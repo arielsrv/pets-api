@@ -1,12 +1,13 @@
 package services_test
 
 import (
+	"testing"
+
 	"github.com/internal/clients/requests"
 	"github.com/internal/clients/responses"
 	"github.com/internal/services"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
-	"testing"
 )
 
 type MockClient struct {

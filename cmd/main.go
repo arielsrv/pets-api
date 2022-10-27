@@ -2,12 +2,12 @@ package main
 
 import (
 	"fmt"
+	"log"
+	"net/http"
+
 	_ "github.com/docs"
 	"github.com/internal/application"
 	"github.com/internal/server"
-	"log"
-	"net/http"
-	"os"
 )
 
 // @title       Golang Template API
@@ -24,15 +24,8 @@ func main() {
 	app.Add(http.MethodGet, "/repositories/groups", repositoriesHandler.GetGroups)
 	app.Add(http.MethodPost, "/repositories", repositoriesHandler.CreateRepository)
 
-	host := os.Getenv("HOST")
-	if host == "" {
-		host = "127.0.0.1"
-	}
-
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = "8080"
-	}
+	host := server.GetAppConfig().Server.Host
+	port := server.GetAppConfig().Server.Port
 
 	address := fmt.Sprintf("%s:%s", host, port)
 

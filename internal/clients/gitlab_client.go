@@ -2,10 +2,11 @@ package clients
 
 import (
 	"fmt"
-	"github.com/internal/clients/requests"
-	"github.com/internal/clients/responses"
 	"net/http"
 	"strconv"
+
+	"github.com/internal/clients/requests"
+	"github.com/internal/clients/responses"
 
 	"github.com/internal/shared"
 

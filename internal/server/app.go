@@ -1,9 +1,13 @@
 package server
 
 import (
+	"log"
 	"net/http"
+	"os"
+	"sync"
 
 	"github.com/internal/shared"
+	"gopkg.in/yaml.v3"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/logger"
@@ -11,6 +15,9 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/requestid"
 	"github.com/gofiber/swagger"
 )
+
+var appConfigMtx sync.Once
+var Configuration AppConfig
 
 type App struct {
 	*fiber.App
@@ -79,4 +86,39 @@ func SendString(ctx *fiber.Ctx, body string) error {
 
 func SendJSON(ctx *fiber.Ctx, data interface{}) error {
 	return ctx.JSON(data)
+}
+
+type AppConfig struct {
+	Server struct {
+		Host string `yaml:"host"`
+		Port string `yaml:"port"`
+	} `yaml:"server"`
+	Credentials struct {
+		GitlabToken string `yaml:"gitlab_token"`
+	} `yaml:"credentials"`
+	GitLabClient struct {
+		BaseURL           string `yaml:"base_url"`
+		Timeout           int64  `yaml:"timeout"`
+		ConnectionTimeout int64  `yaml:"connection_timeout"`
+	} `yaml:"gitlab_client"`
+}
+
+func GetAppConfig() AppConfig {
+	appConfigMtx.Do(func() {
+		f, err := os.Open("config.yml")
+		if err != nil {
+			log.Fatal(err)
+		}
+		defer f.Close()
+
+		var appConfig AppConfig
+		decoder := yaml.NewDecoder(f)
+		err = decoder.Decode(&appConfig)
+		if err != nil {
+			log.Fatal()
+		}
+		Configuration = appConfig
+	})
+
+	return Configuration
 }

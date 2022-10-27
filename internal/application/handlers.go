@@ -2,13 +2,14 @@ package application
 
 import (
 	"fmt"
+	"net/http"
+	"time"
+
 	"github.com/arielsrv/golang-toolkit/rest"
 	"github.com/internal/clients"
 	"github.com/internal/handlers"
+	"github.com/internal/server"
 	"github.com/internal/services"
-	"net/http"
-	"os"
-	"time"
 )
 
 func GetPingHandler() *handlers.PingHandler {
@@ -19,17 +20,13 @@ func GetPingHandler() *handlers.PingHandler {
 }
 
 func GetRepositoriesHandler() *handlers.RepositoriesHandler {
-	gitlabToken := os.Getenv("GITLAB_TOKEN")
-	if gitlabToken == "" {
-		gitlabToken = "glpat-BWcsGBLXz-1yQxzd3BG3"
-	}
 	gitLabRequestBuilder := &rest.RequestBuilder{
-		BaseURL: "https://gitlab.tiendanimal.com:8088/api/v4",
+		BaseURL: server.GetAppConfig().GitLabClient.BaseURL,
 		Headers: http.Header{
-			"Authorization": {fmt.Sprintf("Bearer %s", gitlabToken)},
+			"Authorization": {fmt.Sprintf("Bearer %s", server.GetAppConfig().Credentials.GitlabToken)},
 		},
-		Timeout:        time.Millisecond * 1000,
-		ConnectTimeout: time.Millisecond * 2000,
+		Timeout:        time.Millisecond * time.Duration(server.GetAppConfig().GitLabClient.Timeout),
+		ConnectTimeout: time.Millisecond * time.Duration(server.GetAppConfig().GitLabClient.ConnectionTimeout),
 	}
 
 	gitLabClient := clients.NewGitLabClient(gitLabRequestBuilder)
