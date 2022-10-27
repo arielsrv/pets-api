@@ -2,16 +2,20 @@ package clients
 
 import (
 	"fmt"
-	"log"
+	"github.com/internal/clients/requests"
+	"github.com/internal/clients/responses"
 	"net/http"
 	"strconv"
 
-	"github.com/internal/model/requests"
 	"github.com/internal/shared"
 
 	"github.com/arielsrv/golang-toolkit/rest"
-	"github.com/internal/model/responses"
 )
+
+type IGitLabClient interface {
+	GetGroups() ([]responses.GroupResponse, error)
+	CreateProject(request *requests.CreateProjectRequest) error
+}
 
 type GitLabClient struct {
 	rb *rest.RequestBuilder
@@ -21,18 +25,7 @@ func NewGitLabClient(rb *rest.RequestBuilder) *GitLabClient {
 	return &GitLabClient{rb: rb}
 }
 
-func (r *GitLabClient) GetGroup(groupID int64) responses.GitLabGroupResponse {
-	response := r.rb.Get(fmt.Sprintf("/groups/%d", groupID))
-	if response.StatusCode != http.StatusOK {
-		log.Fatal(response.StatusCode)
-	}
-	var group responses.GitLabGroupResponse
-	response.FillUp(&group)
-
-	return group
-}
-
-func (r *GitLabClient) GetGroups() ([]responses.GitLabGroupResponse, error) {
+func (r *GitLabClient) GetGroups() ([]responses.GroupResponse, error) {
 	response := r.rb.Get("/groups")
 	if response.Err != nil {
 		return nil, response.Err
@@ -40,12 +33,12 @@ func (r *GitLabClient) GetGroups() ([]responses.GitLabGroupResponse, error) {
 	if response.StatusCode != http.StatusOK {
 		return nil, shared.NewError(response.StatusCode, response.String())
 	}
-	var groups []responses.GitLabGroupResponse
+	var groups []responses.GroupResponse
 	response.FillUp(&groups)
 
 	total, err := strconv.Atoi(response.Response.Header.Get("x-total-pages"))
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
 	if total > 1 {
 		page, headerErr := strconv.Atoi(response.Response.Header.Get("x-page"))
@@ -57,7 +50,7 @@ func (r *GitLabClient) GetGroups() ([]responses.GitLabGroupResponse, error) {
 			if response.StatusCode != http.StatusOK {
 				return nil, shared.NewError(response.StatusCode, response.String())
 			}
-			var pageGroup []responses.GitLabGroupResponse
+			var pageGroup []responses.GroupResponse
 			response.FillUp(&pageGroup)
 			groups = append(groups, pageGroup...)
 		}

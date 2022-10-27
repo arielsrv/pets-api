@@ -2,26 +2,30 @@ package services
 
 import (
 	"github.com/internal/clients"
+	"github.com/internal/clients/requests"
 	"github.com/internal/model"
-	"github.com/internal/model/requests"
 )
 
-type RepositoriesService struct {
-	client *clients.GitLabClient
+type IRepositoriesService interface {
+	GetGroups() ([]model.GroupModel, error)
 }
 
-func NewRepositoriesService(client *clients.GitLabClient) *RepositoriesService {
+type RepositoriesService struct {
+	client clients.IGitLabClient
+}
+
+func NewRepositoriesService(client clients.IGitLabClient) *RepositoriesService {
 	return &RepositoriesService{client: client}
 }
 
-func (service *RepositoriesService) GetGroups() ([]model.GroupDto, error) {
+func (service *RepositoriesService) GetGroups() ([]model.GroupModel, error) {
 	groupsResponse, err := service.client.GetGroups()
 	if err != nil {
 		return nil, err
 	}
-	var groupsDto []model.GroupDto
+	var groupsDto []model.GroupModel
 	for _, groupResponse := range groupsResponse {
-		var groupDto model.GroupDto
+		var groupDto model.GroupModel
 		groupDto.ID = groupResponse.ID
 		groupDto.Name = groupResponse.Path
 		groupsDto = append(groupsDto, groupDto)
@@ -29,7 +33,7 @@ func (service *RepositoriesService) GetGroups() ([]model.GroupDto, error) {
 	return groupsDto, nil
 }
 
-func (service *RepositoriesService) CreateRepository(repositoryDto *model.RepositoryDto) error {
+func (service *RepositoriesService) CreateRepository(repositoryDto *model.RepositoryModel) error {
 	request := new(requests.CreateProjectRequest)
 	request.Name = repositoryDto.Name
 	request.GroupID = repositoryDto.GroupID

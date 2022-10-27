@@ -24,7 +24,7 @@ func (handler RepositoriesHandler) GetGroups(ctx *fiber.Ctx) error {
 }
 
 func (handler RepositoriesHandler) CreateRepository(ctx *fiber.Ctx) error {
-	request := new(model.RepositoryDto)
+	request := new(model.RepositoryModel)
 	if err := ctx.BodyParser(request); err != nil {
 		return err
 	}

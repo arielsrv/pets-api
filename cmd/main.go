@@ -2,18 +2,12 @@ package main
 
 import (
 	"fmt"
+	_ "github.com/docs"
+	"github.com/internal/application"
+	"github.com/internal/server"
 	"log"
 	"net/http"
 	"os"
-	"time"
-
-	"github.com/arielsrv/golang-toolkit/rest"
-	"github.com/internal/clients"
-
-	_ "github.com/docs"
-	"github.com/internal/handlers"
-	"github.com/internal/server"
-	"github.com/internal/services"
 )
 
 // @title       Golang Template API
@@ -23,25 +17,8 @@ import (
 func main() {
 	app := server.New()
 
-	pingService := services.NewPingService()
-	pingHandler := handlers.NewPingHandler(pingService)
-
-	gitlabToken := os.Getenv("GITLAB_TOKEN")
-	if gitlabToken == "" {
-		gitlabToken = "glpat-BWcsGBLXz-1yQxzd3BG3"
-	}
-	gitLabRequestBuilder := &rest.RequestBuilder{
-		BaseURL: "https://gitlab.tiendanimal.com:8088/api/v4",
-		Headers: http.Header{
-			"Authorization": {fmt.Sprintf("Bearer %s", gitlabToken)},
-		},
-		Timeout:        time.Millisecond * 1000,
-		ConnectTimeout: time.Millisecond * 2000,
-	}
-
-	gitLabClient := clients.NewGitLabClient(gitLabRequestBuilder)
-	repositoriesService := services.NewRepositoriesService(gitLabClient)
-	repositoriesHandler := handlers.NewRepositoriesHandler(repositoriesService)
+	pingHandler := application.GetPingHandler()
+	repositoriesHandler := application.GetRepositoriesHandler()
 
 	app.Add(http.MethodGet, "/ping", pingHandler.Ping)
 	app.Add(http.MethodGet, "/repositories/groups", repositoriesHandler.GetGroups)
