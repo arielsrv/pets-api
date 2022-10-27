@@ -27,6 +27,9 @@ func GetRepositoriesHandler() *handlers.RepositoriesHandler {
 		},
 		Timeout:        time.Millisecond * time.Duration(server.GetAppConfig().GitLabClient.Timeout),
 		ConnectTimeout: time.Millisecond * time.Duration(server.GetAppConfig().GitLabClient.ConnectionTimeout),
+		CustomPool: &rest.CustomPool{
+			MaxIdleConnsPerHost: 20,
+		},
 	}
 
 	gitLabClient := clients.NewGitLabClient(gitLabRequestBuilder)
