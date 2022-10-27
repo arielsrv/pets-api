@@ -1,0 +1,82 @@
+# yaml-language-server: $schema=https://json.schemastore.org/taskfile.json
+version: '3'
+
+env:
+  ENTRY_POINT: cmd/main.go
+  BUILD_FOLDER: build
+  EXECUTABLE: server
+  COVERAGE_OUT_FILE: coverage.out
+  COVERAGE_HTML_FILE: coverage.html
+  SWAGGER_COVERAGE: "\
+    ../internal/handlers,\
+    ../internal/services"
+  SWAGGER_OUTPUT_FOLDER: docs
+
+tasks:
+  lint:
+    desc: Use golangci-lint (.golangci.yml).
+    cmds:
+      - golangci-lint run --fix
+  test:
+    desc: Run test.
+    cmds:
+      - go test ./...
+  coverage:
+    desc: Makes report coverage.
+    cmds:
+      - echo files $COVERAGE_OUT_FILE, $COVERAGE_HTML_FILE // -coverpkg=./... all files
+      - go test -v ./... -covermode=count -coverprofile=$COVERAGE_OUT_FILE
+      - go tool cover -html $COVERAGE_OUT_FILE -o $COVERAGE_HTML_FILE
+      - go tool cover -func=$COVERAGE_OUT_FILE -o=$COVERAGE_OUT_FILE
+  clean:
+    desc: Clean binaries and reports.
+    cmds:
+      - rm -rf $BUILD_FOLDER
+      - rm -rf $COVERAGE_OUT_FILE $COVERAGE_HTML_FILE
+  download:
+    desc: Run go mod tidy.
+    cmds:
+      - go mod tidy
+  upgrade:
+    desc: Check for latest direct dependencies.
+    cmds:
+      - go-mod-upgrade
+  swagger:
+    desc: Generate RESTful API documentation with Swagger.
+    dir: cmd
+    cmds:
+      - go install github.com/swaggo/swag/cmd/swag@latest
+      - swag init -d ./,$SWAGGER_COVERAGE -o ../$SWAGGER_OUTPUT_FOLDER
+      - swag fmt
+  build:
+    desc: Build the go EXECUTABLE.
+    generates:
+      - server
+    interactive: true
+    cmds:
+      - mkdir -p $BUILD_FOLDER
+      - go build -v $ENTRY_POINT
+      - mv main $BUILD_FOLDER/$EXECUTABLE
+  all:
+    desc: Run relevant tasks.
+    cmds:
+      - task: clean
+      - task: download
+      - task: lint
+      - task: test
+      - task: coverage
+      - task: swagger
+      - task: build
+  default:
+    desc: Run [build] task.
+    cmds:
+      - task: build
+  variables:
+    desc: Run [build] task.
+    cmds:
+      - task: build
+  run:
+    desc: Run $ENTRY_POINT
+    cmds:
+      - echo '{{OS}}'
+      - ./$BUILD_FOLDER/$EXECUTABLE
