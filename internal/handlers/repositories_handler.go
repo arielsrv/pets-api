@@ -8,10 +8,10 @@ import (
 )
 
 type RepositoriesHandler struct {
-	service *services.RepositoriesService
+	service services.IRepositoriesService
 }
 
-func NewRepositoriesHandler(service *services.RepositoriesService) *RepositoriesHandler {
+func NewRepositoriesHandler(service services.IRepositoriesService) *RepositoriesHandler {
 	return &RepositoriesHandler{service: service}
 }
 

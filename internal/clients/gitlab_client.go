@@ -42,18 +42,19 @@ func (r *GitLabClient) GetGroups() ([]responses.GroupResponse, error) {
 		return nil, err
 	}
 	if total > 1 {
-		page, headerErr := strconv.Atoi(response.Response.Header.Get("x-page"))
-		if headerErr != nil {
-			return nil, headerErr
-		}
-		for i := page + 1; i <= total; i++ {
-			response = r.rb.Get(fmt.Sprintf("/groups?page=%d", i))
-			if response.StatusCode != http.StatusOK {
+		var pages []*rest.FutureResponse
+		r.rb.ForkJoin(func(c *rest.Concurrent) {
+			for i := 2; i <= total; i++ {
+				pages = append(pages, c.Get(fmt.Sprintf("/groups?page=%d", i)))
+			}
+		})
+		for i := range pages {
+			if pages[i].Response().StatusCode != http.StatusOK {
 				return nil, shared.NewError(response.StatusCode, response.String())
 			}
-			var pageGroup []responses.GroupResponse
-			response.FillUp(&pageGroup)
-			groups = append(groups, pageGroup...)
+			var page []responses.GroupResponse
+			pages[i].Response().FillUp(&page)
+			groups = append(groups, page...)
 		}
 	}
 

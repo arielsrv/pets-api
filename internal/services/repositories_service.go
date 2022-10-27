@@ -8,6 +8,7 @@ import (
 
 type IRepositoriesService interface {
 	GetGroups() ([]model.GroupModel, error)
+	CreateRepository(repositoryDto *model.RepositoryModel) error
 }
 
 type RepositoriesService struct {
