@@ -2,6 +2,8 @@ package handlers_test
 
 import (
 	"bytes"
+	"errors"
+	"github.com/internal/shared"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -48,6 +50,30 @@ func TestRepositoriesHandler_GetGroups(t *testing.T) {
 	assert.Equal(t, "[{\"id\":1,\"name\":\"root/group1\"},{\"id\":2,\"name\":\"root/group2\"}]", string(body))
 }
 
+func TestRepositoriesHandler_GetGroups_Err(t *testing.T) {
+	repositoriesService := new(MockRepositoriesService)
+	repositoriesService.On("GetGroups").Return(GetGroupsErr())
+	repositoriesHandler := handlers.NewRepositoriesHandler(repositoriesService)
+	app := server.New()
+	app.Add(http.MethodGet, "/repositories/groups", repositoriesHandler.GetGroups)
+
+	request := httptest.NewRequest(http.MethodGet, "/repositories/groups", nil)
+	response, err := app.Test(request)
+	assert.NoError(t, err)
+	assert.NotNil(t, response)
+	assert.Equal(t, http.StatusInternalServerError, response.StatusCode)
+
+	body, err := io.ReadAll(response.Body)
+	assert.NoError(t, err)
+	assert.NotNil(t, body)
+
+	assert.Equal(t, "{\"status_code\":500,\"message\":\"internal server error\"}", string(body))
+}
+
+func GetGroupsErr() ([]model.GroupModel, error) {
+	return nil, errors.New("internal server error")
+}
+
 func TestRepositoriesHandler_CreateRepository(t *testing.T) {
 	repositoriesService := new(MockRepositoriesService)
 	repositoriesService.On("CreateRepository").Return(nil)
@@ -71,6 +97,54 @@ func TestRepositoriesHandler_CreateRepository(t *testing.T) {
 	assert.NotNil(t, body)
 
 	assert.Equal(t, "ok", string(body))
+}
+
+func TestRepositoriesHandler_CreateRepository_Err(t *testing.T) {
+	repositoriesService := new(MockRepositoriesService)
+	repositoriesService.On("CreateRepository").Return(errors.New("internal server error"))
+	repositoriesHandler := handlers.NewRepositoriesHandler(repositoriesService)
+	app := server.New()
+	app.Add(http.MethodPost, "/repositories", repositoriesHandler.CreateRepository)
+
+	request := httptest.
+		NewRequest(http.MethodPost, "/repositories",
+			bytes.NewBufferString("{\"name\":\"my repo\",\"group_id\":1}"))
+
+	request.Header.Add("Content-Type", "application/json")
+
+	response, err := app.Test(request)
+	assert.NoError(t, err)
+	assert.NotNil(t, response)
+	assert.Equal(t, http.StatusInternalServerError, response.StatusCode)
+
+	body, err := io.ReadAll(response.Body)
+	assert.NoError(t, err)
+	assert.NotNil(t, body)
+
+	assert.Equal(t, "{\"status_code\":500,\"message\":\"internal server error\"}", string(body))
+}
+
+func TestRepositoriesHandler_CreateRepository_BadRequest_Err(t *testing.T) {
+	repositoriesService := new(MockRepositoriesService)
+	repositoriesService.On("CreateRepository").Return(shared.NewError(http.StatusBadRequest, "bad request error"))
+	repositoriesHandler := handlers.NewRepositoriesHandler(repositoriesService)
+	app := server.New()
+	app.Add(http.MethodPost, "/repositories", repositoriesHandler.CreateRepository)
+
+	request := httptest.
+		NewRequest(http.MethodPost, "/repositories",
+			bytes.NewBufferString("{\"invalid_field\":\"my repo\",\"group_id\":1}"))
+
+	response, err := app.Test(request)
+	assert.NoError(t, err)
+	assert.NotNil(t, response)
+	assert.Equal(t, http.StatusBadRequest, response.StatusCode)
+
+	body, err := io.ReadAll(response.Body)
+	assert.NoError(t, err)
+	assert.NotNil(t, body)
+
+	assert.Equal(t, "{\"status_code\":400,\"message\":\"bad request error\"}", string(body))
 }
 
 func GetGroups() ([]model.GroupModel, error) {

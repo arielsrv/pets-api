@@ -18,6 +18,7 @@ func TestNewError(t *testing.T) {
 	assert.NotNil(t, actual)
 	assert.Equal(t, http.StatusInternalServerError, actual.StatusCode)
 	assert.Equal(t, "nil reference", actual.Message)
+	assert.Equal(t, "nil reference", actual.Error())
 }
 
 func TestErrorHandler(t *testing.T) {

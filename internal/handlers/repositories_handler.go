@@ -5,6 +5,8 @@ import (
 	"github.com/internal/model"
 	"github.com/internal/server"
 	"github.com/internal/services"
+	"github.com/internal/shared"
+	"net/http"
 )
 
 type RepositoriesHandler struct {
@@ -26,7 +28,7 @@ func (handler RepositoriesHandler) GetGroups(ctx *fiber.Ctx) error {
 func (handler RepositoriesHandler) CreateRepository(ctx *fiber.Ctx) error {
 	request := new(model.RepositoryModel)
 	if err := ctx.BodyParser(request); err != nil {
-		return err
+		return shared.NewError(http.StatusBadRequest, "bad request error")
 	}
 	err := handler.service.CreateRepository(request)
 	if err != nil {
