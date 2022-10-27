@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"github.com/gofiber/fiber/v2"
+	"github.com/internal/server"
 	"github.com/internal/services"
 )
 
@@ -29,5 +30,5 @@ func NewPingHandler(pingService services.IPingService) *PingHandler {
 // @Router      /ping [get].
 func (handler PingHandler) Ping(ctx *fiber.Ctx) error {
 	result := handler.pingService.Ping()
-	return ctx.SendString(result)
+	return server.SendString(ctx, result)
 }

@@ -3,6 +3,8 @@ package server
 import (
 	"net/http"
 
+	"github.com/internal/shared"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/fiber/v2/middleware/recover"
@@ -23,6 +25,7 @@ func New(config ...Config) *App {
 	app := &App{
 		App: fiber.New(fiber.Config{
 			DisableStartupMessage: true,
+			ErrorHandler:          shared.ErrorHandler,
 		}),
 		config: Config{
 			Recovery:  true,
@@ -64,4 +67,16 @@ type Config struct {
 	Swagger   bool
 	RequestID bool
 	Logger    bool
+}
+
+func SendString(ctx *fiber.Ctx, body string) error {
+	if body == "" {
+		ctx.Status(http.StatusNotFound)
+	}
+
+	return ctx.SendString(body)
+}
+
+func SendJSON(ctx *fiber.Ctx, data interface{}) error {
+	return ctx.JSON(data)
 }
