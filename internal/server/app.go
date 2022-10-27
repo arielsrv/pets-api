@@ -4,7 +4,7 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"reflect"
+	reflect "reflect"
 	"runtime"
 	"sync"
 
@@ -126,12 +126,16 @@ func GetAppConfig() AppConfig {
 	return Configuration
 }
 
-func RegisterHandler(f func(ctx *fiber.Ctx) error) {
-	name := runtime.FuncForPC(reflect.ValueOf(f).Pointer()).Name()
-	routes[name] = f
+func RegisterHandler(action func(ctx *fiber.Ctx) error) {
+	name := getFuncName(action)
+	routes[name] = action
 }
 
-func GetHandler(f func(ctx *fiber.Ctx) error) func(ctx *fiber.Ctx) error {
-	name := runtime.FuncForPC(reflect.ValueOf(f).Pointer()).Name()
+func Use(action func(ctx *fiber.Ctx) error) func(ctx *fiber.Ctx) error {
+	name := getFuncName(action)
 	return routes[name]
+}
+
+func getFuncName(action func(ctx *fiber.Ctx) error) string {
+	return runtime.FuncForPC(reflect.ValueOf(action).Pointer()).Name()
 }

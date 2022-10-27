@@ -1,4 +1,12 @@
-basePath: /
+basePath: /.
+definitions:
+  model.GroupModel:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+    type: object
 info:
   contact: {}
   description: This is a sample swagger for Golang Template API
@@ -18,4 +26,21 @@ paths:
       summary: Check if the instance is online
       tags:
       - Check
+  /repositories/groups:
+    get:
+      consumes:
+      - application/json
+      description: Needed for create a project in a specific group
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.GroupModel'
+            type: array
+      summary: Get all groups
+      tags:
+      - Groups
 swagger: "2.0"

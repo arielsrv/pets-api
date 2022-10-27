@@ -8,7 +8,10 @@ import (
 )
 
 func RegisterRoutes(app *server.App) {
-	app.Add(http.MethodGet, "/ping", server.GetHandler(handlers.PingHandler{}.Ping))
-	app.Add(http.MethodGet, "/repositories/groups", server.GetHandler(handlers.RepositoriesHandler{}.GetGroups))
-	app.Add(http.MethodPost, "/repositories", server.GetHandler(handlers.RepositoriesHandler{}.CreateRepository))
+	// read
+	app.Add(http.MethodGet, "/ping", server.Use(handlers.PingHandler{}.Ping))
+	app.Add(http.MethodGet, "/repositories/groups", server.Use(handlers.RepositoriesHandler{}.GetGroups))
+
+	// write
+	app.Add(http.MethodPost, "/repositories", server.Use(handlers.RepositoriesHandler{}.CreateRepository))
 }

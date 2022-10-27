@@ -18,6 +18,14 @@ func NewRepositoriesHandler(service services.IRepositoriesService) *Repositories
 	return &RepositoriesHandler{service: service}
 }
 
+// GetGroups  godoc
+// @Summary     Get all groups
+// @Description Needed for create a project in a specific group
+// @Tags        Groups
+// @Accept      json
+// @Produce     json
+// @Success     200 {array} model.GroupModel
+// @Router      /repositories/groups [get].
 func (handler RepositoriesHandler) GetGroups(ctx *fiber.Ctx) error {
 	result, err := handler.service.GetGroups()
 	if err != nil {
