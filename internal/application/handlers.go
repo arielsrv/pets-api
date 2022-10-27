@@ -12,15 +12,11 @@ import (
 	"github.com/internal/services"
 )
 
-func GetPingHandler() *handlers.PingHandler {
+func RegisterHandlers() {
 	pingService := services.NewPingService()
 	pingHandler := handlers.NewPingHandler(pingService)
 
-	return pingHandler
-}
-
-func GetRepositoriesHandler() *handlers.RepositoriesHandler {
-	gitLabRequestBuilder := &rest.RequestBuilder{
+	gitLabRb := &rest.RequestBuilder{
 		BaseURL: server.GetAppConfig().GitLabClient.BaseURL,
 		Headers: http.Header{
 			"Authorization": {fmt.Sprintf("Bearer %s", server.GetAppConfig().Credentials.GitlabToken)},
@@ -32,9 +28,11 @@ func GetRepositoriesHandler() *handlers.RepositoriesHandler {
 		},
 	}
 
-	gitLabClient := clients.NewGitLabClient(gitLabRequestBuilder)
+	gitLabClient := clients.NewGitLabClient(gitLabRb)
 	repositoriesService := services.NewRepositoriesService(gitLabClient)
 	repositoriesHandler := handlers.NewRepositoriesHandler(repositoriesService)
 
-	return repositoriesHandler
+	server.RegisterHandler(pingHandler.Ping)
+	server.RegisterHandler(repositoriesHandler.CreateRepository)
+	server.RegisterHandler(repositoriesHandler.GetGroups)
 }

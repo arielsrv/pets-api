@@ -2,8 +2,9 @@ package services_test
 
 import (
 	"errors"
-	"github.com/internal/model"
 	"testing"
+
+	"github.com/internal/model"
 
 	"github.com/internal/clients/requests"
 	"github.com/internal/clients/responses"

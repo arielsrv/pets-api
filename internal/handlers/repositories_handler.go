@@ -1,12 +1,13 @@
 package handlers
 
 import (
+	"net/http"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/internal/model"
 	"github.com/internal/server"
 	"github.com/internal/services"
 	"github.com/internal/shared"
-	"net/http"
 )
 
 type RepositoriesHandler struct {

@@ -3,11 +3,12 @@ package handlers_test
 import (
 	"bytes"
 	"errors"
-	"github.com/internal/shared"
 	"io"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	"github.com/internal/shared"
 
 	"github.com/internal/handlers"
 	"github.com/internal/model"

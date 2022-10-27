@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"log"
-	"net/http"
 
 	_ "github.com/docs"
 	"github.com/internal/application"
@@ -17,12 +16,8 @@ import (
 func main() {
 	app := server.New()
 
-	pingHandler := application.GetPingHandler()
-	repositoriesHandler := application.GetRepositoriesHandler()
-
-	app.Add(http.MethodGet, "/ping", pingHandler.Ping)
-	app.Add(http.MethodGet, "/repositories/groups", repositoriesHandler.GetGroups)
-	app.Add(http.MethodPost, "/repositories", repositoriesHandler.CreateRepository)
+	application.RegisterHandlers()
+	application.RegisterRoutes(app)
 
 	host := server.GetAppConfig().Server.Host
 	port := server.GetAppConfig().Server.Port

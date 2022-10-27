@@ -4,6 +4,8 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"reflect"
+	"runtime"
 	"sync"
 
 	"github.com/internal/shared"
@@ -18,6 +20,7 @@ import (
 
 var appConfigMtx sync.Once
 var Configuration AppConfig
+var routes = make(map[string]func(ctx *fiber.Ctx) error)
 
 type App struct {
 	*fiber.App
@@ -121,4 +124,14 @@ func GetAppConfig() AppConfig {
 	})
 
 	return Configuration
+}
+
+func RegisterHandler(f func(ctx *fiber.Ctx) error) {
+	name := runtime.FuncForPC(reflect.ValueOf(f).Pointer()).Name()
+	routes[name] = f
+}
+
+func GetHandler(f func(ctx *fiber.Ctx) error) func(ctx *fiber.Ctx) error {
+	name := runtime.FuncForPC(reflect.ValueOf(f).Pointer()).Name()
+	return routes[name]
 }
