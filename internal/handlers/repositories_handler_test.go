@@ -1,6 +1,7 @@
 package handlers_test
 
 import (
+	"bytes"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -22,9 +23,9 @@ func (m *MockRepositoriesService) GetGroups() ([]model.GroupModel, error) {
 	return args.Get(0).([]model.GroupModel), args.Error(1)
 }
 
-func (m *MockRepositoriesService) CreateRepository(repositoryDto *model.RepositoryModel) error {
-	// TODO implement me
-	panic("implement me")
+func (m *MockRepositoriesService) CreateRepository(*model.RepositoryModel) error {
+	args := m.Called()
+	return args.Error(0)
 }
 
 func TestRepositoriesHandler_GetGroups(t *testing.T) {
@@ -45,6 +46,31 @@ func TestRepositoriesHandler_GetGroups(t *testing.T) {
 	assert.NotNil(t, body)
 
 	assert.Equal(t, "[{\"id\":1,\"name\":\"root/group1\"},{\"id\":2,\"name\":\"root/group2\"}]", string(body))
+}
+
+func TestRepositoriesHandler_CreateRepository(t *testing.T) {
+	repositoriesService := new(MockRepositoriesService)
+	repositoriesService.On("CreateRepository").Return(nil)
+	repositoriesHandler := handlers.NewRepositoriesHandler(repositoriesService)
+	app := server.New()
+	app.Add(http.MethodPost, "/repositories", repositoriesHandler.CreateRepository)
+
+	request := httptest.
+		NewRequest(http.MethodPost, "/repositories",
+			bytes.NewBufferString("{\"name\":\"my repo\",\"group_id\":1}"))
+
+	request.Header.Add("Content-Type", "application/json")
+
+	response, err := app.Test(request)
+	assert.NoError(t, err)
+	assert.NotNil(t, response)
+	assert.Equal(t, http.StatusOK, response.StatusCode)
+
+	body, err := io.ReadAll(response.Body)
+	assert.NoError(t, err)
+	assert.NotNil(t, body)
+
+	assert.Equal(t, "ok", string(body))
 }
 
 func GetGroups() ([]model.GroupModel, error) {

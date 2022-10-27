@@ -1,6 +1,7 @@
 package services_test
 
 import (
+	"github.com/internal/model"
 	"testing"
 
 	"github.com/internal/clients/requests"
@@ -37,6 +38,16 @@ func TestRepositoriesService_GetGroups(t *testing.T) {
 	assert.Equal(t, "root/group1", actual[0].Name)
 	assert.Equal(t, int64(2), actual[1].ID)
 	assert.Equal(t, "root/group2", actual[1].Name)
+}
+
+func TestRepositoriesService_CreateRepository(t *testing.T) {
+	client := new(MockClient)
+	client.On("CreateProject").Return(nil)
+	service := services.NewRepositoriesService(client)
+	repositoryModel := new(model.RepositoryModel)
+	err := service.CreateRepository(repositoryModel)
+
+	assert.NoError(t, err)
 }
 
 func GetGroups() ([]responses.GroupResponse, error) {
