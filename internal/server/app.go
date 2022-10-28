@@ -96,9 +96,15 @@ type AppConfig struct {
 		Host string `yaml:"host"`
 		Port string `yaml:"port"`
 	} `yaml:"server"`
-	Credentials struct {
-		GitlabToken string `yaml:"gitlab_token"`
-	} `yaml:"credentials"`
+	GitLab struct {
+		Token string `yaml:"token"`
+	} `yaml:"gitlab"`
+	Database struct {
+		User     string `yaml:"user"`
+		Password string `yaml:"password"`
+		Host     string `yaml:"host"`
+		Port     int    `yaml:"port"`
+	} `yaml:"database"`
 	GitLabClient struct {
 		BaseURL           string `yaml:"base_url"`
 		Timeout           int64  `yaml:"timeout"`

@@ -2,10 +2,12 @@ package application
 
 import (
 	"fmt"
+	"github.com/internal/infrastructure"
 	"net/http"
 	"time"
 
 	"github.com/arielsrv/golang-toolkit/rest"
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/internal/clients"
 	"github.com/internal/handlers"
 	"github.com/internal/server"
@@ -13,13 +15,17 @@ import (
 )
 
 func RegisterHandlers() {
+
+	dataAccess := infrastructure.NewDataAccessService()
+	dataAccess.Open()
+
 	pingService := services.NewPingService()
 	pingHandler := handlers.NewPingHandler(pingService)
 
 	gitLabRb := &rest.RequestBuilder{
 		BaseURL: server.GetAppConfig().GitLabClient.BaseURL,
 		Headers: http.Header{
-			"Authorization": {fmt.Sprintf("Bearer %s", server.GetAppConfig().Credentials.GitlabToken)},
+			"Authorization": {fmt.Sprintf("Bearer %s", server.GetAppConfig().GitLab.Token)},
 		},
 		Timeout:        time.Millisecond * time.Duration(server.GetAppConfig().GitLabClient.Timeout),
 		ConnectTimeout: time.Millisecond * time.Duration(server.GetAppConfig().GitLabClient.ConnectionTimeout),
@@ -29,7 +35,7 @@ func RegisterHandlers() {
 	}
 
 	gitLabClient := clients.NewGitLabClient(gitLabRb)
-	repositoriesService := services.NewRepositoriesService(gitLabClient)
+	repositoriesService := services.NewRepositoriesService(gitLabClient, dataAccess)
 	repositoriesHandler := handlers.NewRepositoriesHandler(repositoriesService)
 
 	server.RegisterHandler(pingHandler.Ping)

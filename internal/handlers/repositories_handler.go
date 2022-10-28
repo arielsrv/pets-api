@@ -39,9 +39,10 @@ func (handler RepositoriesHandler) CreateRepository(ctx *fiber.Ctx) error {
 	if err := ctx.BodyParser(request); err != nil {
 		return shared.NewError(http.StatusBadRequest, "bad request error")
 	}
-	err := handler.service.CreateRepository(request)
+	result, err := handler.service.CreateRepository(request)
 	if err != nil {
 		return err
 	}
-	return server.SendString(ctx, "ok")
+	return server.
+		SendJSON(ctx, &model.CreateProjectModel{ID: result})
 }
