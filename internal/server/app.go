@@ -66,6 +66,7 @@ func New(config ...Config) *App {
 	}
 
 	if app.config.Swagger {
+		log.Println("Swagger enabled")
 		app.Add(http.MethodGet, "/swagger/*", swagger.HandlerDefault)
 	}
 
@@ -114,6 +115,7 @@ type AppConfig struct {
 
 func GetAppConfig() AppConfig {
 	appConfigMtx.Do(func() {
+		log.Println("Loading config file ...")
 		f, err := os.Open("config.yml")
 		if err != nil {
 			log.Fatal(err)
@@ -124,7 +126,7 @@ func GetAppConfig() AppConfig {
 		decoder := yaml.NewDecoder(f)
 		err = decoder.Decode(&appConfig)
 		if err != nil {
-			log.Fatal()
+			log.Fatal(err)
 		}
 		Configuration = appConfig
 	})

@@ -2,8 +2,9 @@ package services_test
 
 import (
 	"errors"
-	"github.com/internal/infrastructure"
 	"testing"
+
+	"github.com/internal/infrastructure"
 
 	"github.com/internal/model"
 
@@ -98,6 +99,7 @@ func TestRepositoriesService_CreateRepository_Conflict(t *testing.T) {
 
 	actual, err = service.CreateRepository(repositoryModel)
 	assert.Error(t, err)
+	assert.NotNil(t, actual)
 	assert.Equal(t, "duplicated project name project name", err.Error())
 }
 

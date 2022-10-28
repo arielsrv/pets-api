@@ -3,13 +3,14 @@ package infrastructure
 import (
 	"context"
 	"fmt"
+	"log"
+	"sync"
+	"testing"
+
 	"github.com/ent"
 	"github.com/ent/enttest"
 	"github.com/internal/server"
 	_ "github.com/mattn/go-sqlite3"
-	"log"
-	"sync"
-	"testing"
 )
 
 type DataAccessService struct {

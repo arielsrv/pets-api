@@ -3,13 +3,14 @@ package services
 import (
 	"context"
 	"fmt"
+	"net/http"
+
 	"github.com/ent/app"
 	"github.com/internal/clients"
 	"github.com/internal/clients/requests"
 	"github.com/internal/infrastructure"
 	"github.com/internal/model"
 	"github.com/internal/shared"
-	"net/http"
 )
 
 type IRepositoriesService interface {

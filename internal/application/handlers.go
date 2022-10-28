@@ -2,9 +2,10 @@ package application
 
 import (
 	"fmt"
-	"github.com/internal/infrastructure"
 	"net/http"
 	"time"
+
+	"github.com/internal/infrastructure"
 
 	"github.com/arielsrv/golang-toolkit/rest"
 	_ "github.com/go-sql-driver/mysql"
@@ -15,7 +16,6 @@ import (
 )
 
 func RegisterHandlers() {
-
 	dataAccess := infrastructure.NewDataAccessService()
 	dataAccess.Open()
 
