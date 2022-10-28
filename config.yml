@@ -4,8 +4,14 @@ server:
   port: 8080
 
 # Credentials
-credentials:
-  gitlab_token: "glpat-BWcsGBLXz-1yQxzd3BG3"
+gitlab:
+  token: "glpat-BWcsGBLXz-1yQxzd3BG3"
+
+database:
+  user: root
+  password: a300p011
+  host: localhost
+  port: 3306
 
 # RESTful clients
 gitlab_client:

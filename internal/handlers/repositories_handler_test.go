@@ -15,6 +15,8 @@ import (
 	"github.com/internal/server"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
+
+	_ "github.com/mattn/go-sqlite3"
 )
 
 type MockRepositoriesService struct {
@@ -26,14 +28,15 @@ func (m *MockRepositoriesService) GetGroups() ([]model.GroupModel, error) {
 	return args.Get(0).([]model.GroupModel), args.Error(1)
 }
 
-func (m *MockRepositoriesService) CreateRepository(*model.RepositoryModel) error {
+func (m *MockRepositoriesService) CreateRepository(*model.RepositoryModel) (int64, error) {
 	args := m.Called()
-	return args.Error(0)
+	return args.Get(0).(int64), args.Error(1)
 }
 
 func TestRepositoriesHandler_GetGroups(t *testing.T) {
 	repositoriesService := new(MockRepositoriesService)
 	repositoriesService.On("GetGroups").Return(GetGroups())
+
 	repositoriesHandler := handlers.NewRepositoriesHandler(repositoriesService)
 	app := server.New()
 	app.Add(http.MethodGet, "/repositories/groups", repositoriesHandler.GetGroups)
@@ -77,7 +80,7 @@ func GetGroupsErr() ([]model.GroupModel, error) {
 
 func TestRepositoriesHandler_CreateRepository(t *testing.T) {
 	repositoriesService := new(MockRepositoriesService)
-	repositoriesService.On("CreateRepository").Return(nil)
+	repositoriesService.On("CreateRepository").Return(GetCreateRepository())
 	repositoriesHandler := handlers.NewRepositoriesHandler(repositoriesService)
 	app := server.New()
 	app.Add(http.MethodPost, "/repositories", repositoriesHandler.CreateRepository)
@@ -97,12 +100,16 @@ func TestRepositoriesHandler_CreateRepository(t *testing.T) {
 	assert.NoError(t, err)
 	assert.NotNil(t, body)
 
-	assert.Equal(t, "ok", string(body))
+	assert.Equal(t, "{\"id\":1}", string(body))
+}
+
+func GetCreateRepository() (int64, error) {
+	return 1, nil
 }
 
 func TestRepositoriesHandler_CreateRepository_Err(t *testing.T) {
 	repositoriesService := new(MockRepositoriesService)
-	repositoriesService.On("CreateRepository").Return(errors.New("internal server error"))
+	repositoriesService.On("CreateRepository").Return(GetCreateError())
 	repositoriesHandler := handlers.NewRepositoriesHandler(repositoriesService)
 	app := server.New()
 	app.Add(http.MethodPost, "/repositories", repositoriesHandler.CreateRepository)
@@ -123,6 +130,10 @@ func TestRepositoriesHandler_CreateRepository_Err(t *testing.T) {
 	assert.NotNil(t, body)
 
 	assert.Equal(t, "{\"status_code\":500,\"message\":\"internal server error\"}", string(body))
+}
+
+func GetCreateError() (int64, error) {
+	return 0, errors.New("internal server error")
 }
 
 func TestRepositoriesHandler_CreateRepository_BadRequest_Err(t *testing.T) {
