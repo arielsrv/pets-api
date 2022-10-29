@@ -11,9 +11,11 @@ import (
 	"github.com/ent/migrate"
 
 	"github.com/ent/app"
+	"github.com/ent/apptype"
 
 	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/sql"
+	"entgo.io/ent/dialect/sql/sqlgraph"
 )
 
 // Client is the client that holds all ent builders.
@@ -23,6 +25,8 @@ type Client struct {
 	Schema *migrate.Schema
 	// App is the client for interacting with the App builders.
 	App *AppClient
+	// AppType is the client for interacting with the AppType builders.
+	AppType *AppTypeClient
 }
 
 // NewClient creates a new client configured with the given options.
@@ -37,6 +41,7 @@ func NewClient(opts ...Option) *Client {
 func (c *Client) init() {
 	c.Schema = migrate.NewSchema(c.driver)
 	c.App = NewAppClient(c.config)
+	c.AppType = NewAppTypeClient(c.config)
 }
 
 // Open opens a database/sql.DB specified by the driver name and
@@ -68,9 +73,10 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 	cfg := c.config
 	cfg.driver = tx
 	return &Tx{
-		ctx:    ctx,
-		config: cfg,
-		App:    NewAppClient(cfg),
+		ctx:     ctx,
+		config:  cfg,
+		App:     NewAppClient(cfg),
+		AppType: NewAppTypeClient(cfg),
 	}, nil
 }
 
@@ -88,9 +94,10 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 	cfg := c.config
 	cfg.driver = &txDriver{tx: tx, drv: c.driver}
 	return &Tx{
-		ctx:    ctx,
-		config: cfg,
-		App:    NewAppClient(cfg),
+		ctx:     ctx,
+		config:  cfg,
+		App:     NewAppClient(cfg),
+		AppType: NewAppTypeClient(cfg),
 	}, nil
 }
 
@@ -120,6 +127,7 @@ func (c *Client) Close() error {
 // In order to add hooks to a specific client, call: `client.Node.Use(...)`.
 func (c *Client) Use(hooks ...Hook) {
 	c.App.Use(hooks...)
+	c.AppType.Use(hooks...)
 }
 
 // AppClient is a client for the App schema.
@@ -207,7 +215,129 @@ func (c *AppClient) GetX(ctx context.Context, id int64) *App {
 	return obj
 }
 
+// QueryAppsTypes queries the apps_types edge of a App.
+func (c *AppClient) QueryAppsTypes(a *App) *AppTypeQuery {
+	query := &AppTypeQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := a.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(app.Table, app.FieldID, id),
+			sqlgraph.To(apptype.Table, apptype.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, app.AppsTypesTable, app.AppsTypesColumn),
+		)
+		fromV = sqlgraph.Neighbors(a.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
 // Hooks returns the client hooks.
 func (c *AppClient) Hooks() []Hook {
 	return c.hooks.App
+}
+
+// AppTypeClient is a client for the AppType schema.
+type AppTypeClient struct {
+	config
+}
+
+// NewAppTypeClient returns a client for the AppType from the given config.
+func NewAppTypeClient(c config) *AppTypeClient {
+	return &AppTypeClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `apptype.Hooks(f(g(h())))`.
+func (c *AppTypeClient) Use(hooks ...Hook) {
+	c.hooks.AppType = append(c.hooks.AppType, hooks...)
+}
+
+// Create returns a builder for creating a AppType entity.
+func (c *AppTypeClient) Create() *AppTypeCreate {
+	mutation := newAppTypeMutation(c.config, OpCreate)
+	return &AppTypeCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of AppType entities.
+func (c *AppTypeClient) CreateBulk(builders ...*AppTypeCreate) *AppTypeCreateBulk {
+	return &AppTypeCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for AppType.
+func (c *AppTypeClient) Update() *AppTypeUpdate {
+	mutation := newAppTypeMutation(c.config, OpUpdate)
+	return &AppTypeUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *AppTypeClient) UpdateOne(at *AppType) *AppTypeUpdateOne {
+	mutation := newAppTypeMutation(c.config, OpUpdateOne, withAppType(at))
+	return &AppTypeUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *AppTypeClient) UpdateOneID(id int) *AppTypeUpdateOne {
+	mutation := newAppTypeMutation(c.config, OpUpdateOne, withAppTypeID(id))
+	return &AppTypeUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for AppType.
+func (c *AppTypeClient) Delete() *AppTypeDelete {
+	mutation := newAppTypeMutation(c.config, OpDelete)
+	return &AppTypeDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *AppTypeClient) DeleteOne(at *AppType) *AppTypeDeleteOne {
+	return c.DeleteOneID(at.ID)
+}
+
+// DeleteOne returns a builder for deleting the given entity by its id.
+func (c *AppTypeClient) DeleteOneID(id int) *AppTypeDeleteOne {
+	builder := c.Delete().Where(apptype.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &AppTypeDeleteOne{builder}
+}
+
+// Query returns a query builder for AppType.
+func (c *AppTypeClient) Query() *AppTypeQuery {
+	return &AppTypeQuery{
+		config: c.config,
+	}
+}
+
+// Get returns a AppType entity by its id.
+func (c *AppTypeClient) Get(ctx context.Context, id int) (*AppType, error) {
+	return c.Query().Where(apptype.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *AppTypeClient) GetX(ctx context.Context, id int) *AppType {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// QueryApps queries the apps edge of a AppType.
+func (c *AppTypeClient) QueryApps(at *AppType) *AppQuery {
+	query := &AppQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := at.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(apptype.Table, apptype.FieldID, id),
+			sqlgraph.To(app.Table, app.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, apptype.AppsTable, apptype.AppsColumn),
+		)
+		fromV = sqlgraph.Neighbors(at.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// Hooks returns the client hooks.
+func (c *AppTypeClient) Hooks() []Hook {
+	return c.hooks.AppType
 }

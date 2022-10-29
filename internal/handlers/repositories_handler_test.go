@@ -87,7 +87,7 @@ func TestRepositoriesHandler_CreateRepository(t *testing.T) {
 
 	request := httptest.
 		NewRequest(http.MethodPost, "/repositories",
-			bytes.NewBufferString("{\"name\":\"my repo\",\"group_id\":1}"))
+			bytes.NewBufferString("{\"name\":\"my repo\",\"group_id\":1, \"app_type_id\": 1}"))
 
 	request.Header.Add("Content-Type", "application/json")
 
@@ -116,7 +116,7 @@ func TestRepositoriesHandler_CreateRepository_Err(t *testing.T) {
 
 	request := httptest.
 		NewRequest(http.MethodPost, "/repositories",
-			bytes.NewBufferString("{\"name\":\"my repo\",\"group_id\":1}"))
+			bytes.NewBufferString("{\"name\":\"my repo\",\"group_id\":1, \"app_type_id\": 1}"))
 
 	request.Header.Add("Content-Type", "application/json")
 

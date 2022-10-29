@@ -2,6 +2,7 @@ package schema
 
 import (
 	"entgo.io/ent"
+	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
 )
 
@@ -19,6 +20,7 @@ func (App) Fields() []ent.Field {
 			Unique(),
 		field.Int64("projectId").
 			Unique(),
+		field.Int("app_type_id"),
 		field.Bool("active").
 			Default(true),
 	}
@@ -26,5 +28,11 @@ func (App) Fields() []ent.Field {
 
 // Edges of the App.
 func (App) Edges() []ent.Edge {
-	return nil
+	return []ent.Edge{
+		edge.From("apps_types", AppType.Type).
+			Ref("apps").
+			Required().
+			Unique().
+			Field("app_type_id"),
+	}
 }

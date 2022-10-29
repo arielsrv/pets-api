@@ -68,6 +68,7 @@ func (s *RepositoriesService) CreateRepository(repositoryDto *model.RepositoryMo
 	application, err := s.dataAccess.GetClient().App.Create().
 		SetName(createProjectRequest.Name).
 		SetProjectId(response.ID).
+		SetAppTypeID(repositoryDto.AppTypeID).
 		Save(context.Background())
 
 	if err != nil {

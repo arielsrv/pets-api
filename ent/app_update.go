@@ -11,6 +11,7 @@ import (
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
 	"github.com/ent/app"
+	"github.com/ent/apptype"
 	"github.com/ent/predicate"
 )
 
@@ -46,6 +47,12 @@ func (au *AppUpdate) AddProjectId(i int64) *AppUpdate {
 	return au
 }
 
+// SetAppTypeID sets the "app_type_id" field.
+func (au *AppUpdate) SetAppTypeID(i int) *AppUpdate {
+	au.mutation.SetAppTypeID(i)
+	return au
+}
+
 // SetActive sets the "active" field.
 func (au *AppUpdate) SetActive(b bool) *AppUpdate {
 	au.mutation.SetActive(b)
@@ -60,9 +67,26 @@ func (au *AppUpdate) SetNillableActive(b *bool) *AppUpdate {
 	return au
 }
 
+// SetAppsTypesID sets the "apps_types" edge to the AppType entity by ID.
+func (au *AppUpdate) SetAppsTypesID(id int) *AppUpdate {
+	au.mutation.SetAppsTypesID(id)
+	return au
+}
+
+// SetAppsTypes sets the "apps_types" edge to the AppType entity.
+func (au *AppUpdate) SetAppsTypes(a *AppType) *AppUpdate {
+	return au.SetAppsTypesID(a.ID)
+}
+
 // Mutation returns the AppMutation object of the builder.
 func (au *AppUpdate) Mutation() *AppMutation {
 	return au.mutation
+}
+
+// ClearAppsTypes clears the "apps_types" edge to the AppType entity.
+func (au *AppUpdate) ClearAppsTypes() *AppUpdate {
+	au.mutation.ClearAppsTypes()
+	return au
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
@@ -72,12 +96,18 @@ func (au *AppUpdate) Save(ctx context.Context) (int, error) {
 		affected int
 	)
 	if len(au.hooks) == 0 {
+		if err = au.check(); err != nil {
+			return 0, err
+		}
 		affected, err = au.sqlSave(ctx)
 	} else {
 		var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
 			mutation, ok := m.(*AppMutation)
 			if !ok {
 				return nil, fmt.Errorf("unexpected mutation type %T", m)
+			}
+			if err = au.check(); err != nil {
+				return 0, err
 			}
 			au.mutation = mutation
 			affected, err = au.sqlSave(ctx)
@@ -117,6 +147,14 @@ func (au *AppUpdate) ExecX(ctx context.Context) {
 	if err := au.Exec(ctx); err != nil {
 		panic(err)
 	}
+}
+
+// check runs all checks and user-defined validators on the builder.
+func (au *AppUpdate) check() error {
+	if _, ok := au.mutation.AppsTypesID(); au.mutation.AppsTypesCleared() && !ok {
+		return errors.New(`ent: clearing a required unique edge "App.apps_types"`)
+	}
+	return nil
 }
 
 func (au *AppUpdate) sqlSave(ctx context.Context) (n int, err error) {
@@ -165,6 +203,41 @@ func (au *AppUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: app.FieldActive,
 		})
 	}
+	if au.mutation.AppsTypesCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   app.AppsTypesTable,
+			Columns: []string{app.AppsTypesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: apptype.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := au.mutation.AppsTypesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   app.AppsTypesTable,
+			Columns: []string{app.AppsTypesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: apptype.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	if n, err = sqlgraph.UpdateNodes(ctx, au.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{app.Label}
@@ -203,6 +276,12 @@ func (auo *AppUpdateOne) AddProjectId(i int64) *AppUpdateOne {
 	return auo
 }
 
+// SetAppTypeID sets the "app_type_id" field.
+func (auo *AppUpdateOne) SetAppTypeID(i int) *AppUpdateOne {
+	auo.mutation.SetAppTypeID(i)
+	return auo
+}
+
 // SetActive sets the "active" field.
 func (auo *AppUpdateOne) SetActive(b bool) *AppUpdateOne {
 	auo.mutation.SetActive(b)
@@ -217,9 +296,26 @@ func (auo *AppUpdateOne) SetNillableActive(b *bool) *AppUpdateOne {
 	return auo
 }
 
+// SetAppsTypesID sets the "apps_types" edge to the AppType entity by ID.
+func (auo *AppUpdateOne) SetAppsTypesID(id int) *AppUpdateOne {
+	auo.mutation.SetAppsTypesID(id)
+	return auo
+}
+
+// SetAppsTypes sets the "apps_types" edge to the AppType entity.
+func (auo *AppUpdateOne) SetAppsTypes(a *AppType) *AppUpdateOne {
+	return auo.SetAppsTypesID(a.ID)
+}
+
 // Mutation returns the AppMutation object of the builder.
 func (auo *AppUpdateOne) Mutation() *AppMutation {
 	return auo.mutation
+}
+
+// ClearAppsTypes clears the "apps_types" edge to the AppType entity.
+func (auo *AppUpdateOne) ClearAppsTypes() *AppUpdateOne {
+	auo.mutation.ClearAppsTypes()
+	return auo
 }
 
 // Select allows selecting one or more fields (columns) of the returned entity.
@@ -236,12 +332,18 @@ func (auo *AppUpdateOne) Save(ctx context.Context) (*App, error) {
 		node *App
 	)
 	if len(auo.hooks) == 0 {
+		if err = auo.check(); err != nil {
+			return nil, err
+		}
 		node, err = auo.sqlSave(ctx)
 	} else {
 		var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
 			mutation, ok := m.(*AppMutation)
 			if !ok {
 				return nil, fmt.Errorf("unexpected mutation type %T", m)
+			}
+			if err = auo.check(); err != nil {
+				return nil, err
 			}
 			auo.mutation = mutation
 			node, err = auo.sqlSave(ctx)
@@ -287,6 +389,14 @@ func (auo *AppUpdateOne) ExecX(ctx context.Context) {
 	if err := auo.Exec(ctx); err != nil {
 		panic(err)
 	}
+}
+
+// check runs all checks and user-defined validators on the builder.
+func (auo *AppUpdateOne) check() error {
+	if _, ok := auo.mutation.AppsTypesID(); auo.mutation.AppsTypesCleared() && !ok {
+		return errors.New(`ent: clearing a required unique edge "App.apps_types"`)
+	}
+	return nil
 }
 
 func (auo *AppUpdateOne) sqlSave(ctx context.Context) (_node *App, err error) {
@@ -351,6 +461,41 @@ func (auo *AppUpdateOne) sqlSave(ctx context.Context) (_node *App, err error) {
 			Value:  value,
 			Column: app.FieldActive,
 		})
+	}
+	if auo.mutation.AppsTypesCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   app.AppsTypesTable,
+			Columns: []string{app.AppsTypesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: apptype.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := auo.mutation.AppsTypesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   app.AppsTypesTable,
+			Columns: []string{app.AppsTypesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: apptype.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	_node = &App{config: auo.config}
 	_spec.Assign = _node.assignValues

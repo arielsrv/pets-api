@@ -50,9 +50,14 @@ func (d *DataAccessService) Test(t *testing.T) *ent.Client {
 		}
 		dataAccess := enttest.Open(t, "sqlite3", "file:ent?mode=memory&cache=shared&_fk=1", opts...)
 		d.client = dataAccess
+		Seeds(d.client)
 	})
 
 	return d.client
+}
+
+func Seeds(client *ent.Client) {
+	client.AppType.Create().SetID(1).SetName("backend").Save(context.Background())
 }
 
 func (d *DataAccessService) GetClient() *ent.Client {

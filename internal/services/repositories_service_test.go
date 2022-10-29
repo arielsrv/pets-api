@@ -77,6 +77,8 @@ func TestRepositoriesService_CreateRepository(t *testing.T) {
 
 	service := services.NewRepositoriesService(client, dataAccessService)
 	repositoryModel := new(model.RepositoryModel)
+	repositoryModel.Name = "my project name"
+	repositoryModel.AppTypeID = 1
 	actual, err := service.CreateRepository(repositoryModel)
 
 	assert.NoError(t, err)
@@ -92,7 +94,9 @@ func TestRepositoriesService_CreateRepository_Conflict(t *testing.T) {
 
 	service := services.NewRepositoriesService(client, dataAccessService)
 	repositoryModel := new(model.RepositoryModel)
-	repositoryModel.Name = "project name"
+	repositoryModel.Name = "customers-api"
+	repositoryModel.GroupID = 1
+	repositoryModel.AppTypeID = 1
 	actual, err := service.CreateRepository(repositoryModel)
 	assert.NoError(t, err)
 	assert.NotNil(t, actual)
@@ -100,7 +104,7 @@ func TestRepositoriesService_CreateRepository_Conflict(t *testing.T) {
 	actual, err = service.CreateRepository(repositoryModel)
 	assert.Error(t, err)
 	assert.NotNil(t, actual)
-	assert.Equal(t, "duplicated project name project name", err.Error())
+	assert.Equal(t, "duplicated project name customers-api", err.Error())
 }
 
 func GetCreateProjectResponse() (*responses.CreateProjectResponse, error) {

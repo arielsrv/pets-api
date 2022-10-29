@@ -39,10 +39,26 @@ func (handler RepositoriesHandler) CreateRepository(ctx *fiber.Ctx) error {
 	if err := ctx.BodyParser(request); err != nil {
 		return shared.NewError(http.StatusBadRequest, "bad request error")
 	}
+
+	err := shared.EnsureNotEmpty(request.Name, "bad request error, missing name")
+	if err != nil {
+		return err
+	}
+
+	err = shared.EnsureInt64(request.GroupID, "bad request error, invalid group id")
+	if err != nil {
+		return err
+	}
+
+	err = shared.EnsureInt(request.AppTypeID, "bad request error, invalid app type")
+	if err != nil {
+		return err
+	}
+
 	result, err := handler.service.CreateRepository(request)
 	if err != nil {
 		return err
 	}
-	return server.
-		SendJSON(ctx, &model.CreateProjectModel{ID: result})
+
+	return server.SendJSON(ctx, &model.CreateProjectModel{ID: result})
 }

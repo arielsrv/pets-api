@@ -4,6 +4,7 @@ package app
 
 import (
 	"entgo.io/ent/dialect/sql"
+	"entgo.io/ent/dialect/sql/sqlgraph"
 	"github.com/ent/predicate"
 )
 
@@ -89,6 +90,13 @@ func Name(v string) predicate.App {
 func ProjectId(v int64) predicate.App {
 	return predicate.App(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldProjectId), v))
+	})
+}
+
+// AppTypeID applies equality check predicate on the "app_type_id" field. It's identical to AppTypeIDEQ.
+func AppTypeID(v int) predicate.App {
+	return predicate.App(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldAppTypeID), v))
 	})
 }
 
@@ -262,6 +270,42 @@ func ProjectIdLTE(v int64) predicate.App {
 	})
 }
 
+// AppTypeIDEQ applies the EQ predicate on the "app_type_id" field.
+func AppTypeIDEQ(v int) predicate.App {
+	return predicate.App(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldAppTypeID), v))
+	})
+}
+
+// AppTypeIDNEQ applies the NEQ predicate on the "app_type_id" field.
+func AppTypeIDNEQ(v int) predicate.App {
+	return predicate.App(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldAppTypeID), v))
+	})
+}
+
+// AppTypeIDIn applies the In predicate on the "app_type_id" field.
+func AppTypeIDIn(vs ...int) predicate.App {
+	v := make([]any, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.App(func(s *sql.Selector) {
+		s.Where(sql.In(s.C(FieldAppTypeID), v...))
+	})
+}
+
+// AppTypeIDNotIn applies the NotIn predicate on the "app_type_id" field.
+func AppTypeIDNotIn(vs ...int) predicate.App {
+	v := make([]any, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.App(func(s *sql.Selector) {
+		s.Where(sql.NotIn(s.C(FieldAppTypeID), v...))
+	})
+}
+
 // ActiveEQ applies the EQ predicate on the "active" field.
 func ActiveEQ(v bool) predicate.App {
 	return predicate.App(func(s *sql.Selector) {
@@ -273,6 +317,34 @@ func ActiveEQ(v bool) predicate.App {
 func ActiveNEQ(v bool) predicate.App {
 	return predicate.App(func(s *sql.Selector) {
 		s.Where(sql.NEQ(s.C(FieldActive), v))
+	})
+}
+
+// HasAppsTypes applies the HasEdge predicate on the "apps_types" edge.
+func HasAppsTypes() predicate.App {
+	return predicate.App(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(AppsTypesTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, AppsTypesTable, AppsTypesColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasAppsTypesWith applies the HasEdge predicate on the "apps_types" edge with a given conditions (other predicates).
+func HasAppsTypesWith(preds ...predicate.AppType) predicate.App {
+	return predicate.App(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(AppsTypesInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, AppsTypesTable, AppsTypesColumn),
+		)
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
 	})
 }
 

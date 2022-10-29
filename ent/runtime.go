@@ -14,7 +14,7 @@ func init() {
 	appFields := schema.App{}.Fields()
 	_ = appFields
 	// appDescActive is the schema descriptor for active field.
-	appDescActive := appFields[3].Descriptor()
+	appDescActive := appFields[4].Descriptor()
 	// app.DefaultActive holds the default value on creation for the active field.
 	app.DefaultActive = appDescActive.Default.(bool)
 }

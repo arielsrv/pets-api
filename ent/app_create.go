@@ -10,6 +10,7 @@ import (
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
 	"github.com/ent/app"
+	"github.com/ent/apptype"
 )
 
 // AppCreate is the builder for creating a App entity.
@@ -31,6 +32,12 @@ func (ac *AppCreate) SetProjectId(i int64) *AppCreate {
 	return ac
 }
 
+// SetAppTypeID sets the "app_type_id" field.
+func (ac *AppCreate) SetAppTypeID(i int) *AppCreate {
+	ac.mutation.SetAppTypeID(i)
+	return ac
+}
+
 // SetActive sets the "active" field.
 func (ac *AppCreate) SetActive(b bool) *AppCreate {
 	ac.mutation.SetActive(b)
@@ -49,6 +56,17 @@ func (ac *AppCreate) SetNillableActive(b *bool) *AppCreate {
 func (ac *AppCreate) SetID(i int64) *AppCreate {
 	ac.mutation.SetID(i)
 	return ac
+}
+
+// SetAppsTypesID sets the "apps_types" edge to the AppType entity by ID.
+func (ac *AppCreate) SetAppsTypesID(id int) *AppCreate {
+	ac.mutation.SetAppsTypesID(id)
+	return ac
+}
+
+// SetAppsTypes sets the "apps_types" edge to the AppType entity.
+func (ac *AppCreate) SetAppsTypes(a *AppType) *AppCreate {
+	return ac.SetAppsTypesID(a.ID)
 }
 
 // Mutation returns the AppMutation object of the builder.
@@ -142,8 +160,14 @@ func (ac *AppCreate) check() error {
 	if _, ok := ac.mutation.ProjectId(); !ok {
 		return &ValidationError{Name: "projectId", err: errors.New(`ent: missing required field "App.projectId"`)}
 	}
+	if _, ok := ac.mutation.AppTypeID(); !ok {
+		return &ValidationError{Name: "app_type_id", err: errors.New(`ent: missing required field "App.app_type_id"`)}
+	}
 	if _, ok := ac.mutation.Active(); !ok {
 		return &ValidationError{Name: "active", err: errors.New(`ent: missing required field "App.active"`)}
+	}
+	if _, ok := ac.mutation.AppsTypesID(); !ok {
+		return &ValidationError{Name: "apps_types", err: errors.New(`ent: missing required edge "App.apps_types"`)}
 	}
 	return nil
 }
@@ -201,6 +225,26 @@ func (ac *AppCreate) createSpec() (*App, *sqlgraph.CreateSpec) {
 			Column: app.FieldActive,
 		})
 		_node.Active = value
+	}
+	if nodes := ac.mutation.AppsTypesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   app.AppsTypesTable,
+			Columns: []string{app.AppsTypesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: apptype.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_node.AppTypeID = nodes[0]
+		_spec.Edges = append(_spec.Edges, edge)
 	}
 	return _node, _spec
 }

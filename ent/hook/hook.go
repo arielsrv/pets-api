@@ -22,6 +22,19 @@ func (f AppFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) 
 	return f(ctx, mv)
 }
 
+// The AppTypeFunc type is an adapter to allow the use of ordinary
+// function as AppTypeID mutator.
+type AppTypeFunc func(context.Context, *ent.AppTypeMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f AppTypeFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.AppTypeMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.AppTypeMutation", m)
+	}
+	return f(ctx, mv)
+}
+
 // Condition is a hook condition function.
 type Condition func(context.Context, ent.Mutation) bool
 

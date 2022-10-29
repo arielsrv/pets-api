@@ -2,10 +2,11 @@ package main
 
 import (
 	"fmt"
+	"log"
+
 	_ "github.com/docs"
 	"github.com/internal/application"
 	"github.com/internal/server"
-	"log"
 )
 
 // @title       Golang Template API

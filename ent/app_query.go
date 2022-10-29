@@ -11,18 +11,20 @@ import (
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
 	"github.com/ent/app"
+	"github.com/ent/apptype"
 	"github.com/ent/predicate"
 )
 
 // AppQuery is the builder for querying App entities.
 type AppQuery struct {
 	config
-	limit      *int
-	offset     *int
-	unique     *bool
-	order      []OrderFunc
-	fields     []string
-	predicates []predicate.App
+	limit         *int
+	offset        *int
+	unique        *bool
+	order         []OrderFunc
+	fields        []string
+	predicates    []predicate.App
+	withAppsTypes *AppTypeQuery
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -57,6 +59,28 @@ func (aq *AppQuery) Unique(unique bool) *AppQuery {
 func (aq *AppQuery) Order(o ...OrderFunc) *AppQuery {
 	aq.order = append(aq.order, o...)
 	return aq
+}
+
+// QueryAppsTypes chains the current query on the "apps_types" edge.
+func (aq *AppQuery) QueryAppsTypes() *AppTypeQuery {
+	query := &AppTypeQuery{config: aq.config}
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := aq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		selector := aq.sqlQuery(ctx)
+		if err := selector.Err(); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(app.Table, app.FieldID, selector),
+			sqlgraph.To(apptype.Table, apptype.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, app.AppsTypesTable, app.AppsTypesColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(aq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
 }
 
 // First returns the first App entity from the query.
@@ -235,16 +259,28 @@ func (aq *AppQuery) Clone() *AppQuery {
 		return nil
 	}
 	return &AppQuery{
-		config:     aq.config,
-		limit:      aq.limit,
-		offset:     aq.offset,
-		order:      append([]OrderFunc{}, aq.order...),
-		predicates: append([]predicate.App{}, aq.predicates...),
+		config:        aq.config,
+		limit:         aq.limit,
+		offset:        aq.offset,
+		order:         append([]OrderFunc{}, aq.order...),
+		predicates:    append([]predicate.App{}, aq.predicates...),
+		withAppsTypes: aq.withAppsTypes.Clone(),
 		// clone intermediate query.
 		sql:    aq.sql.Clone(),
 		path:   aq.path,
 		unique: aq.unique,
 	}
+}
+
+// WithAppsTypes tells the query-builder to eager-load the nodes that are connected to
+// the "apps_types" edge. The optional arguments are used to configure the query builder of the edge.
+func (aq *AppQuery) WithAppsTypes(opts ...func(*AppTypeQuery)) *AppQuery {
+	query := &AppTypeQuery{config: aq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	aq.withAppsTypes = query
+	return aq
 }
 
 // GroupBy is used to group vertices by one or more fields/columns.
@@ -313,8 +349,11 @@ func (aq *AppQuery) prepareQuery(ctx context.Context) error {
 
 func (aq *AppQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*App, error) {
 	var (
-		nodes = []*App{}
-		_spec = aq.querySpec()
+		nodes       = []*App{}
+		_spec       = aq.querySpec()
+		loadedTypes = [1]bool{
+			aq.withAppsTypes != nil,
+		}
 	)
 	_spec.ScanValues = func(columns []string) ([]any, error) {
 		return (*App).scanValues(nil, columns)
@@ -322,6 +361,7 @@ func (aq *AppQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*App, err
 	_spec.Assign = func(columns []string, values []any) error {
 		node := &App{config: aq.config}
 		nodes = append(nodes, node)
+		node.Edges.loadedTypes = loadedTypes
 		return node.assignValues(columns, values)
 	}
 	for i := range hooks {
@@ -333,7 +373,40 @@ func (aq *AppQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*App, err
 	if len(nodes) == 0 {
 		return nodes, nil
 	}
+	if query := aq.withAppsTypes; query != nil {
+		if err := aq.loadAppsTypes(ctx, query, nodes, nil,
+			func(n *App, e *AppType) { n.Edges.AppsTypes = e }); err != nil {
+			return nil, err
+		}
+	}
 	return nodes, nil
+}
+
+func (aq *AppQuery) loadAppsTypes(ctx context.Context, query *AppTypeQuery, nodes []*App, init func(*App), assign func(*App, *AppType)) error {
+	ids := make([]int, 0, len(nodes))
+	nodeids := make(map[int][]*App)
+	for i := range nodes {
+		fk := nodes[i].AppTypeID
+		if _, ok := nodeids[fk]; !ok {
+			ids = append(ids, fk)
+		}
+		nodeids[fk] = append(nodeids[fk], nodes[i])
+	}
+	query.Where(apptype.IDIn(ids...))
+	neighbors, err := query.All(ctx)
+	if err != nil {
+		return err
+	}
+	for _, n := range neighbors {
+		nodes, ok := nodeids[n.ID]
+		if !ok {
+			return fmt.Errorf(`unexpected foreign-key "app_type_id" returned %v`, n.ID)
+		}
+		for i := range nodes {
+			assign(nodes[i], n)
+		}
+	}
+	return nil
 }
 
 func (aq *AppQuery) sqlCount(ctx context.Context) (int, error) {
