@@ -41,4 +41,5 @@ func RegisterHandlers() {
 	server.RegisterHandler(pingHandler.Ping)
 	server.RegisterHandler(repositoriesHandler.CreateRepository)
 	server.RegisterHandler(repositoriesHandler.GetGroups)
+	server.RegisterHandler(repositoriesHandler.GetAppTypes)
 }

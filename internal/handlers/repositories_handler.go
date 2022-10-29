@@ -62,3 +62,12 @@ func (handler RepositoriesHandler) CreateRepository(ctx *fiber.Ctx) error {
 
 	return server.SendJSON(ctx, &model.CreateProjectModel{ID: result})
 }
+
+func (handler RepositoriesHandler) GetAppTypes(ctx *fiber.Ctx) error {
+	result, err := handler.service.GetAppTypes()
+	if err != nil {
+		return err
+	}
+
+	return server.SendJSON(ctx, result)
+}

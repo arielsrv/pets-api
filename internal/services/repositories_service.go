@@ -16,6 +16,7 @@ import (
 type IRepositoriesService interface {
 	GetGroups() ([]model.GroupModel, error)
 	CreateRepository(repositoryDto *model.RepositoryModel) (int64, error)
+	GetAppTypes() ([]model.AppType, error)
 }
 
 type RepositoriesService struct {
@@ -25,6 +26,24 @@ type RepositoriesService struct {
 
 func NewRepositoriesService(client clients.IGitLabClient, dataAccess *infrastructure.DataAccessService) *RepositoriesService {
 	return &RepositoriesService{client: client, dataAccess: dataAccess}
+}
+
+func (s *RepositoriesService) GetAppTypes() ([]model.AppType, error) {
+	appTypes, err := s.dataAccess.GetClient().AppType.Query().All(context.Background())
+
+	if err != nil {
+		return nil, err
+	}
+
+	var appTypesModel []model.AppType
+	for _, appType := range appTypes {
+		var appTypeModel model.AppType
+		appTypeModel.ID = appType.ID
+		appTypeModel.Name = appType.Name
+		appTypesModel = append(appTypesModel, appTypeModel)
+	}
+
+	return appTypesModel, nil
 }
 
 func (s *RepositoriesService) GetGroups() ([]model.GroupModel, error) {
