@@ -14,6 +14,14 @@ env:
   SWAGGER_OUTPUT_FOLDER: docs
 
 tasks:
+  add-entity:
+    desc: Add db entity, $ task add-entity -- entity_name
+    cmds:
+      - go run -mod=mod entgo.io/ent/cmd/ent init {{.CLI_ARGS}}
+  build-model:
+    desc: Builds the model
+    cmds:
+      - go generate ./ent
   lint:
     desc: Use golangci-lint (.golangci.yml).
     cmds:
