@@ -47,9 +47,9 @@ func TestRepositoriesHandler_GetGroups(t *testing.T) {
 	appService := new(MockAppService)
 	appService.On("GetGroups").Return(GetGroups())
 
-	repositoriesHandler := handlers.NewAppHandler(appService)
+	appHandler := handlers.NewAppHandler(appService)
 	app := server.New()
-	app.Add(http.MethodGet, "/apps/groups", repositoriesHandler.GetGroups)
+	app.Add(http.MethodGet, "/apps/groups", appHandler.GetGroups)
 
 	request := httptest.NewRequest(http.MethodGet, "/apps/groups", nil)
 	response, err := app.Test(request)
@@ -91,9 +91,9 @@ func GetGroupsErr() ([]model.AppGroupModel, error) {
 func TestRepositoriesHandler_CreateApp(t *testing.T) {
 	appService := new(MockAppService)
 	appService.On("CreateApp").Return(GetCreateApp())
-	repositoriesHandler := handlers.NewAppHandler(appService)
+	appHandler := handlers.NewAppHandler(appService)
 	app := server.New()
-	app.Add(http.MethodPost, "/apps", repositoriesHandler.CreateApp)
+	app.Add(http.MethodPost, "/apps", appHandler.CreateApp)
 
 	request := httptest.
 		NewRequest(http.MethodPost, "/apps",
@@ -120,11 +120,11 @@ func GetCreateApp() (*model.AppModel, error) {
 }
 
 func TestRepositoriesHandler_CreateApp_Err(t *testing.T) {
-	repositoriesService := new(MockAppService)
-	repositoriesService.On("CreateApp").Return(GetCreateError())
-	repositoriesHandler := handlers.NewAppHandler(repositoriesService)
+	appService := new(MockAppService)
+	appService.On("CreateApp").Return(GetCreateError())
+	appHandler := handlers.NewAppHandler(appService)
 	app := server.New()
-	app.Add(http.MethodPost, "/repositories", repositoriesHandler.CreateApp)
+	app.Add(http.MethodPost, "/repositories", appHandler.CreateApp)
 
 	request := httptest.
 		NewRequest(http.MethodPost, "/repositories",
@@ -149,11 +149,11 @@ func GetCreateError() (*model.AppModel, error) {
 }
 
 func TestRepositoriesHandler_CreateApp_BadRequest_Err(t *testing.T) {
-	repositoriesService := new(MockAppService)
-	repositoriesService.On("CreateApp").Return(shared.NewError(http.StatusBadRequest, "bad request error"))
-	repositoriesHandler := handlers.NewAppHandler(repositoriesService)
+	appService := new(MockAppService)
+	appService.On("CreateApp").Return(shared.NewError(http.StatusBadRequest, "bad request error"))
+	appHandler := handlers.NewAppHandler(appService)
 	app := server.New()
-	app.Add(http.MethodPost, "/repositories", repositoriesHandler.CreateApp)
+	app.Add(http.MethodPost, "/repositories", appHandler.CreateApp)
 
 	request := httptest.
 		NewRequest(http.MethodPost, "/repositories",
@@ -169,6 +169,43 @@ func TestRepositoriesHandler_CreateApp_BadRequest_Err(t *testing.T) {
 	assert.NotNil(t, body)
 
 	assert.Equal(t, "{\"status_code\":400,\"message\":\"bad request error\"}", string(body))
+}
+
+func TestAppHandler_GetAppTypes(t *testing.T) {
+	appService := new(MockAppService)
+	appService.On("GetAppTypes").Return(GetAppTypes())
+
+	appHandler := handlers.NewAppHandler(appService)
+	app := server.New()
+	app.Add(http.MethodGet, "/apps/types", appHandler.GetAppTypes)
+
+	request := httptest.NewRequest(http.MethodGet, "/apps/types", nil)
+	response, err := app.Test(request)
+	assert.NoError(t, err)
+	assert.NotNil(t, response)
+	assert.Equal(t, http.StatusOK, response.StatusCode)
+
+	body, err := io.ReadAll(response.Body)
+	assert.NoError(t, err)
+	assert.NotNil(t, body)
+
+	assert.Equal(t, "[{\"id\":1,\"name\":\"backend\"},{\"id\":2,\"name\":\"frontend\"}]", string(body))
+}
+
+func GetAppTypes() ([]model.AppType, error) {
+	var appType1 model.AppType
+	appType1.ID = 1
+	appType1.Name = "backend"
+
+	var appType2 model.AppType
+	appType2.ID = 2
+	appType2.Name = "frontend"
+
+	var appsType []model.AppType
+	appsType = append(appsType, appType1)
+	appsType = append(appsType, appType2)
+
+	return appsType, nil
 }
 
 func GetGroups() ([]model.AppGroupModel, error) {
