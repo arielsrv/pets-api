@@ -58,6 +58,7 @@ func (d *DataAccessService) Test(t *testing.T) *ent.Client {
 
 func Seeds(client *ent.Client) {
 	client.AppType.Create().SetID(1).SetName("backend").Save(context.Background())
+	client.App.Create().SetName("customers-api").SetProjectId(2).SetAppTypeID(1).Save(context.Background())
 }
 
 func (d *DataAccessService) GetClient() *ent.Client {

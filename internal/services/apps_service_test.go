@@ -2,6 +2,8 @@ package services_test
 
 import (
 	"errors"
+	"fmt"
+	"github.com/internal/server"
 	"testing"
 
 	"github.com/internal/infrastructure"
@@ -29,7 +31,7 @@ func (m *MockClient) CreateProject(*requests.CreateProjectRequest) (*responses.C
 	return args.Get(0).(*responses.CreateProjectResponse), args.Error(1)
 }
 
-func (m *MockClient) GetProject(projectID int64) (*responses.ProjectResponse, error) {
+func (m *MockClient) GetProject(int64) (*responses.ProjectResponse, error) {
 	args := m.Called()
 	return args.Get(0).(*responses.ProjectResponse), args.Error(1)
 }
@@ -81,10 +83,10 @@ func TestAppService_CreateRepository(t *testing.T) {
 	defer dataAccessService.Close()
 
 	service := services.NewAppService(client, dataAccessService)
-	repositoryModel := new(model.CreateAppModel)
-	repositoryModel.Name = "my project name"
-	repositoryModel.AppTypeID = 1
-	actual, err := service.CreateApp(repositoryModel)
+	appModel := new(model.CreateAppModel)
+	appModel.Name = "my project name"
+	appModel.AppTypeID = 1
+	actual, err := service.CreateApp(appModel)
 
 	assert.NoError(t, err)
 	assert.NotNil(t, actual)
@@ -99,7 +101,7 @@ func TestAppService_CreateApp_Conflict(t *testing.T) {
 
 	service := services.NewAppService(client, dataAccessService)
 	repositoryModel := new(model.CreateAppModel)
-	repositoryModel.Name = "customers-api"
+	repositoryModel.Name = "users-api"
 	repositoryModel.GroupID = 1
 	repositoryModel.AppTypeID = 1
 	actual, err := service.CreateApp(repositoryModel)
@@ -109,7 +111,32 @@ func TestAppService_CreateApp_Conflict(t *testing.T) {
 	actual, err = service.CreateApp(repositoryModel)
 	assert.Error(t, err)
 	assert.Nil(t, actual)
-	assert.Equal(t, "duplicated project name customers-api", err.Error())
+	assert.Equal(t, "duplicated project name users-api", err.Error())
+}
+
+func TestAppService_GetApp(t *testing.T) {
+	client := new(MockClient)
+	client.On("GetProject").Return(GetProject())
+
+	dataAccessService := infrastructure.NewDataAccessService()
+	dataAccessService.Test(t)
+	defer dataAccessService.Close()
+
+	service := services.NewAppService(client, dataAccessService)
+	actual, err := service.GetApp("customers-api")
+
+	assert.NoError(t, err)
+	assert.NotNil(t, actual)
+	assert.Equal(t, int64(1), actual.ID)
+	assert.Equal(t, fmt.Sprintf("https://oauth2:%s@domain.com/repo_url", server.GetAppConfig().GitLab.Token), actual.URL)
+}
+
+func GetProject() (*responses.ProjectResponse, error) {
+	projectResponse := new(responses.ProjectResponse)
+	projectResponse.ID = 1
+	projectResponse.URL = "https://domain.com/repo_url"
+
+	return projectResponse, nil
 }
 
 func GetCreateProjectResponse() (*responses.CreateProjectResponse, error) {
