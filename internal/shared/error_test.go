@@ -65,3 +65,21 @@ func TestErrorHandler_ApiError(t *testing.T) {
 	assert.Equal(t, http.StatusInternalServerError, apiError.StatusCode)
 	assert.Equal(t, "internal server error", apiError.Message)
 }
+
+func TestEnsureNotEmpty(t *testing.T) {
+	err := shared.EnsureNotEmpty("", "empty value")
+	assert.Error(t, err)
+	assert.Equal(t, "empty value", err.Error())
+}
+
+func TestEnsureInt(t *testing.T) {
+	err := shared.EnsureInt(0, "invalid value")
+	assert.Error(t, err)
+	assert.Equal(t, "invalid value", err.Error())
+}
+
+func TestEnsureInt64(t *testing.T) {
+	err := shared.EnsureInt64(int64(0), "invalid value")
+	assert.Error(t, err)
+	assert.Equal(t, "invalid value", err.Error())
+}
