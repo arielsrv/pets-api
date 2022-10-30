@@ -34,7 +34,7 @@ func (m *MockClient) GetProject(projectID int64) (*responses.ProjectResponse, er
 	return args.Get(0).(*responses.ProjectResponse), args.Error(1)
 }
 
-func TestRepositoriesService_GetGroups(t *testing.T) {
+func TestAppService_GetGroups(t *testing.T) {
 	client := new(MockClient)
 	client.On("GetGroups").Return(GetGroups())
 
@@ -42,7 +42,7 @@ func TestRepositoriesService_GetGroups(t *testing.T) {
 	dataAccessService.Test(t)
 	defer dataAccessService.Close()
 
-	service := services.NewRepositoriesService(client, dataAccessService)
+	service := services.NewAppService(client, dataAccessService)
 	actual, err := service.GetGroups()
 
 	assert.NoError(t, err)
@@ -54,7 +54,7 @@ func TestRepositoriesService_GetGroups(t *testing.T) {
 	assert.Equal(t, "root/group2", actual[1].Name)
 }
 
-func TestRepositoriesService_GetGroups_Err(t *testing.T) {
+func TestAppService_GetGroups_Err(t *testing.T) {
 	client := new(MockClient)
 	client.On("GetGroups").Return(GetGroupsError())
 
@@ -62,7 +62,7 @@ func TestRepositoriesService_GetGroups_Err(t *testing.T) {
 	dataAccessService.Test(t)
 	defer dataAccessService.Close()
 
-	service := services.NewRepositoriesService(client, dataAccessService)
+	service := services.NewAppService(client, dataAccessService)
 	actual, err := service.GetGroups()
 
 	assert.Error(t, err)
@@ -73,40 +73,40 @@ func GetGroupsError() ([]responses.GroupResponse, error) {
 	return nil, errors.New("internal server error")
 }
 
-func TestRepositoriesService_CreateRepository(t *testing.T) {
+func TestAppService_CreateRepository(t *testing.T) {
 	client := new(MockClient)
 	client.On("CreateProject").Return(GetCreateProjectResponse())
 	dataAccessService := infrastructure.NewDataAccessService()
 	dataAccessService.Test(t)
 	defer dataAccessService.Close()
 
-	service := services.NewRepositoriesService(client, dataAccessService)
+	service := services.NewAppService(client, dataAccessService)
 	repositoryModel := new(model.RepositoryModel)
 	repositoryModel.Name = "my project name"
 	repositoryModel.AppTypeID = 1
-	actual, err := service.CreateRepository(repositoryModel)
+	actual, err := service.CreateApp(repositoryModel)
 
 	assert.NoError(t, err)
 	assert.NotNil(t, actual)
 }
 
-func TestRepositoriesService_CreateRepository_Conflict(t *testing.T) {
+func TestAppService_CreateApp_Conflict(t *testing.T) {
 	client := new(MockClient)
 	client.On("CreateProject").Return(GetCreateProjectResponse())
 	dataAccessService := infrastructure.NewDataAccessService()
 	dataAccessService.Test(t)
 	defer dataAccessService.Close()
 
-	service := services.NewRepositoriesService(client, dataAccessService)
+	service := services.NewAppService(client, dataAccessService)
 	repositoryModel := new(model.RepositoryModel)
 	repositoryModel.Name = "customers-api"
 	repositoryModel.GroupID = 1
 	repositoryModel.AppTypeID = 1
-	actual, err := service.CreateRepository(repositoryModel)
+	actual, err := service.CreateApp(repositoryModel)
 	assert.NoError(t, err)
 	assert.NotNil(t, actual)
 
-	actual, err = service.CreateRepository(repositoryModel)
+	actual, err = service.CreateApp(repositoryModel)
 	assert.Error(t, err)
 	assert.Nil(t, actual)
 	assert.Equal(t, "duplicated project name customers-api", err.Error())

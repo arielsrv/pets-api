@@ -10,12 +10,12 @@ import (
 	"github.com/internal/shared"
 )
 
-type RepositoriesHandler struct {
-	service services.IRepositoriesService
+type AppHandler struct {
+	service services.IAppService
 }
 
-func NewRepositoriesHandler(service services.IRepositoriesService) *RepositoriesHandler {
-	return &RepositoriesHandler{service: service}
+func NewAppHandler(service services.IAppService) *AppHandler {
+	return &AppHandler{service: service}
 }
 
 // GetGroups  godoc
@@ -26,7 +26,7 @@ func NewRepositoriesHandler(service services.IRepositoriesService) *Repositories
 // @Produce     json
 // @Success     200 {array} model.GroupModel
 // @Router      /repositories/groups [get].
-func (handler RepositoriesHandler) GetGroups(ctx *fiber.Ctx) error {
+func (handler AppHandler) GetGroups(ctx *fiber.Ctx) error {
 	result, err := handler.service.GetGroups()
 	if err != nil {
 		return err
@@ -34,7 +34,7 @@ func (handler RepositoriesHandler) GetGroups(ctx *fiber.Ctx) error {
 	return server.SendJSON(ctx, result)
 }
 
-func (handler RepositoriesHandler) CreateRepository(ctx *fiber.Ctx) error {
+func (handler AppHandler) CreateApp(ctx *fiber.Ctx) error {
 	request := new(model.RepositoryModel)
 	if err := ctx.BodyParser(request); err != nil {
 		return shared.NewError(http.StatusBadRequest, "bad request error")
@@ -55,7 +55,7 @@ func (handler RepositoriesHandler) CreateRepository(ctx *fiber.Ctx) error {
 		return err
 	}
 
-	result, err := handler.service.CreateRepository(request)
+	result, err := handler.service.CreateApp(request)
 	if err != nil {
 		return err
 	}
@@ -63,7 +63,7 @@ func (handler RepositoriesHandler) CreateRepository(ctx *fiber.Ctx) error {
 	return server.SendJSON(ctx, result)
 }
 
-func (handler RepositoriesHandler) GetAppTypes(ctx *fiber.Ctx) error {
+func (handler AppHandler) GetAppTypes(ctx *fiber.Ctx) error {
 	result, err := handler.service.GetAppTypes()
 	if err != nil {
 		return err
@@ -72,7 +72,7 @@ func (handler RepositoriesHandler) GetAppTypes(ctx *fiber.Ctx) error {
 	return server.SendJSON(ctx, result)
 }
 
-func (handler RepositoriesHandler) GetApp(ctx *fiber.Ctx) error {
+func (handler AppHandler) GetApp(ctx *fiber.Ctx) error {
 	appName := ctx.Query("app_name")
 	err := shared.EnsureNotEmpty(appName, "bad request error, missing app_name")
 	if err != nil {

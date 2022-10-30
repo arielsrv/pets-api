@@ -18,23 +18,23 @@ import (
 	"github.com/internal/shared"
 )
 
-type IRepositoriesService interface {
+type IAppService interface {
 	GetGroups() ([]model.GroupModel, error)
-	CreateRepository(repositoryDto *model.RepositoryModel) (*model.AppModel, error)
+	CreateApp(repositoryDto *model.RepositoryModel) (*model.AppModel, error)
 	GetAppTypes() ([]model.AppType, error)
 	GetApp(appName string) (*model.AppModel, error)
 }
 
-type RepositoriesService struct {
+type AppService struct {
 	client     clients.IGitLabClient
 	dataAccess *infrastructure.DataAccessService
 }
 
-func NewRepositoriesService(client clients.IGitLabClient, dataAccess *infrastructure.DataAccessService) *RepositoriesService {
-	return &RepositoriesService{client: client, dataAccess: dataAccess}
+func NewAppService(client clients.IGitLabClient, dataAccess *infrastructure.DataAccessService) *AppService {
+	return &AppService{client: client, dataAccess: dataAccess}
 }
 
-func (s *RepositoriesService) GetApp(appName string) (*model.AppModel, error) {
+func (s *AppService) GetApp(appName string) (*model.AppModel, error) {
 	app, err := s.dataAccess.GetClient().App.Query().
 		Where(app.Name(appName)).
 		First(context.Background())
@@ -71,7 +71,7 @@ func (s *RepositoriesService) GetApp(appName string) (*model.AppModel, error) {
 	return appModel, nil
 }
 
-func (s *RepositoriesService) GetAppTypes() ([]model.AppType, error) {
+func (s *AppService) GetAppTypes() ([]model.AppType, error) {
 	appTypes, err := s.dataAccess.GetClient().AppType.Query().All(context.Background())
 
 	if err != nil {
@@ -89,7 +89,7 @@ func (s *RepositoriesService) GetAppTypes() ([]model.AppType, error) {
 	return appTypesModel, nil
 }
 
-func (s *RepositoriesService) GetGroups() ([]model.GroupModel, error) {
+func (s *AppService) GetGroups() ([]model.GroupModel, error) {
 	groupsResponse, err := s.client.GetGroups()
 	if err != nil {
 		return nil, err
@@ -104,7 +104,7 @@ func (s *RepositoriesService) GetGroups() ([]model.GroupModel, error) {
 	return groupsDto, nil
 }
 
-func (s *RepositoriesService) CreateRepository(repositoryDto *model.RepositoryModel) (*model.AppModel, error) {
+func (s *AppService) CreateApp(repositoryDto *model.RepositoryModel) (*model.AppModel, error) {
 	duplicated, err := s.dataAccess.GetClient().App.Query().
 		Where(app.Name(repositoryDto.Name)).
 		Exist(context.Background())
