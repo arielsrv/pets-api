@@ -137,20 +137,9 @@ func (s *RepositoriesService) CreateRepository(repositoryDto *model.RepositoryMo
 		return nil, err
 	}
 
-	repoURL, err := url.Parse(response.URL)
-	if err != nil {
-		return nil, err
-	}
-
-	secureURL := fmt.Sprintf("%s://oauth2:%s@%s%s",
-		repoURL.Scheme,
-		server.GetAppConfig().GitLab.Token,
-		repoURL.Host,
-		repoURL.Path)
-
 	appModel := new(model.AppModel)
 	appModel.ID = application.ID
-	appModel.URL = secureURL
+	appModel.URL = response.URL
 
 	return appModel, err
 }
