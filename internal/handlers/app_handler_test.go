@@ -64,6 +64,34 @@ func TestRepositoriesHandler_GetGroups(t *testing.T) {
 	assert.Equal(t, "[{\"id\":1,\"name\":\"root/group1\"},{\"id\":2,\"name\":\"root/group2\"}]", string(body))
 }
 
+func TestRepositoriesHandler_GetApp(t *testing.T) {
+	appService := new(MockAppService)
+	appService.On("GetApp").Return(GetApp())
+
+	appHandler := handlers.NewAppHandler(appService)
+	app := server.New()
+	app.Add(http.MethodGet, "/apps", appHandler.GetApp)
+
+	request := httptest.NewRequest(http.MethodGet, "/apps?app_name=go", nil)
+	response, err := app.Test(request)
+	assert.NoError(t, err)
+	assert.NotNil(t, response)
+	assert.Equal(t, http.StatusOK, response.StatusCode)
+
+	body, err := io.ReadAll(response.Body)
+	assert.NoError(t, err)
+	assert.NotNil(t, body)
+
+	assert.Equal(t, "{\"id\":1,\"url\":\"repo_url\"}", string(body))
+}
+
+func GetApp() (*model.AppModel, error) {
+	appModel := new(model.AppModel)
+	appModel.ID = 1
+	appModel.URL = "repo_url"
+	return appModel, nil
+}
+
 func TestRepositoriesHandler_GetGroups_Err(t *testing.T) {
 	repositoriesService := new(MockAppService)
 	repositoriesService.On("GetGroups").Return(GetGroupsErr())
