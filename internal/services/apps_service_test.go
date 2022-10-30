@@ -132,6 +132,22 @@ func TestAppService_GetApp(t *testing.T) {
 	assert.Equal(t, fmt.Sprintf("https://oauth2:%s@domain.com/repo_url", server.GetAppConfig().GitLab.Token), actual.URL)
 }
 
+func TestAppService_GetAppTypes(t *testing.T) {
+	client := new(MockClient)
+	dataAccessService := infrastructure.NewDataAccessService()
+	dataAccessService.Test(t)
+	defer dataAccessService.Close()
+
+	service := services.NewAppService(client, dataAccessService)
+	actual, err := service.GetAppTypes()
+
+	assert.NoError(t, err)
+	assert.NotNil(t, actual)
+	assert.Len(t, actual, 1)
+	assert.Equal(t, 1, actual[0].ID)
+	assert.Equal(t, "backend", actual[0].Name)
+}
+
 func GetProject() (*responses.ProjectResponse, error) {
 	projectResponse := new(responses.ProjectResponse)
 	projectResponse.ID = 1
