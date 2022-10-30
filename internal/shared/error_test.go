@@ -83,3 +83,18 @@ func TestEnsureInt64(t *testing.T) {
 	assert.Error(t, err)
 	assert.Equal(t, "invalid value", err.Error())
 }
+
+func TestEnsureNotEmpty_Ok(t *testing.T) {
+	err := shared.EnsureNotEmpty("value", "empty value")
+	assert.NoError(t, err)
+}
+
+func TestEnsureInt_Ok(t *testing.T) {
+	err := shared.EnsureInt(1, "invalid value")
+	assert.NoError(t, err)
+}
+
+func TestEnsureInt64_Ok(t *testing.T) {
+	err := shared.EnsureInt64(int64(1), "invalid value")
+	assert.NoError(t, err)
+}
