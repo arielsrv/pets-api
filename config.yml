@@ -6,6 +6,7 @@ server:
 # Credentials
 gitlab:
   token: "glpat-BWcsGBLXz-1yQxzd3BG3"
+  prefix: "ikp_"
 
 database:
   user: root

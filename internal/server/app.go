@@ -98,7 +98,8 @@ type AppConfig struct {
 		Port string `yaml:"port"`
 	} `yaml:"server"`
 	GitLab struct {
-		Token string `yaml:"token"`
+		Token  string `yaml:"token"`
+		Prefix string `yaml:"prefix"`
 	} `yaml:"gitlab"`
 	Database struct {
 		User     string `yaml:"user"`

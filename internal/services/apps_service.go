@@ -118,7 +118,7 @@ func (s *AppService) CreateApp(repositoryDto *model.CreateAppModel) (*model.AppM
 	}
 
 	createProjectRequest := new(requests.CreateProjectRequest)
-	createProjectRequest.Name = repositoryDto.Name
+	createProjectRequest.Name = fmt.Sprintf("%s%s", server.GetAppConfig().GitLab.Prefix, repositoryDto.Name)
 	createProjectRequest.GroupID = repositoryDto.GroupID
 
 	response, err := s.client.CreateProject(createProjectRequest)
@@ -128,7 +128,7 @@ func (s *AppService) CreateApp(repositoryDto *model.CreateAppModel) (*model.AppM
 	}
 
 	application, err := s.dataAccess.GetClient().App.Create().
-		SetName(createProjectRequest.Name).
+		SetName(repositoryDto.Name).
 		SetProjectId(response.ID).
 		SetAppTypeID(repositoryDto.AppTypeID).
 		Save(context.Background())
