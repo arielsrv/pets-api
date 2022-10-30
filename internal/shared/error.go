@@ -45,3 +45,24 @@ func ErrorHandler(ctx *fiber.Ctx, err error) error {
 	ctx.Status(e.StatusCode)
 	return ctx.JSON(e)
 }
+
+func EnsureNotEmpty(value string, message string) error {
+	if value == "" {
+		return NewError(http.StatusBadRequest, message)
+	}
+	return nil
+}
+
+func EnsureInt(value int, message string) error {
+	if value < 1 {
+		return NewError(http.StatusBadRequest, message)
+	}
+	return nil
+}
+
+func EnsureInt64(value int64, message string) error {
+	if value < 1 {
+		return NewError(http.StatusBadRequest, message)
+	}
+	return nil
+}
