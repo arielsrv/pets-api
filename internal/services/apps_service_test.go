@@ -3,8 +3,9 @@ package services_test
 import (
 	"errors"
 	"fmt"
-	"github.com/internal/server"
 	"testing"
+
+	"github.com/internal/server"
 
 	"github.com/internal/infrastructure"
 
