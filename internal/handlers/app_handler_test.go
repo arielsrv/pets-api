@@ -23,12 +23,12 @@ type MockAppService struct {
 	mock.Mock
 }
 
-func (m *MockAppService) GetGroups() ([]model.GroupModel, error) {
+func (m *MockAppService) GetGroups() ([]model.AppGroupModel, error) {
 	args := m.Called()
-	return args.Get(0).([]model.GroupModel), args.Error(1)
+	return args.Get(0).([]model.AppGroupModel), args.Error(1)
 }
 
-func (m *MockAppService) CreateApp(*model.RepositoryModel) (*model.AppModel, error) {
+func (m *MockAppService) CreateApp(*model.CreateAppModel) (*model.AppModel, error) {
 	args := m.Called()
 	return args.Get(0).(*model.AppModel), args.Error(1)
 }
@@ -84,7 +84,7 @@ func TestRepositoriesHandler_GetGroups_Err(t *testing.T) {
 	assert.Equal(t, "{\"status_code\":500,\"message\":\"internal server error\"}", string(body))
 }
 
-func GetGroupsErr() ([]model.GroupModel, error) {
+func GetGroupsErr() ([]model.AppGroupModel, error) {
 	return nil, errors.New("internal server error")
 }
 
@@ -171,15 +171,15 @@ func TestRepositoriesHandler_CreateApp_BadRequest_Err(t *testing.T) {
 	assert.Equal(t, "{\"status_code\":400,\"message\":\"bad request error\"}", string(body))
 }
 
-func GetGroups() ([]model.GroupModel, error) {
-	var group1 model.GroupModel
+func GetGroups() ([]model.AppGroupModel, error) {
+	var group1 model.AppGroupModel
 	group1.ID = 1
 	group1.Name = "root/group1"
-	var group2 model.GroupModel
+	var group2 model.AppGroupModel
 	group2.ID = 2
 	group2.Name = "root/group2"
 
-	var groups []model.GroupModel
+	var groups []model.AppGroupModel
 	groups = append(groups, group1)
 	groups = append(groups, group2)
 

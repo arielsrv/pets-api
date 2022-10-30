@@ -24,7 +24,7 @@ func NewAppHandler(service services.IAppService) *AppHandler {
 // @Tags        Groups
 // @Accept      json
 // @Produce     json
-// @Success     200 {array} model.GroupModel
+// @Success     200 {array} model.AppGroupModel
 // @Router      /repositories/groups [get].
 func (handler AppHandler) GetGroups(ctx *fiber.Ctx) error {
 	result, err := handler.service.GetGroups()
@@ -35,7 +35,7 @@ func (handler AppHandler) GetGroups(ctx *fiber.Ctx) error {
 }
 
 func (handler AppHandler) CreateApp(ctx *fiber.Ctx) error {
-	request := new(model.RepositoryModel)
+	request := new(model.CreateAppModel)
 	if err := ctx.BodyParser(request); err != nil {
 		return shared.NewError(http.StatusBadRequest, "bad request error")
 	}

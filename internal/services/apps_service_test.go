@@ -81,7 +81,7 @@ func TestAppService_CreateRepository(t *testing.T) {
 	defer dataAccessService.Close()
 
 	service := services.NewAppService(client, dataAccessService)
-	repositoryModel := new(model.RepositoryModel)
+	repositoryModel := new(model.CreateAppModel)
 	repositoryModel.Name = "my project name"
 	repositoryModel.AppTypeID = 1
 	actual, err := service.CreateApp(repositoryModel)
@@ -98,7 +98,7 @@ func TestAppService_CreateApp_Conflict(t *testing.T) {
 	defer dataAccessService.Close()
 
 	service := services.NewAppService(client, dataAccessService)
-	repositoryModel := new(model.RepositoryModel)
+	repositoryModel := new(model.CreateAppModel)
 	repositoryModel.Name = "customers-api"
 	repositoryModel.GroupID = 1
 	repositoryModel.AppTypeID = 1

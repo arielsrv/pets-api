@@ -55,7 +55,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/model.GroupModel"
+                                "$ref": "#/definitions/model.AppGroupModel"
                             }
                         }
                     }
@@ -64,7 +64,7 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "model.GroupModel": {
+        "model.AppGroupModel": {
             "type": "object",
             "properties": {
                 "id": {

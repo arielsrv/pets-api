@@ -19,8 +19,8 @@ import (
 )
 
 type IAppService interface {
-	GetGroups() ([]model.GroupModel, error)
-	CreateApp(repositoryDto *model.RepositoryModel) (*model.AppModel, error)
+	GetGroups() ([]model.AppGroupModel, error)
+	CreateApp(repositoryDto *model.CreateAppModel) (*model.AppModel, error)
 	GetAppTypes() ([]model.AppType, error)
 	GetApp(appName string) (*model.AppModel, error)
 }
@@ -89,14 +89,14 @@ func (s *AppService) GetAppTypes() ([]model.AppType, error) {
 	return appTypesModel, nil
 }
 
-func (s *AppService) GetGroups() ([]model.GroupModel, error) {
+func (s *AppService) GetGroups() ([]model.AppGroupModel, error) {
 	groupsResponse, err := s.client.GetGroups()
 	if err != nil {
 		return nil, err
 	}
-	var groupsDto []model.GroupModel
+	var groupsDto []model.AppGroupModel
 	for _, groupResponse := range groupsResponse {
-		var groupDto model.GroupModel
+		var groupDto model.AppGroupModel
 		groupDto.ID = groupResponse.ID
 		groupDto.Name = groupResponse.Path
 		groupsDto = append(groupsDto, groupDto)
@@ -104,7 +104,7 @@ func (s *AppService) GetGroups() ([]model.GroupModel, error) {
 	return groupsDto, nil
 }
 
-func (s *AppService) CreateApp(repositoryDto *model.RepositoryModel) (*model.AppModel, error) {
+func (s *AppService) CreateApp(repositoryDto *model.CreateAppModel) (*model.AppModel, error) {
 	duplicated, err := s.dataAccess.GetClient().App.Query().
 		Where(app.Name(repositoryDto.Name)).
 		Exist(context.Background())
