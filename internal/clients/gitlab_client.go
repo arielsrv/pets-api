@@ -15,11 +15,27 @@ import (
 
 type IGitLabClient interface {
 	GetGroups() ([]responses.GroupResponse, error)
-	CreateProject(request *requests.CreateProjectRequest) error
+	CreateProject(request *requests.CreateProjectRequest) (*responses.CreateProjectResponse, error)
+	GetProject(projectID int64) (*responses.ProjectResponse, error)
 }
 
 type GitLabClient struct {
 	rb *rest.RequestBuilder
+}
+
+func (r *GitLabClient) GetProject(projectID int64) (*responses.ProjectResponse, error) {
+	response := r.rb.Get(fmt.Sprintf("/projects/%d", projectID))
+	if response.Err != nil {
+		return nil, response.Err
+	}
+	if response.StatusCode != http.StatusOK {
+		return nil, shared.NewError(response.StatusCode, response.String())
+	}
+
+	var projectResponse responses.ProjectResponse
+	response.FillUp(&projectResponse)
+
+	return &projectResponse, nil
 }
 
 func NewGitLabClient(rb *rest.RequestBuilder) *GitLabClient {
@@ -61,13 +77,17 @@ func (r *GitLabClient) GetGroups() ([]responses.GroupResponse, error) {
 	return groups, nil
 }
 
-func (r *GitLabClient) CreateProject(request *requests.CreateProjectRequest) error {
+func (r *GitLabClient) CreateProject(request *requests.CreateProjectRequest) (*responses.CreateProjectResponse, error) {
 	response := r.rb.Post("/projects", request)
 	if response.Err != nil {
-		return response.Err
+		return nil, response.Err
 	}
 	if response.StatusCode != http.StatusCreated {
-		return shared.NewError(response.StatusCode, response.String())
+		return nil, shared.NewError(response.StatusCode, response.String())
 	}
-	return nil
+
+	var createProjectResponse responses.CreateProjectResponse
+	response.FillUp(&createProjectResponse)
+
+	return &createProjectResponse, nil
 }

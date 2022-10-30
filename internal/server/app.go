@@ -66,6 +66,7 @@ func New(config ...Config) *App {
 	}
 
 	if app.config.Swagger {
+		log.Println("Swagger enabled")
 		app.Add(http.MethodGet, "/swagger/*", swagger.HandlerDefault)
 	}
 
@@ -96,9 +97,15 @@ type AppConfig struct {
 		Host string `yaml:"host"`
 		Port string `yaml:"port"`
 	} `yaml:"server"`
-	Credentials struct {
-		GitlabToken string `yaml:"gitlab_token"`
-	} `yaml:"credentials"`
+	GitLab struct {
+		Token string `yaml:"token"`
+	} `yaml:"gitlab"`
+	Database struct {
+		User     string `yaml:"user"`
+		Password string `yaml:"password"`
+		Host     string `yaml:"host"`
+		Port     int    `yaml:"port"`
+	} `yaml:"database"`
 	GitLabClient struct {
 		BaseURL           string `yaml:"base_url"`
 		Timeout           int64  `yaml:"timeout"`
@@ -108,9 +115,13 @@ type AppConfig struct {
 
 func GetAppConfig() AppConfig {
 	appConfigMtx.Do(func() {
+		log.Println("Loading config file ...")
 		f, err := os.Open("config.yml")
 		if err != nil {
-			log.Fatal(err)
+			f, err = os.Open("../../config.yml")
+			if err != nil {
+				log.Fatal(err)
+			}
 		}
 		defer f.Close()
 
@@ -118,7 +129,7 @@ func GetAppConfig() AppConfig {
 		decoder := yaml.NewDecoder(f)
 		err = decoder.Decode(&appConfig)
 		if err != nil {
-			log.Fatal()
+			log.Fatal(err)
 		}
 		Configuration = appConfig
 	})

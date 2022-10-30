@@ -4,6 +4,8 @@ import (
 	"errors"
 	"testing"
 
+	"github.com/internal/infrastructure"
+
 	"github.com/internal/model"
 
 	"github.com/internal/clients/requests"
@@ -22,15 +24,25 @@ func (m *MockClient) GetGroups() ([]responses.GroupResponse, error) {
 	return args.Get(0).([]responses.GroupResponse), args.Error(1)
 }
 
-func (m *MockClient) CreateProject(*requests.CreateProjectRequest) error {
+func (m *MockClient) CreateProject(*requests.CreateProjectRequest) (*responses.CreateProjectResponse, error) {
 	args := m.Called()
-	return args.Error(0)
+	return args.Get(0).(*responses.CreateProjectResponse), args.Error(1)
+}
+
+func (m *MockClient) GetProject(projectID int64) (*responses.ProjectResponse, error) {
+	args := m.Called()
+	return args.Get(0).(*responses.ProjectResponse), args.Error(1)
 }
 
 func TestRepositoriesService_GetGroups(t *testing.T) {
 	client := new(MockClient)
 	client.On("GetGroups").Return(GetGroups())
-	service := services.NewRepositoriesService(client)
+
+	dataAccessService := infrastructure.NewDataAccessService()
+	dataAccessService.Test(t)
+	defer dataAccessService.Close()
+
+	service := services.NewRepositoriesService(client, dataAccessService)
 	actual, err := service.GetGroups()
 
 	assert.NoError(t, err)
@@ -45,7 +57,12 @@ func TestRepositoriesService_GetGroups(t *testing.T) {
 func TestRepositoriesService_GetGroups_Err(t *testing.T) {
 	client := new(MockClient)
 	client.On("GetGroups").Return(GetGroupsError())
-	service := services.NewRepositoriesService(client)
+
+	dataAccessService := infrastructure.NewDataAccessService()
+	dataAccessService.Test(t)
+	defer dataAccessService.Close()
+
+	service := services.NewRepositoriesService(client, dataAccessService)
 	actual, err := service.GetGroups()
 
 	assert.Error(t, err)
@@ -58,12 +75,49 @@ func GetGroupsError() ([]responses.GroupResponse, error) {
 
 func TestRepositoriesService_CreateRepository(t *testing.T) {
 	client := new(MockClient)
-	client.On("CreateProject").Return(nil)
-	service := services.NewRepositoriesService(client)
+	client.On("CreateProject").Return(GetCreateProjectResponse())
+	dataAccessService := infrastructure.NewDataAccessService()
+	dataAccessService.Test(t)
+	defer dataAccessService.Close()
+
+	service := services.NewRepositoriesService(client, dataAccessService)
 	repositoryModel := new(model.RepositoryModel)
-	err := service.CreateRepository(repositoryModel)
+	repositoryModel.Name = "my project name"
+	repositoryModel.AppTypeID = 1
+	actual, err := service.CreateRepository(repositoryModel)
 
 	assert.NoError(t, err)
+	assert.NotNil(t, actual)
+}
+
+func TestRepositoriesService_CreateRepository_Conflict(t *testing.T) {
+	client := new(MockClient)
+	client.On("CreateProject").Return(GetCreateProjectResponse())
+	dataAccessService := infrastructure.NewDataAccessService()
+	dataAccessService.Test(t)
+	defer dataAccessService.Close()
+
+	service := services.NewRepositoriesService(client, dataAccessService)
+	repositoryModel := new(model.RepositoryModel)
+	repositoryModel.Name = "customers-api"
+	repositoryModel.GroupID = 1
+	repositoryModel.AppTypeID = 1
+	actual, err := service.CreateRepository(repositoryModel)
+	assert.NoError(t, err)
+	assert.NotNil(t, actual)
+
+	actual, err = service.CreateRepository(repositoryModel)
+	assert.Error(t, err)
+	assert.Nil(t, actual)
+	assert.Equal(t, "duplicated project name customers-api", err.Error())
+}
+
+func GetCreateProjectResponse() (*responses.CreateProjectResponse, error) {
+	var createProjectResponse responses.CreateProjectResponse
+	createProjectResponse.ID = 1
+	createProjectResponse.URL = "https://gitlab.com/repoURL"
+
+	return &createProjectResponse, nil
 }
 
 func GetGroups() ([]responses.GroupResponse, error) {
