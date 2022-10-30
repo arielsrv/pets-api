@@ -28,9 +28,9 @@ func (m *MockRepositoriesService) GetGroups() ([]model.GroupModel, error) {
 	return args.Get(0).([]model.GroupModel), args.Error(1)
 }
 
-func (m *MockRepositoriesService) CreateRepository(*model.RepositoryModel) (int64, error) {
+func (m *MockRepositoriesService) CreateRepository(*model.RepositoryModel) (*model.AppModel, error) {
 	args := m.Called()
-	return args.Get(0).(int64), args.Error(1)
+	return args.Get(0).(*model.AppModel), args.Error(1)
 }
 
 func (m *MockRepositoriesService) GetAppTypes() ([]model.AppType, error) {
@@ -113,8 +113,10 @@ func TestRepositoriesHandler_CreateRepository(t *testing.T) {
 	assert.Equal(t, "{\"id\":1}", string(body))
 }
 
-func GetCreateRepository() (int64, error) {
-	return 1, nil
+func GetCreateRepository() (*model.AppModel, error) {
+	appModel := new(model.AppModel)
+	appModel.ID = 1
+	return appModel, nil
 }
 
 func TestRepositoriesHandler_CreateRepository_Err(t *testing.T) {
@@ -142,8 +144,8 @@ func TestRepositoriesHandler_CreateRepository_Err(t *testing.T) {
 	assert.Equal(t, "{\"status_code\":500,\"message\":\"internal server error\"}", string(body))
 }
 
-func GetCreateError() (int64, error) {
-	return 0, errors.New("internal server error")
+func GetCreateError() (*model.AppModel, error) {
+	return nil, errors.New("internal server error")
 }
 
 func TestRepositoriesHandler_CreateRepository_BadRequest_Err(t *testing.T) {

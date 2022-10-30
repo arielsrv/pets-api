@@ -20,7 +20,7 @@ import (
 
 type IRepositoriesService interface {
 	GetGroups() ([]model.GroupModel, error)
-	CreateRepository(repositoryDto *model.RepositoryModel) (int64, error)
+	CreateRepository(repositoryDto *model.RepositoryModel) (*model.AppModel, error)
 	GetAppTypes() ([]model.AppType, error)
 	GetApp(appName string) (*model.AppModel, error)
 }
@@ -104,17 +104,17 @@ func (s *RepositoriesService) GetGroups() ([]model.GroupModel, error) {
 	return groupsDto, nil
 }
 
-func (s *RepositoriesService) CreateRepository(repositoryDto *model.RepositoryModel) (int64, error) {
+func (s *RepositoriesService) CreateRepository(repositoryDto *model.RepositoryModel) (*model.AppModel, error) {
 	duplicated, err := s.dataAccess.GetClient().App.Query().
 		Where(app.Name(repositoryDto.Name)).
 		Exist(context.Background())
 
 	if err != nil {
-		return 0, err
+		return nil, err
 	}
 
 	if duplicated {
-		return 0, shared.NewError(http.StatusConflict, fmt.Sprintf("duplicated project name %s", repositoryDto.Name))
+		return nil, shared.NewError(http.StatusConflict, fmt.Sprintf("duplicated project name %s", repositoryDto.Name))
 	}
 
 	createProjectRequest := new(requests.CreateProjectRequest)
@@ -124,7 +124,7 @@ func (s *RepositoriesService) CreateRepository(repositoryDto *model.RepositoryMo
 	response, err := s.client.CreateProject(createProjectRequest)
 
 	if err != nil {
-		return 0, err
+		return nil, err
 	}
 
 	application, err := s.dataAccess.GetClient().App.Create().
@@ -134,8 +134,23 @@ func (s *RepositoriesService) CreateRepository(repositoryDto *model.RepositoryMo
 		Save(context.Background())
 
 	if err != nil {
-		return 0, err
+		return nil, err
 	}
 
-	return application.ID, err
+	repoURL, err := url.Parse(response.URL)
+	if err != nil {
+		return nil, err
+	}
+
+	secureURL := fmt.Sprintf("%s://oauth2:%s@%s%s",
+		repoURL.Scheme,
+		server.GetAppConfig().GitLab.Token,
+		repoURL.Host,
+		repoURL.Path)
+
+	appModel := new(model.AppModel)
+	appModel.ID = application.ID
+	appModel.URL = secureURL
+
+	return appModel, err
 }

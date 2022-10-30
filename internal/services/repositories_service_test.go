@@ -108,13 +108,14 @@ func TestRepositoriesService_CreateRepository_Conflict(t *testing.T) {
 
 	actual, err = service.CreateRepository(repositoryModel)
 	assert.Error(t, err)
-	assert.NotNil(t, actual)
+	assert.Nil(t, actual)
 	assert.Equal(t, "duplicated project name customers-api", err.Error())
 }
 
 func GetCreateProjectResponse() (*responses.CreateProjectResponse, error) {
 	var createProjectResponse responses.CreateProjectResponse
 	createProjectResponse.ID = 1
+	createProjectResponse.URL = "https://gitlab.com/repoURL"
 
 	return &createProjectResponse, nil
 }
