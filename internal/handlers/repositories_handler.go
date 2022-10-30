@@ -71,3 +71,17 @@ func (handler RepositoriesHandler) GetAppTypes(ctx *fiber.Ctx) error {
 
 	return server.SendJSON(ctx, result)
 }
+
+func (handler RepositoriesHandler) GetApp(ctx *fiber.Ctx) error {
+	appName := ctx.Query("app_name")
+	err := shared.EnsureNotEmpty(appName, "bad request error, missing app_name")
+	if err != nil {
+		return err
+	}
+	result, err := handler.service.GetApp(appName)
+	if err != nil {
+		return err
+	}
+
+	return server.SendJSON(ctx, result)
+}

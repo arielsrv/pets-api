@@ -42,4 +42,5 @@ func RegisterHandlers() {
 	server.RegisterHandler(repositoriesHandler.CreateRepository)
 	server.RegisterHandler(repositoriesHandler.GetGroups)
 	server.RegisterHandler(repositoriesHandler.GetAppTypes)
+	server.RegisterHandler(repositoriesHandler.GetApp)
 }

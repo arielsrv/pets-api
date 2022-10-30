@@ -16,10 +16,26 @@ import (
 type IGitLabClient interface {
 	GetGroups() ([]responses.GroupResponse, error)
 	CreateProject(request *requests.CreateProjectRequest) (*responses.CreateProjectResponse, error)
+	GetProject(projectId int64) (*responses.ProjectResponse, error)
 }
 
 type GitLabClient struct {
 	rb *rest.RequestBuilder
+}
+
+func (r *GitLabClient) GetProject(projectId int64) (*responses.ProjectResponse, error) {
+	response := r.rb.Get(fmt.Sprintf("/projects/%d", projectId))
+	if response.Err != nil {
+		return nil, response.Err
+	}
+	if response.StatusCode != http.StatusOK {
+		return nil, shared.NewError(response.StatusCode, response.String())
+	}
+
+	var projectResponse responses.ProjectResponse
+	response.FillUp(&projectResponse)
+
+	return &projectResponse, nil
 }
 
 func NewGitLabClient(rb *rest.RequestBuilder) *GitLabClient {

@@ -2,8 +2,12 @@ package services
 
 import (
 	"context"
+	"errors"
 	"fmt"
+	"github.com/ent"
+	"github.com/internal/server"
 	"net/http"
+	"net/url"
 
 	"github.com/ent/app"
 	"github.com/internal/clients"
@@ -17,6 +21,7 @@ type IRepositoriesService interface {
 	GetGroups() ([]model.GroupModel, error)
 	CreateRepository(repositoryDto *model.RepositoryModel) (int64, error)
 	GetAppTypes() ([]model.AppType, error)
+	GetApp(appName string) (*model.AppModel, error)
 }
 
 type RepositoriesService struct {
@@ -26,6 +31,45 @@ type RepositoriesService struct {
 
 func NewRepositoriesService(client clients.IGitLabClient, dataAccess *infrastructure.DataAccessService) *RepositoriesService {
 	return &RepositoriesService{client: client, dataAccess: dataAccess}
+}
+
+func (s *RepositoriesService) GetApp(appName string) (*model.AppModel, error) {
+	app, err := s.dataAccess.GetClient().App.Query().
+		Where(app.Name(appName)).
+		First(context.Background())
+
+	if err != nil {
+		var notFoundErr *ent.NotFoundError
+		if errors.As(err, &notFoundErr) {
+			return nil, shared.NewError(http.StatusNotFound, fmt.Sprintf("app with name %s not found", appName))
+		}
+		return nil, err
+	}
+
+	s.client.GetGroups()
+
+	projectResponse, err := s.client.GetProject(app.ProjectId)
+
+	if err != nil {
+		return nil, err
+	}
+
+	repoURL, err := url.Parse(projectResponse.URL)
+	if err != nil {
+		return nil, err
+	}
+
+	secureURL := fmt.Sprintf("%s://oauth2:%s@%s%s",
+		repoURL.Scheme,
+		server.GetAppConfig().GitLab.Token,
+		repoURL.Host,
+		repoURL.Path)
+
+	appModel := new(model.AppModel)
+	appModel.ID = app.ID
+	appModel.URL = secureURL
+
+	return appModel, nil
 }
 
 func (s *RepositoriesService) GetAppTypes() ([]model.AppType, error) {

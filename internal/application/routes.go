@@ -12,4 +12,5 @@ func RegisterRoutes(app *server.App) {
 	app.Add(http.MethodGet, "/repositories/groups", server.Use(handlers.RepositoriesHandler{}.GetGroups))
 	app.Add(http.MethodPost, "/repositories", server.Use(handlers.RepositoriesHandler{}.CreateRepository))
 	app.Add(http.MethodGet, "/apps/types", server.Use(handlers.RepositoriesHandler{}.GetAppTypes))
+	app.Add(http.MethodGet, "/search/apps", server.Use(handlers.RepositoriesHandler{}.GetApp))
 }
