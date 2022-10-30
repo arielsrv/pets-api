@@ -16,15 +16,15 @@ import (
 type IGitLabClient interface {
 	GetGroups() ([]responses.GroupResponse, error)
 	CreateProject(request *requests.CreateProjectRequest) (*responses.CreateProjectResponse, error)
-	GetProject(projectId int64) (*responses.ProjectResponse, error)
+	GetProject(projectID int64) (*responses.ProjectResponse, error)
 }
 
 type GitLabClient struct {
 	rb *rest.RequestBuilder
 }
 
-func (r *GitLabClient) GetProject(projectId int64) (*responses.ProjectResponse, error) {
-	response := r.rb.Get(fmt.Sprintf("/projects/%d", projectId))
+func (r *GitLabClient) GetProject(projectID int64) (*responses.ProjectResponse, error) {
+	response := r.rb.Get(fmt.Sprintf("/projects/%d", projectID))
 	if response.Err != nil {
 		return nil, response.Err
 	}

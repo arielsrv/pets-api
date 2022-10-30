@@ -29,6 +29,11 @@ func (m *MockClient) CreateProject(*requests.CreateProjectRequest) (*responses.C
 	return args.Get(0).(*responses.CreateProjectResponse), args.Error(1)
 }
 
+func (m *MockClient) GetProject(projectID int64) (*responses.ProjectResponse, error) {
+	args := m.Called()
+	return args.Get(0).(*responses.ProjectResponse), args.Error(1)
+}
+
 func TestRepositoriesService_GetGroups(t *testing.T) {
 	client := new(MockClient)
 	client.On("GetGroups").Return(GetGroups())

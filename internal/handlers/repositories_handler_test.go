@@ -38,6 +38,11 @@ func (m *MockRepositoriesService) GetAppTypes() ([]model.AppType, error) {
 	return args.Get(0).([]model.AppType), args.Error(1)
 }
 
+func (m *MockRepositoriesService) GetApp(string) (*model.AppModel, error) {
+	args := m.Called()
+	return args.Get(0).(*model.AppModel), args.Error(1)
+}
+
 func TestRepositoriesHandler_GetGroups(t *testing.T) {
 	repositoriesService := new(MockRepositoriesService)
 	repositoriesService.On("GetGroups").Return(GetGroups())

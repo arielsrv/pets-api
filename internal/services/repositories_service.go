@@ -4,10 +4,11 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/ent"
-	"github.com/internal/server"
 	"net/http"
 	"net/url"
+
+	"github.com/ent"
+	"github.com/internal/server"
 
 	"github.com/ent/app"
 	"github.com/internal/clients"
@@ -45,8 +46,6 @@ func (s *RepositoriesService) GetApp(appName string) (*model.AppModel, error) {
 		}
 		return nil, err
 	}
-
-	s.client.GetGroups()
 
 	projectResponse, err := s.client.GetProject(app.ProjectId)
 
