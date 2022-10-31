@@ -35,8 +35,8 @@ func RegisterHandlers() {
 	}
 
 	gitLabClient := clients.NewGitLabClient(gitLabRb)
-	repositoriesService := services.NewAppService(gitLabClient, dataAccess)
-	appHandler := handlers.NewAppHandler(repositoriesService)
+	appService := services.NewAppService(gitLabClient, dataAccess)
+	appHandler := handlers.NewAppHandler(appService)
 
 	server.RegisterHandler(pingHandler.Ping)
 	server.RegisterHandler(appHandler.CreateApp)

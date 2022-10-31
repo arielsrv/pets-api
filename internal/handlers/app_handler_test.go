@@ -43,7 +43,7 @@ func (m *MockAppService) GetApp(string) (*model.AppModel, error) {
 	return args.Get(0).(*model.AppModel), args.Error(1)
 }
 
-func TestRepositoriesHandler_GetGroups(t *testing.T) {
+func TestAppHandler_GetGroups(t *testing.T) {
 	appService := new(MockAppService)
 	appService.On("GetGroups").Return(GetGroups())
 
@@ -64,7 +64,7 @@ func TestRepositoriesHandler_GetGroups(t *testing.T) {
 	assert.Equal(t, "[{\"id\":1,\"name\":\"root/group1\"},{\"id\":2,\"name\":\"root/group2\"}]", string(body))
 }
 
-func TestRepositoriesHandler_GetApp(t *testing.T) {
+func TestAppHandler_GetApp(t *testing.T) {
 	appService := new(MockAppService)
 	appService.On("GetApp").Return(GetApp())
 
@@ -92,10 +92,10 @@ func GetApp() (*model.AppModel, error) {
 	return appModel, nil
 }
 
-func TestRepositoriesHandler_GetGroups_Err(t *testing.T) {
-	repositoriesService := new(MockAppService)
-	repositoriesService.On("GetGroups").Return(GetGroupsErr())
-	repositoriesHandler := handlers.NewAppHandler(repositoriesService)
+func TestAppHandler_GetGroups_Err(t *testing.T) {
+	appService := new(MockAppService)
+	appService.On("GetGroups").Return(GetGroupsErr())
+	repositoriesHandler := handlers.NewAppHandler(appService)
 	app := server.New()
 	app.Add(http.MethodGet, "/repositories/groups", repositoriesHandler.GetGroups)
 
