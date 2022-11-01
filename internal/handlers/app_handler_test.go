@@ -106,6 +106,31 @@ func TestAppHandler_GetApp_BadRequestErr(t *testing.T) {
 	assert.Equal(t, "{\"status_code\":400,\"message\":\"bad request error, missing app_name\"}", string(body))
 }
 
+func TestAppHandler_GetApp_NotFoundErr(t *testing.T) {
+	appService := new(MockAppService)
+	appService.On("GetApp").Return(GetAppNotFound())
+
+	appHandler := handlers.NewAppHandler(appService)
+	app := server.New()
+	app.Add(http.MethodGet, "/apps", appHandler.GetApp)
+
+	request := httptest.NewRequest(http.MethodGet, "/apps?app_name=customers-api", nil)
+	response, err := app.Test(request)
+	assert.NoError(t, err)
+	assert.NotNil(t, response)
+	assert.Equal(t, http.StatusNotFound, response.StatusCode)
+
+	body, err := io.ReadAll(response.Body)
+	assert.NoError(t, err)
+	assert.NotNil(t, body)
+
+	assert.Equal(t, "{\"status_code\":404,\"message\":\"app with name customer-api not found\"}", string(body))
+}
+
+func GetAppNotFound() (*model.AppModel, error) {
+	return nil, shared.NewError(http.StatusNotFound, "app with name customer-api not found")
+}
+
 func GetApp() (*model.AppModel, error) {
 	appModel := new(model.AppModel)
 	appModel.ID = 1
