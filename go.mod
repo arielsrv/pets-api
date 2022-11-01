@@ -4,7 +4,7 @@ go 1.19
 
 require (
 	entgo.io/ent v0.11.4
-	github.com/arielsrv/golang-toolkit/rest v0.0.3
+	github.com/arielsrv/golang-toolkit/rest v0.0.4
 	github.com/go-sql-driver/mysql v1.6.0
 	github.com/gofiber/fiber/v2 v2.39.0
 	github.com/gofiber/swagger v0.1.7
