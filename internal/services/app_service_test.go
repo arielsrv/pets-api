@@ -3,6 +3,7 @@ package services_test
 import (
 	"errors"
 	"fmt"
+	"github.com/ent"
 	"testing"
 
 	"github.com/internal/server"
@@ -132,6 +133,22 @@ func TestAppService_GetApp(t *testing.T) {
 	assert.Equal(t, fmt.Sprintf("https://oauth2:%s@domain.com/repo_url", server.GetAppConfig().GitLab.Token), actual.URL)
 }
 
+func TestAppService_GetApp_NotFoundErr(t *testing.T) {
+	client := new(MockClient)
+	client.On("GetProject").Return(GetProjectNotFoundErr())
+
+	dataAccessService := infrastructure.NewDataAccessService()
+	dataAccessService.Test(t)
+	defer dataAccessService.Close()
+
+	service := services.NewAppService(client, dataAccessService)
+	actual, err := service.GetApp("loyalty-api")
+
+	assert.Error(t, err)
+	assert.Nil(t, actual)
+	assert.Equal(t, "app with name loyalty-api not found", err.Error())
+}
+
 func TestAppService_GetAppTypes(t *testing.T) {
 	client := new(MockClient)
 	dataAccessService := infrastructure.NewDataAccessService()
@@ -154,6 +171,11 @@ func GetProject() (*responses.ProjectResponse, error) {
 	projectResponse.URL = "https://domain.com/repo_url"
 
 	return projectResponse, nil
+}
+
+func GetProjectNotFoundErr() (*responses.ProjectResponse, error) {
+	var notFoundErr *ent.NotFoundError
+	return nil, notFoundErr
 }
 
 func GetCreateProjectResponse() (*responses.CreateProjectResponse, error) {

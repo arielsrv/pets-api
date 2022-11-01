@@ -2,7 +2,6 @@ package services
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"net/http"
 	"net/url"
@@ -40,8 +39,7 @@ func (s *AppService) GetApp(appName string) (*model.AppModel, error) {
 		First(context.Background())
 
 	if err != nil {
-		var notFoundErr *ent.NotFoundError
-		if errors.As(err, &notFoundErr) {
+		if ent.IsNotFound(err) {
 			return nil, shared.NewError(http.StatusNotFound, fmt.Sprintf("app with name %s not found", appName))
 		}
 		return nil, err
