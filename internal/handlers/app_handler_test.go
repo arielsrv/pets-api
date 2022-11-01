@@ -85,6 +85,27 @@ func TestAppHandler_GetApp(t *testing.T) {
 	assert.Equal(t, "{\"id\":1,\"url\":\"repo_url\"}", string(body))
 }
 
+func TestAppHandler_GetApp_BadRequestErr(t *testing.T) {
+	appService := new(MockAppService)
+	appService.On("GetApp").Return(GetApp())
+
+	appHandler := handlers.NewAppHandler(appService)
+	app := server.New()
+	app.Add(http.MethodGet, "/apps", appHandler.GetApp)
+
+	request := httptest.NewRequest(http.MethodGet, "/apps", nil)
+	response, err := app.Test(request)
+	assert.NoError(t, err)
+	assert.NotNil(t, response)
+	assert.Equal(t, http.StatusBadRequest, response.StatusCode)
+
+	body, err := io.ReadAll(response.Body)
+	assert.NoError(t, err)
+	assert.NotNil(t, body)
+
+	assert.Equal(t, "{\"status_code\":400,\"message\":\"bad request error, missing app_name\"}", string(body))
+}
+
 func GetApp() (*model.AppModel, error) {
 	appModel := new(model.AppModel)
 	appModel.ID = 1
