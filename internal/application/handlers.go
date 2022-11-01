@@ -5,11 +5,12 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/internal/clients/gitlab"
+
 	"github.com/internal/infrastructure"
 
 	"github.com/arielsrv/golang-toolkit/rest"
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/internal/clients"
 	"github.com/internal/handlers"
 	"github.com/internal/server"
 	"github.com/internal/services"
@@ -34,7 +35,7 @@ func RegisterHandlers() {
 		},
 	}
 
-	gitLabClient := clients.NewGitLabClient(gitLabRb)
+	gitLabClient := gitlab.NewGitLabClient(gitLabRb)
 	appService := services.NewAppService(gitLabClient, dataAccess)
 	appHandler := handlers.NewAppHandler(appService)
 

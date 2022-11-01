@@ -6,12 +6,13 @@ import (
 	"net/http"
 	"net/url"
 
+	"github.com/internal/clients/gitlab"
+	"github.com/internal/clients/gitlab/requests"
+
 	"github.com/ent"
 	"github.com/internal/server"
 
 	"github.com/ent/app"
-	"github.com/internal/clients"
-	"github.com/internal/clients/requests"
 	"github.com/internal/infrastructure"
 	"github.com/internal/model"
 	"github.com/internal/shared"
@@ -25,11 +26,11 @@ type IAppService interface {
 }
 
 type AppService struct {
-	client     clients.IGitLabClient
+	client     gitlab.IGitLabClient
 	dataAccess *infrastructure.DataAccessService
 }
 
-func NewAppService(client clients.IGitLabClient, dataAccess *infrastructure.DataAccessService) *AppService {
+func NewAppService(client gitlab.IGitLabClient, dataAccess *infrastructure.DataAccessService) *AppService {
 	return &AppService{client: client, dataAccess: dataAccess}
 }
 
