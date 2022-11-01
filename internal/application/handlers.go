@@ -30,7 +30,7 @@ func RegisterHandlers() {
 		Timeout:        time.Millisecond * time.Duration(server.GetAppConfig().GitLabClient.Timeout),
 		ConnectTimeout: time.Millisecond * time.Duration(server.GetAppConfig().GitLabClient.ConnectionTimeout),
 		CustomPool: &rest.CustomPool{
-			MaxIdleConnsPerHost: 20,
+			MaxIdleConnsPerHost: int(server.GetAppConfig().GitLabClient.MaxIdleConnsPerHost),
 		},
 	}
 

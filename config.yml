@@ -19,3 +19,4 @@ gitlab_client:
   base_url: "https://gitlab.tiendanimal.com:8088/api/v4"
   timeout: 2000
   connection_timeout: 5000
+  max_idle_conns_per_host: 20

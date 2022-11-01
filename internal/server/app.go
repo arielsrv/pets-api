@@ -108,9 +108,10 @@ type AppConfig struct {
 		Port     int    `yaml:"port"`
 	} `yaml:"database"`
 	GitLabClient struct {
-		BaseURL           string `yaml:"base_url"`
-		Timeout           int64  `yaml:"timeout"`
-		ConnectionTimeout int64  `yaml:"connection_timeout"`
+		BaseURL             string `yaml:"base_url"`
+		Timeout             int64  `yaml:"timeout"`
+		ConnectionTimeout   int64  `yaml:"connection_timeout"`
+		MaxIdleConnsPerHost int64  `yaml:"max_idle_conns_per_host"`
 	} `yaml:"gitlab_client"`
 }
 
