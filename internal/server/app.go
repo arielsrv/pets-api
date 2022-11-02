@@ -120,6 +120,7 @@ func GetAppConfig() AppConfig {
 		log.Println("Loading config file ...")
 		f, err := os.Open("config.yml")
 		if err != nil {
+			// fallback for testing
 			f, err = os.Open("../../config.yml")
 			if err != nil {
 				log.Fatal(err)

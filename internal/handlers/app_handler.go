@@ -26,15 +26,15 @@ func NewAppHandler(service services.IAppService) *AppHandler {
 // @Produce     json
 // @Success     200 {array} model.AppGroupModel
 // @Router      /repositories/groups [get].
-func (handler AppHandler) GetGroups(ctx *fiber.Ctx) error {
-	result, err := handler.service.GetGroups()
+func (h AppHandler) GetGroups(ctx *fiber.Ctx) error {
+	result, err := h.service.GetGroups()
 	if err != nil {
 		return err
 	}
 	return server.SendJSON(ctx, result)
 }
 
-func (handler AppHandler) CreateApp(ctx *fiber.Ctx) error {
+func (h AppHandler) CreateApp(ctx *fiber.Ctx) error {
 	request := new(model.CreateAppModel)
 	if err := ctx.BodyParser(request); err != nil {
 		return shared.NewError(http.StatusBadRequest, "bad request error")
@@ -55,7 +55,7 @@ func (handler AppHandler) CreateApp(ctx *fiber.Ctx) error {
 		return err
 	}
 
-	result, err := handler.service.CreateApp(request)
+	result, err := h.service.CreateApp(request)
 	if err != nil {
 		return err
 	}
@@ -63,8 +63,8 @@ func (handler AppHandler) CreateApp(ctx *fiber.Ctx) error {
 	return server.SendJSON(ctx, result)
 }
 
-func (handler AppHandler) GetAppTypes(ctx *fiber.Ctx) error {
-	result, err := handler.service.GetAppTypes()
+func (h AppHandler) GetAppTypes(ctx *fiber.Ctx) error {
+	result, err := h.service.GetAppTypes()
 	if err != nil {
 		return err
 	}
@@ -72,13 +72,13 @@ func (handler AppHandler) GetAppTypes(ctx *fiber.Ctx) error {
 	return server.SendJSON(ctx, result)
 }
 
-func (handler AppHandler) GetApp(ctx *fiber.Ctx) error {
+func (h AppHandler) GetApp(ctx *fiber.Ctx) error {
 	appName := ctx.Query("app_name")
 	err := shared.EnsureNotEmpty(appName, "bad request error, missing app_name")
 	if err != nil {
 		return err
 	}
-	result, err := handler.service.GetApp(appName)
+	result, err := h.service.GetApp(appName)
 	if err != nil {
 		return err
 	}

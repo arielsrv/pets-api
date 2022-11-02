@@ -266,6 +266,31 @@ func TestAppHandler_GetAppTypes(t *testing.T) {
 	assert.Equal(t, "[{\"id\":1,\"name\":\"backend\"},{\"id\":2,\"name\":\"frontend\"}]", string(body))
 }
 
+func TestAppHandler_GetAppTypes_Err(t *testing.T) {
+	appService := new(MockAppService)
+	appService.On("GetAppTypes").Return(GetAppTypesErr())
+
+	appHandler := handlers.NewAppHandler(appService)
+	app := server.New()
+	app.Add(http.MethodGet, "/apps/types", appHandler.GetAppTypes)
+
+	request := httptest.NewRequest(http.MethodGet, "/apps/types", nil)
+	response, err := app.Test(request)
+	assert.NoError(t, err)
+	assert.NotNil(t, response)
+	assert.Equal(t, http.StatusInternalServerError, response.StatusCode)
+
+	body, err := io.ReadAll(response.Body)
+	assert.NoError(t, err)
+	assert.NotNil(t, body)
+
+	assert.Equal(t, "{\"status_code\":500,\"message\":\"internal server error\"}", string(body))
+}
+
+func GetAppTypesErr() ([]model.AppType, error) {
+	return nil, errors.New("internal server error")
+}
+
 func GetAppTypes() ([]model.AppType, error) {
 	var appType1 model.AppType
 	appType1.ID = 1
