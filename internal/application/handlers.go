@@ -5,6 +5,8 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/beego/beego/v2/core/config"
+
 	"github.com/internal/clients/gitlab"
 
 	"github.com/internal/infrastructure"
@@ -24,14 +26,14 @@ func RegisterHandlers() {
 	pingHandler := handlers.NewPingHandler(pingService)
 
 	gitLabRb := &rest.RequestBuilder{
-		BaseURL: server.GetAppConfig().GitLabClient.BaseURL,
+		BaseURL: config.DefaultString("gitlab.client.baseurl", ""),
 		Headers: http.Header{
-			"Authorization": {fmt.Sprintf("Bearer %s", server.GetAppConfig().GitLab.Token)},
+			"Authorization": {fmt.Sprintf("Bearer %s", config.DefaultString("gitlab.token", ""))},
 		},
-		Timeout:        time.Millisecond * time.Duration(server.GetAppConfig().GitLabClient.Timeout),
-		ConnectTimeout: time.Millisecond * time.Duration(server.GetAppConfig().GitLabClient.ConnectionTimeout),
+		Timeout:        time.Millisecond * time.Duration(config.DefaultInt("gitlab.client.pool.timeout", 500)),
+		ConnectTimeout: time.Millisecond * time.Duration(config.DefaultInt("gitlab.client.socket.connection-timeout", 1000)),
 		CustomPool: &rest.CustomPool{
-			MaxIdleConnsPerHost: int(server.GetAppConfig().GitLabClient.MaxIdleConnsPerHost),
+			MaxIdleConnsPerHost: config.DefaultInt("gitlab.client.pool.size", 20),
 		},
 	}
 

@@ -5,12 +5,12 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/beego/beego/v2/core/config"
+
 	"github.com/internal/clients/gitlab/requests"
 	responses2 "github.com/internal/clients/gitlab/responses"
 
 	"github.com/ent"
-
-	"github.com/internal/server"
 
 	"github.com/internal/infrastructure"
 
@@ -132,7 +132,7 @@ func TestAppService_GetApp(t *testing.T) {
 	assert.NoError(t, err)
 	assert.NotNil(t, actual)
 	assert.Equal(t, int64(1), actual.ID)
-	assert.Equal(t, fmt.Sprintf("https://oauth2:%s@domain.com/repo_url", server.GetAppConfig().GitLab.Token), actual.URL)
+	assert.Equal(t, fmt.Sprintf("https://oauth2:%s@domain.com/repo_url", config.DefaultString("gitlab.token", "")), actual.URL)
 }
 
 func TestAppService_GetApp_NotFoundErr(t *testing.T) {

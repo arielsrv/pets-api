@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"os"
 
 	_ "github.com/docs"
 	"github.com/internal/application"
@@ -19,12 +20,19 @@ func main() {
 	application.RegisterHandlers()
 	application.RegisterRoutes(app)
 
-	host := server.GetAppConfig().Server.Host
-	port := server.GetAppConfig().Server.Port
+	host := os.Getenv("HOST")
+	if host == "" {
+		host = "127.0.0.1"
+	}
+
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
 
 	address := fmt.Sprintf("%s:%s", host, port)
 
 	log.Printf("Listening on port %s", port)
 	log.Printf("Open http://%s:%s/ping in the browser", host, port)
-	log.Fatal(app.Start(address))
+	log.Fatal(app.Listen(address))
 }

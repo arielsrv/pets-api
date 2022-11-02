@@ -3,41 +3,35 @@ package server
 import (
 	"log"
 	"net/http"
-	"os"
 	reflect "reflect"
 	"runtime"
-	"sync"
-
-	"github.com/internal/shared"
-	"gopkg.in/yaml.v3"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/gofiber/fiber/v2/middleware/requestid"
 	"github.com/gofiber/swagger"
+	"github.com/internal/shared"
 )
 
-var appConfigMtx sync.Once
-var Configuration AppConfig
 var routes = make(map[string]func(ctx *fiber.Ctx) error)
 
 type App struct {
 	*fiber.App
-	config Config
+	appConfig AppConfig
 }
 
 func (app *App) Start(addr string) error {
 	return app.Listen(addr)
 }
 
-func New(config ...Config) *App {
+func New(appConfig ...AppConfig) *App {
 	app := &App{
 		App: fiber.New(fiber.Config{
 			DisableStartupMessage: true,
 			ErrorHandler:          shared.ErrorHandler,
 		}),
-		config: Config{
+		appConfig: AppConfig{
 			Recovery:  true,
 			Swagger:   true,
 			RequestID: true,
@@ -45,27 +39,27 @@ func New(config ...Config) *App {
 		},
 	}
 
-	if len(config) > 0 {
-		app.config = config[0]
+	if len(appConfig) > 0 {
+		app.appConfig = appConfig[0]
 	}
 
-	if app.config.Recovery {
+	if app.appConfig.Recovery {
 		app.Use(recover.New(recover.Config{
 			EnableStackTrace: true,
 		}))
 	}
 
-	if app.config.RequestID {
+	if app.appConfig.RequestID {
 		app.Use(requestid.New())
 	}
 
-	if app.config.Logger {
+	if app.appConfig.Logger {
 		app.Use(logger.New(logger.Config{
 			Format: "${pid} ${locals:requestid} ${status} - ${method} ${path}\n",
 		}))
 	}
 
-	if app.config.Swagger {
+	if app.appConfig.Swagger {
 		log.Println("Swagger enabled")
 		app.Add(http.MethodGet, "/swagger/*", swagger.HandlerDefault)
 	}
@@ -73,7 +67,7 @@ func New(config ...Config) *App {
 	return app
 }
 
-type Config struct {
+type AppConfig struct {
 	Recovery  bool
 	Swagger   bool
 	RequestID bool
@@ -90,54 +84,6 @@ func SendString(ctx *fiber.Ctx, body string) error {
 
 func SendJSON(ctx *fiber.Ctx, data interface{}) error {
 	return ctx.JSON(data)
-}
-
-type AppConfig struct {
-	Server struct {
-		Host string `yaml:"host"`
-		Port string `yaml:"port"`
-	} `yaml:"server"`
-	GitLab struct {
-		Token  string `yaml:"token"`
-		Prefix string `yaml:"prefix"`
-	} `yaml:"gitlab"`
-	Database struct {
-		User     string `yaml:"user"`
-		Password string `yaml:"password"`
-		Host     string `yaml:"host"`
-		Port     int    `yaml:"port"`
-	} `yaml:"database"`
-	GitLabClient struct {
-		BaseURL             string `yaml:"base_url"`
-		Timeout             int64  `yaml:"timeout"`
-		ConnectionTimeout   int64  `yaml:"connection_timeout"`
-		MaxIdleConnsPerHost int64  `yaml:"max_idle_conns_per_host"`
-	} `yaml:"gitlab_client"`
-}
-
-func GetAppConfig() AppConfig {
-	appConfigMtx.Do(func() {
-		log.Println("Loading config file ...")
-		f, err := os.Open("config.yml")
-		if err != nil {
-			// fallback for testing
-			f, err = os.Open("../../config.yml")
-			if err != nil {
-				log.Fatal(err)
-			}
-		}
-		defer f.Close()
-
-		var appConfig AppConfig
-		decoder := yaml.NewDecoder(f)
-		err = decoder.Decode(&appConfig)
-		if err != nil {
-			log.Fatal(err)
-		}
-		Configuration = appConfig
-	})
-
-	return Configuration
 }
 
 func RegisterHandler(action func(ctx *fiber.Ctx) error) {
