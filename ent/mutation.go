@@ -25,7 +25,7 @@ const (
 
 	// Node types.
 	TypeApp     = "App"
-	TypeAppType = "AppTypeID"
+	TypeAppType = "AppType"
 )
 
 // AppMutation represents an operation that mutates the App nodes in the graph.
@@ -864,7 +864,7 @@ func (m *AppTypeMutation) OldField(ctx context.Context, name string) (ent.Value,
 	case apptype.FieldName:
 		return m.OldName(ctx)
 	}
-	return nil, fmt.Errorf("unknown AppTypeID field %s", name)
+	return nil, fmt.Errorf("unknown AppType field %s", name)
 }
 
 // SetField sets the value of a field with the given name. It returns an error if
@@ -880,7 +880,7 @@ func (m *AppTypeMutation) SetField(name string, value ent.Value) error {
 		m.SetName(v)
 		return nil
 	}
-	return fmt.Errorf("unknown AppTypeID field %s", name)
+	return fmt.Errorf("unknown AppType field %s", name)
 }
 
 // AddedFields returns all numeric fields that were incremented/decremented during
@@ -902,7 +902,7 @@ func (m *AppTypeMutation) AddedField(name string) (ent.Value, bool) {
 func (m *AppTypeMutation) AddField(name string, value ent.Value) error {
 	switch name {
 	}
-	return fmt.Errorf("unknown AppTypeID numeric field %s", name)
+	return fmt.Errorf("unknown AppType numeric field %s", name)
 }
 
 // ClearedFields returns all nullable fields that were cleared during this
@@ -921,7 +921,7 @@ func (m *AppTypeMutation) FieldCleared(name string) bool {
 // ClearField clears the value of the field with the given name. It returns an
 // error if the field is not defined in the schema.
 func (m *AppTypeMutation) ClearField(name string) error {
-	return fmt.Errorf("unknown AppTypeID nullable field %s", name)
+	return fmt.Errorf("unknown AppType nullable field %s", name)
 }
 
 // ResetField resets all changes in the mutation for the field with the given name.
@@ -932,7 +932,7 @@ func (m *AppTypeMutation) ResetField(name string) error {
 		m.ResetName()
 		return nil
 	}
-	return fmt.Errorf("unknown AppTypeID field %s", name)
+	return fmt.Errorf("unknown AppType field %s", name)
 }
 
 // AddedEdges returns all edge names that were set/added in this mutation.
@@ -1005,7 +1005,7 @@ func (m *AppTypeMutation) EdgeCleared(name string) bool {
 func (m *AppTypeMutation) ClearEdge(name string) error {
 	switch name {
 	}
-	return fmt.Errorf("unknown AppTypeID unique edge %s", name)
+	return fmt.Errorf("unknown AppType unique edge %s", name)
 }
 
 // ResetEdge resets all changes to the edge with the given name in this mutation.
@@ -1016,5 +1016,5 @@ func (m *AppTypeMutation) ResetEdge(name string) error {
 		m.ResetApps()
 		return nil
 	}
-	return fmt.Errorf("unknown AppTypeID edge %s", name)
+	return fmt.Errorf("unknown AppType edge %s", name)
 }

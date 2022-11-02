@@ -148,11 +148,7 @@ func (atu *AppTypeUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 	}
 	if value, ok := atu.mutation.Name(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: apptype.FieldName,
-		})
+		_spec.SetField(apptype.FieldName, field.TypeString, value)
 	}
 	if atu.mutation.AppsCleared() {
 		edge := &sqlgraph.EdgeSpec{
@@ -354,7 +350,7 @@ func (atuo *AppTypeUpdateOne) sqlSave(ctx context.Context) (_node *AppType, err 
 	}
 	id, ok := atuo.mutation.ID()
 	if !ok {
-		return nil, &ValidationError{Name: "id", err: errors.New(`ent: missing "AppTypeID.id" for update`)}
+		return nil, &ValidationError{Name: "id", err: errors.New(`ent: missing "AppType.id" for update`)}
 	}
 	_spec.Node.ID.Value = id
 	if fields := atuo.fields; len(fields) > 0 {
@@ -377,11 +373,7 @@ func (atuo *AppTypeUpdateOne) sqlSave(ctx context.Context) (_node *AppType, err 
 		}
 	}
 	if value, ok := atuo.mutation.Name(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: apptype.FieldName,
-		})
+		_spec.SetField(apptype.FieldName, field.TypeString, value)
 	}
 	if atuo.mutation.AppsCleared() {
 		edge := &sqlgraph.EdgeSpec{

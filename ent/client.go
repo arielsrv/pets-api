@@ -186,7 +186,7 @@ func (c *AppClient) DeleteOne(a *App) *AppDeleteOne {
 	return c.DeleteOneID(a.ID)
 }
 
-// DeleteOne returns a builder for deleting the given entity by its id.
+// DeleteOneID returns a builder for deleting the given entity by its id.
 func (c *AppClient) DeleteOneID(id int64) *AppDeleteOne {
 	builder := c.Delete().Where(app.ID(id))
 	builder.mutation.id = &id
@@ -218,7 +218,7 @@ func (c *AppClient) GetX(ctx context.Context, id int64) *App {
 // QueryAppsTypes queries the apps_types edge of a App.
 func (c *AppClient) QueryAppsTypes(a *App) *AppTypeQuery {
 	query := &AppTypeQuery{config: c.config}
-	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
 		id := a.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(app.Table, app.FieldID, id),
@@ -292,7 +292,7 @@ func (c *AppTypeClient) DeleteOne(at *AppType) *AppTypeDeleteOne {
 	return c.DeleteOneID(at.ID)
 }
 
-// DeleteOne returns a builder for deleting the given entity by its id.
+// DeleteOneID returns a builder for deleting the given entity by its id.
 func (c *AppTypeClient) DeleteOneID(id int) *AppTypeDeleteOne {
 	builder := c.Delete().Where(apptype.ID(id))
 	builder.mutation.id = &id
@@ -324,7 +324,7 @@ func (c *AppTypeClient) GetX(ctx context.Context, id int) *AppType {
 // QueryApps queries the apps edge of a AppType.
 func (c *AppTypeClient) QueryApps(at *AppType) *AppQuery {
 	query := &AppQuery{config: c.config}
-	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
 		id := at.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(apptype.Table, apptype.FieldID, id),

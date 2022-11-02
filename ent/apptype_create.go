@@ -124,7 +124,7 @@ func (atc *AppTypeCreate) ExecX(ctx context.Context) {
 // check runs all checks and user-defined validators on the builder.
 func (atc *AppTypeCreate) check() error {
 	if _, ok := atc.mutation.Name(); !ok {
-		return &ValidationError{Name: "name", err: errors.New(`ent: missing required field "AppTypeID.name"`)}
+		return &ValidationError{Name: "name", err: errors.New(`ent: missing required field "AppType.name"`)}
 	}
 	return nil
 }
@@ -160,11 +160,7 @@ func (atc *AppTypeCreate) createSpec() (*AppType, *sqlgraph.CreateSpec) {
 		_spec.ID.Value = id
 	}
 	if value, ok := atc.mutation.Name(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: apptype.FieldName,
-		})
+		_spec.SetField(apptype.FieldName, field.TypeString, value)
 		_node.Name = value
 	}
 	if nodes := atc.mutation.AppsIDs(); len(nodes) > 0 {

@@ -176,32 +176,16 @@ func (au *AppUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 	}
 	if value, ok := au.mutation.Name(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: app.FieldName,
-		})
+		_spec.SetField(app.FieldName, field.TypeString, value)
 	}
 	if value, ok := au.mutation.ProjectId(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt64,
-			Value:  value,
-			Column: app.FieldProjectId,
-		})
+		_spec.SetField(app.FieldProjectId, field.TypeInt64, value)
 	}
 	if value, ok := au.mutation.AddedProjectId(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt64,
-			Value:  value,
-			Column: app.FieldProjectId,
-		})
+		_spec.AddField(app.FieldProjectId, field.TypeInt64, value)
 	}
 	if value, ok := au.mutation.Active(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeBool,
-			Value:  value,
-			Column: app.FieldActive,
-		})
+		_spec.SetField(app.FieldActive, field.TypeBool, value)
 	}
 	if au.mutation.AppsTypesCleared() {
 		edge := &sqlgraph.EdgeSpec{
@@ -435,32 +419,16 @@ func (auo *AppUpdateOne) sqlSave(ctx context.Context) (_node *App, err error) {
 		}
 	}
 	if value, ok := auo.mutation.Name(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: app.FieldName,
-		})
+		_spec.SetField(app.FieldName, field.TypeString, value)
 	}
 	if value, ok := auo.mutation.ProjectId(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt64,
-			Value:  value,
-			Column: app.FieldProjectId,
-		})
+		_spec.SetField(app.FieldProjectId, field.TypeInt64, value)
 	}
 	if value, ok := auo.mutation.AddedProjectId(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt64,
-			Value:  value,
-			Column: app.FieldProjectId,
-		})
+		_spec.AddField(app.FieldProjectId, field.TypeInt64, value)
 	}
 	if value, ok := auo.mutation.Active(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeBool,
-			Value:  value,
-			Column: app.FieldActive,
-		})
+		_spec.SetField(app.FieldActive, field.TypeBool, value)
 	}
 	if auo.mutation.AppsTypesCleared() {
 		edge := &sqlgraph.EdgeSpec{

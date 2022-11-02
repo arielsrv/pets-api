@@ -203,27 +203,15 @@ func (ac *AppCreate) createSpec() (*App, *sqlgraph.CreateSpec) {
 		_spec.ID.Value = id
 	}
 	if value, ok := ac.mutation.Name(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: app.FieldName,
-		})
+		_spec.SetField(app.FieldName, field.TypeString, value)
 		_node.Name = value
 	}
 	if value, ok := ac.mutation.ProjectId(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt64,
-			Value:  value,
-			Column: app.FieldProjectId,
-		})
+		_spec.SetField(app.FieldProjectId, field.TypeInt64, value)
 		_node.ProjectId = value
 	}
 	if value, ok := ac.mutation.Active(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeBool,
-			Value:  value,
-			Column: app.FieldActive,
-		})
+		_spec.SetField(app.FieldActive, field.TypeBool, value)
 		_node.Active = value
 	}
 	if nodes := ac.mutation.AppsTypesIDs(); len(nodes) > 0 {

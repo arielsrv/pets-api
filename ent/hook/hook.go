@@ -23,7 +23,7 @@ func (f AppFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) 
 }
 
 // The AppTypeFunc type is an adapter to allow the use of ordinary
-// function as AppTypeID mutator.
+// function as AppType mutator.
 type AppTypeFunc func(context.Context, *ent.AppTypeMutation) (ent.Value, error)
 
 // Mutate calls f(ctx, m).

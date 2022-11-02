@@ -50,7 +50,7 @@ func (*AppType) scanValues(columns []string) ([]any, error) {
 		case apptype.FieldName:
 			values[i] = new(sql.NullString)
 		default:
-			return nil, fmt.Errorf("unexpected column %q for type AppTypeID", columns[i])
+			return nil, fmt.Errorf("unexpected column %q for type AppType", columns[i])
 		}
 	}
 	return values, nil
@@ -98,7 +98,7 @@ func (at *AppType) Update() *AppTypeUpdateOne {
 func (at *AppType) Unwrap() *AppType {
 	_tx, ok := at.config.driver.(*txDriver)
 	if !ok {
-		panic("ent: AppTypeID is not a transactional entity")
+		panic("ent: AppType is not a transactional entity")
 	}
 	at.config.driver = _tx.drv
 	return at
@@ -107,7 +107,7 @@ func (at *AppType) Unwrap() *AppType {
 // String implements the fmt.Stringer.
 func (at *AppType) String() string {
 	var builder strings.Builder
-	builder.WriteString("AppTypeID(")
+	builder.WriteString("AppType(")
 	builder.WriteString(fmt.Sprintf("id=%v, ", at.ID))
 	builder.WriteString("name=")
 	builder.WriteString(at.Name)

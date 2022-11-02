@@ -294,7 +294,7 @@ func (atq *AppTypeQuery) WithApps(opts ...func(*AppQuery)) *AppTypeQuery {
 //		Count int `json:"count,omitempty"`
 //	}
 //
-//	client.AppTypeID.Query().
+//	client.AppType.Query().
 //		GroupBy(apptype.FieldName).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
@@ -321,7 +321,7 @@ func (atq *AppTypeQuery) GroupBy(field string, fields ...string) *AppTypeGroupBy
 //		Name string `json:"name,omitempty"`
 //	}
 //
-//	client.AppTypeID.Query().
+//	client.AppType.Query().
 //		Select(apptype.FieldName).
 //		Scan(ctx, &v)
 func (atq *AppTypeQuery) Select(fields ...string) *AppTypeSelect {
@@ -330,6 +330,11 @@ func (atq *AppTypeQuery) Select(fields ...string) *AppTypeSelect {
 	selbuild.label = apptype.Label
 	selbuild.flds, selbuild.scan = &atq.fields, selbuild.Scan
 	return selbuild
+}
+
+// Aggregate returns a AppTypeSelect configured with the given aggregations.
+func (atq *AppTypeQuery) Aggregate(fns ...AggregateFunc) *AppTypeSelect {
+	return atq.Select().Aggregate(fns...)
 }
 
 func (atq *AppTypeQuery) prepareQuery(ctx context.Context) error {
@@ -564,8 +569,6 @@ func (atgb *AppTypeGroupBy) sqlQuery() *sql.Selector {
 	for _, fn := range atgb.fns {
 		aggregation = append(aggregation, fn(selector))
 	}
-	// If no columns were selected in a custom aggregation function, the default
-	// selection is the fields used for "group-by", and the aggregation functions.
 	if len(selector.SelectedColumns()) == 0 {
 		columns := make([]string, 0, len(atgb.fields)+len(atgb.fns))
 		for _, f := range atgb.fields {
@@ -585,6 +588,12 @@ type AppTypeSelect struct {
 	sql *sql.Selector
 }
 
+// Aggregate adds the given aggregation functions to the selector query.
+func (ats *AppTypeSelect) Aggregate(fns ...AggregateFunc) *AppTypeSelect {
+	ats.fns = append(ats.fns, fns...)
+	return ats
+}
+
 // Scan applies the selector query and scans the result into the given value.
 func (ats *AppTypeSelect) Scan(ctx context.Context, v any) error {
 	if err := ats.prepareQuery(ctx); err != nil {
@@ -595,6 +604,16 @@ func (ats *AppTypeSelect) Scan(ctx context.Context, v any) error {
 }
 
 func (ats *AppTypeSelect) sqlScan(ctx context.Context, v any) error {
+	aggregation := make([]string, 0, len(ats.fns))
+	for _, fn := range ats.fns {
+		aggregation = append(aggregation, fn(ats.sql))
+	}
+	switch n := len(*ats.selector.flds); {
+	case n == 0 && len(aggregation) > 0:
+		ats.sql.Select(aggregation...)
+	case n != 0 && len(aggregation) > 0:
+		ats.sql.AppendSelect(aggregation...)
+	}
 	rows := &sql.Rows{}
 	query, args := ats.sql.Query()
 	if err := ats.driver.Query(ctx, query, args, rows); err != nil {
