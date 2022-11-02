@@ -167,6 +167,19 @@ func TestAppService_GetAppTypes(t *testing.T) {
 	assert.Equal(t, "backend", actual[0].Name)
 }
 
+func TestAppService_GetAppTypes_Err(t *testing.T) {
+	client := new(MockClient)
+	dataAccessService := infrastructure.NewDataAccessService()
+	dataAccessService.Test(t)
+	dataAccessService.Close()
+
+	service := services.NewAppService(client, dataAccessService)
+	actual, err := service.GetAppTypes()
+
+	assert.Error(t, err)
+	assert.Nil(t, actual)
+}
+
 func GetProject() (*responses2.ProjectResponse, error) {
 	projectResponse := new(responses2.ProjectResponse)
 	projectResponse.ID = 1
