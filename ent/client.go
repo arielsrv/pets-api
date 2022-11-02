@@ -135,7 +135,7 @@ type AppClient struct {
 	config
 }
 
-// NewAppClient returns a client for the App from the given config.
+// NewAppClient returns a client for the App from the given resources.
 func NewAppClient(c config) *AppClient {
 	return &AppClient{config: c}
 }
@@ -241,7 +241,7 @@ type AppTypeClient struct {
 	config
 }
 
-// NewAppTypeClient returns a client for the AppType from the given config.
+// NewAppTypeClient returns a client for the AppType from the given resources.
 func NewAppTypeClient(c config) *AppTypeClient {
 	return &AppTypeClient{config: c}
 }
