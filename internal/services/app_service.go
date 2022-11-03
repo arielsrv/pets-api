@@ -57,10 +57,7 @@ func (s *AppService) GetApp(appName string) (*model.AppModel, error) {
 		return nil, err
 	}
 
-	gitlabToken, err := config.String("gitlab.token")
-	if err != nil {
-		return nil, err
-	}
+	gitlabToken := shared.GetProperty("gitlab.token")
 
 	secureURL := fmt.Sprintf("%s://oauth2:%s@%s%s",
 		repoURL.Scheme,

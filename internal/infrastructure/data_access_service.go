@@ -7,7 +7,7 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/beego/beego/v2/core/config"
+	"github.com/internal/shared"
 
 	"github.com/ent"
 	"github.com/ent/enttest"
@@ -25,23 +25,11 @@ func NewDataAccessService() *DataAccessService {
 
 func (d *DataAccessService) Open() *ent.Client {
 	d.dbMtx.Do(func() {
-		user, err := config.String("database.user")
-		if err != nil {
-			log.Fatalln(err)
-		}
-		password, err := config.String("database.password")
-		if err != nil {
-			log.Fatalln(err)
-		}
-		host, err := config.String("database.host")
-		if err != nil {
-			log.Fatalln(err)
-		}
-		port, err := config.Int("database.port")
-		if err != nil {
-			log.Fatalln(err)
-		}
-		dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/pets?parseTime=True", user, password, host, port)
+		user := shared.GetProperty("database.user")
+		password := shared.GetProperty("database.password")
+		host := shared.GetProperty("database.host")
+		port := shared.GetProperty("database.port")
+		dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/pets?parseTime=True", user, password, host, port)
 		dataAccess, err := ent.Open("mysql", dsn)
 		if err != nil {
 			log.Fatalf("failed opening connection to mysql: %v", err)
