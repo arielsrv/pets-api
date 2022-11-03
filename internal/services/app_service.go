@@ -6,8 +6,6 @@ import (
 	"net/http"
 	"net/url"
 
-	"github.com/internal/config"
-
 	"github.com/internal/clients/gitlab"
 	"github.com/internal/clients/gitlab/requests"
 
@@ -53,6 +51,11 @@ func (s *AppService) GetApp(appName string) (*model.AppModel, error) {
 	}
 
 	repoURL, err := url.Parse(projectResponse.URL)
+	if err != nil {
+		return nil, err
+	}
+
+	gitlabToken, err := config.String("gitlab.token")
 	if err != nil {
 		return nil, err
 	}
@@ -119,8 +122,7 @@ func (s *AppService) CreateApp(repositoryDto *model.CreateAppModel) (*model.AppM
 	}
 
 	createProjectRequest := new(requests.CreateProjectRequest)
-	gitlabPrefix := config.String("gitlab.prefix")
-	createProjectRequest.Name = fmt.Sprintf("%s%s", gitlabPrefix, repositoryDto.Name)
+	createProjectRequest.Name = fmt.Sprintf("%s%s", server.GetAppConfig().GitLab.Prefix, repositoryDto.Name)
 	createProjectRequest.GroupID = repositoryDto.GroupID
 
 	response, err := s.client.CreateProject(createProjectRequest)
