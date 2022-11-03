@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/internal/clients/gitlab/responses"
 	"github.com/internal/config"
 
 	"github.com/internal/clients/gitlab/requests"
@@ -24,19 +25,19 @@ type MockClient struct {
 	mock.Mock
 }
 
-func (m *MockClient) GetGroups() ([]responses2.GroupResponse, error) {
+func (m *MockClient) GetGroups() ([]responses.GroupResponse, error) {
 	args := m.Called()
-	return args.Get(0).([]responses2.GroupResponse), args.Error(1)
+	return args.Get(0).([]responses.GroupResponse), args.Error(1)
 }
 
-func (m *MockClient) CreateProject(*requests.CreateProjectRequest) (*responses2.CreateProjectResponse, error) {
+func (m *MockClient) CreateProject(*requests.CreateProjectRequest) (*responses.CreateProjectResponse, error) {
 	args := m.Called()
-	return args.Get(0).(*responses2.CreateProjectResponse), args.Error(1)
+	return args.Get(0).(*responses.CreateProjectResponse), args.Error(1)
 }
 
-func (m *MockClient) GetProject(int64) (*responses2.ProjectResponse, error) {
+func (m *MockClient) GetProject(int64) (*responses.ProjectResponse, error) {
 	args := m.Called()
-	return args.Get(0).(*responses2.ProjectResponse), args.Error(1)
+	return args.Get(0).(*responses.ProjectResponse), args.Error(1)
 }
 
 func TestAppService_GetGroups(t *testing.T) {
@@ -74,7 +75,7 @@ func TestAppService_GetGroups_Err(t *testing.T) {
 	assert.Nil(t, actual)
 }
 
-func GetGroupsError() ([]responses2.GroupResponse, error) {
+func GetGroupsError() ([]responses.GroupResponse, error) {
 	return nil, errors.New("internal server error")
 }
 
@@ -131,7 +132,7 @@ func TestAppService_GetApp(t *testing.T) {
 	assert.NoError(t, err)
 	assert.NotNil(t, actual)
 	assert.Equal(t, int64(1), actual.ID)
-	assert.Equal(t, fmt.Sprintf("https://oauth2:%s@domain.com/repo_url", server.GetAppConfig().GitLab.Token), actual.URL)
+	assert.Equal(t, fmt.Sprintf("https://oauth2:%s@domain.com/repo_url", config.String("gitlab.token")), actual.URL)
 }
 
 func TestAppService_GetApp_NotFoundErr(t *testing.T) {
@@ -179,36 +180,36 @@ func TestAppService_GetAppTypes_Err(t *testing.T) {
 	assert.Nil(t, actual)
 }
 
-func GetProject() (*responses2.ProjectResponse, error) {
-	projectResponse := new(responses2.ProjectResponse)
+func GetProject() (*responses.ProjectResponse, error) {
+	projectResponse := new(responses.ProjectResponse)
 	projectResponse.ID = 1
 	projectResponse.URL = "https://domain.com/repo_url"
 
 	return projectResponse, nil
 }
 
-func GetProjectNotFoundErr() (*responses2.ProjectResponse, error) {
+func GetProjectNotFoundErr() (*responses.ProjectResponse, error) {
 	var notFoundErr *ent.NotFoundError
 	return nil, notFoundErr
 }
 
-func GetCreateProjectResponse() (*responses2.CreateProjectResponse, error) {
-	var createProjectResponse responses2.CreateProjectResponse
+func GetCreateProjectResponse() (*responses.CreateProjectResponse, error) {
+	var createProjectResponse responses.CreateProjectResponse
 	createProjectResponse.ID = 1
 	createProjectResponse.URL = "https://gitlab.com/repoURL"
 
 	return &createProjectResponse, nil
 }
 
-func GetGroups() ([]responses2.GroupResponse, error) {
-	var group1 responses2.GroupResponse
+func GetGroups() ([]responses.GroupResponse, error) {
+	var group1 responses.GroupResponse
 	group1.ID = 1
 	group1.Path = "root/group1"
-	var group2 responses2.GroupResponse
+	var group2 responses.GroupResponse
 	group2.ID = 2
 	group2.Path = "root/group2"
 
-	var groups []responses2.GroupResponse
+	var groups []responses.GroupResponse
 	groups = append(groups, group1)
 	groups = append(groups, group2)
 
