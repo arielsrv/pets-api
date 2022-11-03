@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"net/url"
 
-	"github.com/beego/beego/v2/core/config"
+	"github.com/internal/config"
 
 	"github.com/internal/clients/gitlab"
 	"github.com/internal/clients/gitlab/requests"
@@ -57,7 +57,7 @@ func (s *AppService) GetApp(appName string) (*model.AppModel, error) {
 		return nil, err
 	}
 
-	gitlabToken := shared.GetProperty("gitlab.token")
+	gitlabToken := config.String("gitlab.token")
 
 	secureURL := fmt.Sprintf("%s://oauth2:%s@%s%s",
 		repoURL.Scheme,
@@ -119,10 +119,7 @@ func (s *AppService) CreateApp(repositoryDto *model.CreateAppModel) (*model.AppM
 	}
 
 	createProjectRequest := new(requests.CreateProjectRequest)
-	gitlabPrefix, err := config.String("gitlab.prefix")
-	if err != nil {
-		return nil, err
-	}
+	gitlabPrefix := config.String("gitlab.prefix")
 	createProjectRequest.Name = fmt.Sprintf("%s%s", gitlabPrefix, repositoryDto.Name)
 	createProjectRequest.GroupID = repositoryDto.GroupID
 

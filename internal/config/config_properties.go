@@ -1,8 +1,9 @@
-package shared
+package config
 
 import (
-	"github.com/beego/beego/v2/core/config"
 	"log"
+
+	"github.com/beego/beego/v2/core/config"
 )
 
 //nolint:nolintlint,gochecknoinits
@@ -19,12 +20,12 @@ func init() {
 	log.Println("loaded config " + propertiesPath)
 }
 
-func GetProperty(key string) string {
+func String(key string) string {
 	value := config.DefaultString(key, "")
 	return value
 }
 
-func GetIntProperty(key string) int {
+func Int(key string) int {
 	value := config.DefaultInt(key, 0)
 	return value
 }

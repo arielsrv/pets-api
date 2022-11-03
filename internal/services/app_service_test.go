@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/internal/shared"
+	"github.com/internal/config"
 
 	"github.com/internal/clients/gitlab/requests"
 	responses2 "github.com/internal/clients/gitlab/responses"
@@ -132,7 +132,7 @@ func TestAppService_GetApp(t *testing.T) {
 	assert.NoError(t, err)
 	assert.NotNil(t, actual)
 	assert.Equal(t, int64(1), actual.ID)
-	assert.Equal(t, fmt.Sprintf("https://oauth2:%s@domain.com/repo_url", shared.GetProperty("gitlab.token")), actual.URL)
+	assert.Equal(t, fmt.Sprintf("https://oauth2:%s@domain.com/repo_url", config.String("gitlab.token")), actual.URL)
 }
 
 func TestAppService_GetApp_NotFoundErr(t *testing.T) {

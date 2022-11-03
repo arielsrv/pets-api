@@ -7,7 +7,7 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/internal/shared"
+	"github.com/internal/config"
 
 	"github.com/ent"
 	"github.com/ent/enttest"
@@ -25,10 +25,10 @@ func NewDataAccessService() *DataAccessService {
 
 func (d *DataAccessService) Open() *ent.Client {
 	d.dbMtx.Do(func() {
-		user := shared.GetProperty("database.user")
-		password := shared.GetProperty("database.password")
-		host := shared.GetProperty("database.host")
-		port := shared.GetProperty("database.port")
+		user := config.String("database.user")
+		password := config.String("database.password")
+		host := config.String("database.host")
+		port := config.String("database.port")
 		dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/pets?parseTime=True", user, password, host, port)
 		dataAccess, err := ent.Open("mysql", dsn)
 		if err != nil {
