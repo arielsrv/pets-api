@@ -12,6 +12,12 @@ func TestGetProperty(t *testing.T) {
 	assert.Equal(t, "ikp_", actual)
 }
 
+func TestGetProperty_FromEnv(t *testing.T) {
+	t.Setenv("MY_KEY", "ikp_")
+	actual := config.String("my.key")
+	assert.Equal(t, "ikp_", actual)
+}
+
 func TestGetProperty_Err(t *testing.T) {
 	actual := config.String("missing")
 	assert.Equal(t, "", actual)
@@ -20,6 +26,12 @@ func TestGetProperty_Err(t *testing.T) {
 func TestGetIntProperty(t *testing.T) {
 	actual := config.Int("database.port")
 	assert.Equal(t, 3306, actual)
+}
+
+func TestGetIntProperty_FromEnv(t *testing.T) {
+	t.Setenv("MY_PORT", "22")
+	actual := config.Int("my.port")
+	assert.Equal(t, 22, actual)
 }
 
 func TestGetIntProperty_Err(t *testing.T) {
