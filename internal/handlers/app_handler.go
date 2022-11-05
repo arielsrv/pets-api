@@ -110,8 +110,8 @@ func (h AppHandler) GetAppConf(ctx *fiber.Ctx) error {
 	}
 
 	r := struct {
-		Groups []model.AppGroupModel
-		Types  []model.AppType
+		Groups []model.AppGroupModel `json:"groups,omitempty"`
+		Types  []model.AppType       `json:"types,omitempty"`
 	}{
 		Groups: groupsTask.Result,
 		Types:  appTypesTask.Result,
