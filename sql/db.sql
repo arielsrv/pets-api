@@ -9,8 +9,8 @@ create table pets.apps_types
         unique (name)
 );
 
-INSERT INTO pets.apps_types (id, name) VALUES (1, 'backend')
-INSERT INTO pets.apps_types (id, name) VALUES (2, 'frontend')
+INSERT INTO pets.apps_types (id, name) VALUES (1, 'backend');
+INSERT INTO pets.apps_types (id, name) VALUES (2, 'frontend');
 
 create table pets.apps
 (
