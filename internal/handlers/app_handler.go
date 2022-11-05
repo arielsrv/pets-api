@@ -105,8 +105,12 @@ func (h AppHandler) GetAppConf(ctx *fiber.Ctx) error {
 		appTypesTask = task.Await[[]model.AppType](a, h.service.GetAppTypes)
 	})
 
-	if groupsTask.Err != nil || appTypesTask.Err != nil {
-		return shared.NewError(http.StatusInternalServerError, "task builder failed")
+	if groupsTask.Err != nil {
+		return shared.NewError(http.StatusInternalServerError, "groups task failed")
+	}
+
+	if appTypesTask.Err != nil {
+		return shared.NewError(http.StatusInternalServerError, "appTypes task failed")
 	}
 
 	r := struct {

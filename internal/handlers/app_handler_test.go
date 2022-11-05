@@ -306,7 +306,7 @@ func TestAppHandler_GetAppConf(t *testing.T) {
 	assert.NoError(t, err)
 	assert.NotNil(t, body)
 
-	assert.Equal(t, "{\"Groups\":[{\"id\":1,\"name\":\"root/group1\"},{\"id\":2,\"name\":\"root/group2\"}],\"Types\":[{\"id\":1,\"name\":\"backend\"},{\"id\":2,\"name\":\"frontend\"}]}", string(body))
+	assert.Equal(t, "{\"groups\":[{\"id\":1,\"name\":\"root/group1\"},{\"id\":2,\"name\":\"root/group2\"}],\"types\":[{\"id\":1,\"name\":\"backend\"},{\"id\":2,\"name\":\"frontend\"}]}", string(body))
 }
 
 func GetAppTypesErr() ([]model.AppType, error) {
