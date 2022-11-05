@@ -21,8 +21,8 @@ github.com/apparentlymart/go-textseg/v13 v13.0.0 h1:Y+KvPE1NYz0xl601PVImeQfFyEy6
 github.com/apparentlymart/go-textseg/v13 v13.0.0/go.mod h1:ZK2fH7c4NqDTLtiYLvIkEghdlcqw7yxLeM89kiTRPUo=
 github.com/arielsrv/golang-toolkit/rest v0.0.4 h1:isexXtgjvTZ/i9Vy+50QFrEAxgBEzXgLKNKwT/OZBjk=
 github.com/arielsrv/golang-toolkit/rest v0.0.4/go.mod h1:Fc6bijXXHhl2URrASyPshhHM8kNJY59sDXFzq6Cza4Q=
-github.com/arielsrv/golang-toolkit/task v0.0.6 h1:jq9Rpn2KyBuRw8LXmay3FkkGwgNzlFmFnpfnntwCZkM=
-github.com/arielsrv/golang-toolkit/task v0.0.6/go.mod h1:1UOKq0wa2LxyhQsRfn0ftoI5VqT9oUjB1fH+oJLIimg=
+github.com/arielsrv/taskpool v0.0.2 h1:Bqot11GzaUO2OnYa+b8KkmsDPusLINd0oJft3cEQW7E=
+github.com/arielsrv/taskpool v0.0.2/go.mod h1:4Y74tkabEgSjnNft9VuA0CGilksdVcOVQddgUyBI3mQ=
 github.com/beego/beego/v2 v2.0.5 h1:fa2TBWfKGDs35Ck9an9SVnpS0zM8sRTXlW8rFjpeYlE=
 github.com/beego/beego/v2 v2.0.5/go.mod h1:CH2/JIaB4ceGYVQlYqTAFft4pVk/ol1ZkakUrUvAyns=
 github.com/cpuguy83/go-md2man/v2 v2.0.0-20190314233015-f79a8a8ca69d/go.mod h1:maD7wRr/U5Z6m/iR4s+kqSMx2CaBsrgA7czyZG/E6dU=

@@ -5,7 +5,7 @@ go 1.19
 require (
 	entgo.io/ent v0.11.4
 	github.com/arielsrv/golang-toolkit/rest v0.0.4
-	github.com/arielsrv/golang-toolkit/task v0.0.6
+	github.com/arielsrv/taskpool v0.0.2
 	github.com/beego/beego/v2 v2.0.5
 	github.com/go-sql-driver/mysql v1.6.0
 	github.com/gofiber/fiber/v2 v2.39.0

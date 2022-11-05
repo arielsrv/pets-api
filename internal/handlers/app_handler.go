@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"runtime"
 
-	"github.com/arielsrv/golang-toolkit/task"
+	task "github.com/arielsrv/taskpool"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/internal/model"
