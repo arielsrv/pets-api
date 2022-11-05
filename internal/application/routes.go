@@ -13,4 +13,5 @@ func RegisterRoutes(app *server.App) {
 	app.Add(http.MethodPost, "/apps", server.Use(handlers.AppHandler{}.CreateApp))
 	app.Add(http.MethodGet, "/apps/types", server.Use(handlers.AppHandler{}.GetAppTypes))
 	app.Add(http.MethodGet, "/apps/search", server.Use(handlers.AppHandler{}.GetApp))
+	app.Add(http.MethodGet, "/apps/conf", server.Use(handlers.AppHandler{}.GetAppConf))
 }

@@ -45,4 +45,5 @@ func RegisterHandlers() {
 	server.RegisterHandler(appHandler.GetGroups)
 	server.RegisterHandler(appHandler.GetAppTypes)
 	server.RegisterHandler(appHandler.GetApp)
+	server.RegisterHandler(appHandler.GetAppConf)
 }

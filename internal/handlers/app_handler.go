@@ -2,6 +2,9 @@ package handlers
 
 import (
 	"net/http"
+	"runtime"
+
+	"github.com/arielsrv/golang-toolkit/task"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/internal/model"
@@ -12,10 +15,17 @@ import (
 
 type AppHandler struct {
 	service services.IAppService
+	tb      task.Builder
 }
 
 func NewAppHandler(service services.IAppService) *AppHandler {
-	return &AppHandler{service: service}
+	tb := task.Builder{
+		MaxWorkers: runtime.NumCPU() - 1,
+	}
+	return &AppHandler{
+		service: service,
+		tb:      tb,
+	}
 }
 
 // GetGroups  godoc
@@ -84,4 +94,28 @@ func (h AppHandler) GetApp(ctx *fiber.Ctx) error {
 	}
 
 	return server.SendJSON(ctx, result)
+}
+
+func (h AppHandler) GetAppConf(ctx *fiber.Ctx) error {
+	var groupsTask *task.Task[[]model.AppGroupModel]
+	var appTypesTask *task.Task[[]model.AppType]
+
+	h.tb.ForkJoin(func(a *task.Awaitable) {
+		groupsTask = task.Await[[]model.AppGroupModel](a, h.service.GetGroups)
+		appTypesTask = task.Await[[]model.AppType](a, h.service.GetAppTypes)
+	})
+
+	if groupsTask.Err != nil || appTypesTask.Err != nil {
+		return shared.NewError(http.StatusInternalServerError, "task builder failed")
+	}
+
+	r := struct {
+		Groups []model.AppGroupModel
+		Types  []model.AppType
+	}{
+		Groups: groupsTask.Result,
+		Types:  appTypesTask.Result,
+	}
+
+	return server.SendJSON(ctx, r)
 }
