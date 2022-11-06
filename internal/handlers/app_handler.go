@@ -101,8 +101,8 @@ func (h AppHandler) GetAppConf(ctx *fiber.Ctx) error {
 	var appTypesTask *task.Task[[]model.AppType]
 
 	h.tb.ForkJoin(func(a *task.Awaitable) {
-		groupsTask = task.Await[[]model.AppGroupModel](a, h.service.GetGroups)
-		appTypesTask = task.Await[[]model.AppType](a, h.service.GetAppTypes)
+		groupsTask = task.Await(a, h.service.GetGroups)
+		appTypesTask = task.Await(a, h.service.GetAppTypes)
 	})
 
 	if groupsTask.Err != nil {

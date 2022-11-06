@@ -1,4 +1,4 @@
-package application
+package module
 
 import (
 	"fmt"
@@ -18,7 +18,7 @@ import (
 	"github.com/internal/services"
 )
 
-func RegisterHandlers() {
+func Handlers() []server.Handler {
 	dataAccess := infrastructure.NewDataAccessService()
 	dataAccess.Open()
 
@@ -40,10 +40,13 @@ func RegisterHandlers() {
 	appService := services.NewAppService(gitLabClient, dataAccess)
 	appHandler := handlers.NewAppHandler(appService)
 
-	server.RegisterHandler(pingHandler.Ping)
-	server.RegisterHandler(appHandler.CreateApp)
-	server.RegisterHandler(appHandler.GetGroups)
-	server.RegisterHandler(appHandler.GetAppTypes)
-	server.RegisterHandler(appHandler.GetApp)
-	server.RegisterHandler(appHandler.GetAppConf)
+	var handlers []server.Handler
+	handlers = append(handlers, pingHandler.Ping)
+	handlers = append(handlers, appHandler.CreateApp)
+	handlers = append(handlers, appHandler.GetGroups)
+	handlers = append(handlers, appHandler.GetAppTypes)
+	handlers = append(handlers, appHandler.GetApp)
+	handlers = append(handlers, appHandler.GetAppConf)
+
+	return handlers
 }
