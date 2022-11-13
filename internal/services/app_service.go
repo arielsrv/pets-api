@@ -22,7 +22,8 @@ type IAppService interface {
 	GetGroups() ([]model.AppGroupModel, error)
 	CreateApp(repositoryDto *model.CreateAppModel) (*model.AppModel, error)
 	GetAppTypes() ([]model.AppType, error)
-	GetApp(appName string) (*model.AppModel, error)
+	GetAppByName(appName string) (*model.AppModel, error)
+	GetAppById(appId int64) (*model.AppModel, error)
 }
 
 type AppService struct {
@@ -34,19 +35,19 @@ func NewAppService(client gitlab.IGitLabClient, dataAccess *infrastructure.DataA
 	return &AppService{client: client, dataAccess: dataAccess}
 }
 
-func (s *AppService) GetApp(appName string) (*model.AppModel, error) {
-	app, err := s.dataAccess.GetClient().App.Query().
+func (s *AppService) GetAppByName(appName string) (*model.AppModel, error) {
+	application, err := s.dataAccess.GetClient().App.Query().
 		Where(app.Name(appName)).
 		First(context.Background())
 
 	if err != nil {
 		if ent.IsNotFound(err) {
-			return nil, shared.NewError(http.StatusNotFound, fmt.Sprintf("app with name %s not found", appName))
+			return nil, shared.NewError(http.StatusNotFound, fmt.Sprintf("application with name %s not found", appName))
 		}
 		return nil, err
 	}
 
-	projectResponse, err := s.client.GetProject(app.ProjectId)
+	projectResponse, err := s.client.GetProject(application.ProjectId)
 
 	if err != nil {
 		return nil, err
@@ -66,7 +67,46 @@ func (s *AppService) GetApp(appName string) (*model.AppModel, error) {
 		repoURL.Path)
 
 	appModel := new(model.AppModel)
-	appModel.ID = app.ID
+	appModel.ID = application.ID
+	appModel.URL = secureURL
+
+	return appModel, nil
+}
+
+func (s *AppService) GetAppById(appId int64) (*model.AppModel, error) {
+	application, err := s.dataAccess.GetClient().App.Query().
+		Where(app.ID(appId)).
+		First(context.Background())
+
+	if err != nil {
+		if ent.IsNotFound(err) {
+			return nil, shared.NewError(http.StatusNotFound, fmt.Sprintf("application with name %d not found", appId))
+		}
+		return nil, err
+	}
+
+	projectResponse, err := s.client.GetProject(application.ProjectId)
+
+	if err != nil {
+		return nil, err
+	}
+
+	repoURL, err := url.Parse(projectResponse.URL)
+	if err != nil {
+		return nil, err
+	}
+
+	gitlabToken := config.String("gitlab.token")
+
+	secureURL := fmt.Sprintf("%s://oauth2:%s@%s%s",
+		repoURL.Scheme,
+		gitlabToken,
+		repoURL.Host,
+		repoURL.Path)
+
+	appModel := new(model.AppModel)
+	appModel.ID = application.ID
+	appModel.Name = application.Name
 	appModel.URL = secureURL
 
 	return appModel, nil

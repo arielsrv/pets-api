@@ -46,7 +46,7 @@ func Handlers() []server.Handler {
 	handlers = append(handlers, appHandler.GetGroups)
 	handlers = append(handlers, appHandler.GetAppTypes)
 	handlers = append(handlers, appHandler.GetApp)
-	handlers = append(handlers, appHandler.GetAppConf)
+	handlers = append(handlers, appHandler.CreateSecret)
 
 	return handlers
 }

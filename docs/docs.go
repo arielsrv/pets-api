@@ -16,27 +16,27 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/ping": {
-            "get": {
-                "description": "Ping",
-                "produces": [
-                    "text/plain"
-                ],
+        "/apps": {
+            "post": {
                 "tags": [
-                    "Check"
+                    "Apps"
                 ],
-                "summary": "Check if the instance is online",
-                "responses": {
-                    "200": {
-                        "description": "pong",
+                "summary": "Creates an IskayPet Application",
+                "parameters": [
+                    {
+                        "description": "Body params",
+                        "name": "createAppModel",
+                        "in": "body",
+                        "required": true,
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/model.CreateAppModel"
                         }
                     }
-                }
+                ],
+                "responses": {}
             }
         },
-        "/repositories/groups": {
+        "/apps/groups": {
             "get": {
                 "description": "Needed for create a project in a specific group",
                 "consumes": [
@@ -48,7 +48,7 @@ const docTemplate = `{
                 "tags": [
                     "Groups"
                 ],
-                "summary": "Get all groups",
+                "summary": "Get all groups from GitLab",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -57,6 +57,81 @@ const docTemplate = `{
                             "items": {
                                 "$ref": "#/definitions/model.AppGroupModel"
                             }
+                        }
+                    }
+                }
+            }
+        },
+        "/apps/search": {
+            "get": {
+                "tags": [
+                    "Apps"
+                ],
+                "summary": "Get relevant info for an IskayPet app",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Application name",
+                        "name": "app_name",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            }
+        },
+        "/apps/types": {
+            "get": {
+                "description": "For example: app_name: users-api, key: token, value: hash",
+                "tags": [
+                    "Apps"
+                ],
+                "summary": "Get all application types (backend, frontend, etc.)",
+                "responses": {}
+            }
+        },
+        "/apps/{appId}/secrets": {
+            "post": {
+                "tags": [
+                    "Apps"
+                ],
+                "summary": "Creates secret for application",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "App ID",
+                        "name": "appId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Body params",
+                        "name": "createAppSecretModel",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.CreateAppSecretModel"
+                        }
+                    }
+                ],
+                "responses": {}
+            }
+        },
+        "/ping": {
+            "get": {
+                "description": "Health",
+                "produces": [
+                    "text/plain"
+                ],
+                "tags": [
+                    "Check"
+                ],
+                "summary": "Check if the instance is healthy or unhealthy",
+                "responses": {
+                    "200": {
+                        "description": "pong",
+                        "schema": {
+                            "type": "string"
                         }
                     }
                 }
@@ -74,6 +149,31 @@ const docTemplate = `{
                     "type": "string"
                 }
             }
+        },
+        "model.CreateAppModel": {
+            "type": "object",
+            "properties": {
+                "app_type_id": {
+                    "type": "integer"
+                },
+                "group_id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.CreateAppSecretModel": {
+            "type": "object",
+            "properties": {
+                "key": {
+                    "type": "string"
+                },
+                "value": {
+                    "type": "string"
+                }
+            }
         }
     }
 }`
@@ -82,10 +182,10 @@ const docTemplate = `{
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
 	Host:             "",
-	BasePath:         "/.",
+	BasePath:         "",
 	Schemes:          []string{},
-	Title:            "Golang Template API",
-	Description:      "This is a sample swagger for Golang Template API",
+	Title:            "Pets API",
+	Description:      "Create apps, services and infrastructure.",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 }

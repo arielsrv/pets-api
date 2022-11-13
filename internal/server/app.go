@@ -3,6 +3,9 @@ package server
 import (
 	"log"
 	"net/http"
+
+	"github.com/internal/services"
+
 	"reflect"
 	"runtime"
 
@@ -11,6 +14,7 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/gofiber/fiber/v2/middleware/requestid"
 	"github.com/gofiber/swagger"
+	"github.com/gofiber/template/html"
 	"github.com/internal/shared"
 )
 
@@ -30,6 +34,7 @@ func New(appConfig ...AppConfig) *App {
 		App: fiber.New(fiber.Config{
 			DisableStartupMessage: true,
 			ErrorHandler:          shared.ErrorHandler,
+			Views:                 html.New("./views", ".html"),
 		}),
 		appConfig: AppConfig{
 			Recovery:  true,
@@ -63,6 +68,13 @@ func New(appConfig ...AppConfig) *App {
 		log.Println("Swagger enabled")
 		app.Add(http.MethodGet, "/swagger/*", swagger.HandlerDefault)
 	}
+
+	app.Get("/snippets", func(c *fiber.Ctx) error {
+		snippetService := services.NewSnippetService()
+		return c.Render("snippets/index", fiber.Map{
+			"Snippets": snippetService.GetSecrets(),
+		})
+	})
 
 	return app
 }

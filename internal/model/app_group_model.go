@@ -1,6 +1,6 @@
 package model
 
-// AppGroupModel AppGroupModel Model
+// AppGroupModel  Model
 // swagger:model AppGroupModel
 type AppGroupModel struct {
 	ID   int64  `json:"id,omitempty"`

@@ -11,10 +11,9 @@ import (
 	"github.com/internal/server"
 )
 
-// @title       Golang Template API
+// @title       Pets API
 // @version     1.0
-// @description This is a sample swagger for Golang Template API
-// @BasePath    /.
+// @description Create apps, services and infrastructure.
 func main() {
 	app := server.New()
 	app.Handlers(module.Handlers())
