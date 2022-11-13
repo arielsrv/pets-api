@@ -4,8 +4,6 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/internal/services"
-
 	"reflect"
 	"runtime"
 
@@ -68,13 +66,6 @@ func New(appConfig ...AppConfig) *App {
 		log.Println("Swagger enabled")
 		app.Add(http.MethodGet, "/swagger/*", swagger.HandlerDefault)
 	}
-
-	app.Get("/snippets", func(c *fiber.Ctx) error {
-		snippetService := services.NewSnippetService()
-		return c.Render("snippets/index", fiber.Map{
-			"Snippets": snippetService.GetSecrets(),
-		})
-	})
 
 	return app
 }

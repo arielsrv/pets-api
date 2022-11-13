@@ -48,6 +48,16 @@ func (m *MockAppService) GetAppById(int64) (*model.AppModel, error) {
 	return args.Get(0).(*model.AppModel), args.Error(1)
 }
 
+func (m *MockAppService) SaveSecret(int64, *model.CreateAppSecretModel) (*model.AppSecretModel, error) {
+	args := m.Called()
+	return args.Get(0).(*model.AppSecretModel), args.Error(1)
+}
+
+func (m *MockAppService) GetSecret(int64) (string, string, error) {
+	args := m.Called()
+	return args.Get(0).(string), args.Get(1).(string), args.Error(2)
+}
+
 func TestAppHandler_GetGroups(t *testing.T) {
 	appService := new(MockAppService)
 	appService.On("GetGroups").Return(GetGroups())

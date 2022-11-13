@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strings"
 
 	"github.com/internal/config"
 )
@@ -34,23 +35,36 @@ type Snippet struct {
 }
 
 type ISnippetService interface {
-	GetSecrets() []Snippet
+	GetSecrets(secretID int64) ([]Snippet, error)
 }
 
 type SnippetService struct {
-	secrets []Snippet
+	appService IAppService
+	secrets    []Snippet
 }
 
-func (s SnippetService) GetSecrets() []Snippet {
-	return s.secrets
+func (s SnippetService) GetSecrets(secretID int64) ([]Snippet, error) {
+	secretName, appName, err := s.appService.GetSecret(secretID)
+	if err != nil {
+		return nil, err
+	}
+
+	for i, secret := range s.secrets {
+		snippetName := fmt.Sprintf("PETS_%s_%s", strings.ToUpper(appName), strings.ToUpper(secretName))
+		replaced := strings.ReplaceAll(secret.Code, "$PETS_APPNAME_SECRETKEY", snippetName)
+		s.secrets[i].Code = replaced
+	}
+
+	return s.secrets, nil
 }
 
-func NewSnippetService() *SnippetService {
+func NewSnippetService(appService IAppService) *SnippetService {
 	var secrets []Snippet
 	secrets = buildSecrets(secrets)
 
 	return &SnippetService{
-		secrets: secrets,
+		secrets:    secrets,
+		appService: appService,
 	}
 }
 

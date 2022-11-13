@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"fmt"
 	"net/http"
 	"runtime"
 
@@ -144,32 +143,13 @@ func (h AppHandler) CreateSecret(ctx *fiber.Ctx) error {
 		return err
 	}
 
-	// result, err = secrets.CreateSecret(appModel.Name, request.Key, request.Value)
-	// if err != nil {
-	//     return err
-	// }
-	// service.PutSecret( ... result ...)
+	result, err := h.service.SaveSecret(appModel.ID, request)
+	if err != nil {
+		return err
+	}
 
-	// ej: appName: customers-api, key: mirakl_token, value: abcdef12345
-	// secrets.GetSecret(PETS_CUSTOMERS-API_MIRAKL_TOKEN) // PREFIX_APPNAME-KEY
-	// result
-
-	result := new(model.AppSecretModel)
-	result.Key = request.Key //nolint:nolintlint,govet
-
-	var snippets []model.SnippetModel
-	var snippet1 model.SnippetModel
-
-	// @todo: download snippet code from any repo so parse and, replace variables and servers url
-	codeUrl := fmt.Sprintf("%s/apps/%d/secrets/snippets", ctx.BaseURL(), appModel.ID)
-	// apps/123/secrets
-	// secrets/1/secrets/1
-	snippet1.CodeUrl = codeUrl
-
-	snippets = append(snippets, snippet1)
-
-	result.Snippets = snippets
-
+	result.RelativeUrl = ctx.BaseURL() + result.RelativeUrl
 	ctx.Status(201)
+
 	return server.SendJSON(ctx, result)
 }
