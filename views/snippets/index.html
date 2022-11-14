@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+<body>
+{{range $i, $snippet := .Snippets}}
+    <h2>{{ $snippet.Language }}</h2>
+    <pre>
+        <code class="{{ $snippet.Class }}">{{ $snippet.Code }}</code>
+    </pre>
+{{end}}
+</body>
+</html>

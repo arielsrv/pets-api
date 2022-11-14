@@ -3,7 +3,8 @@ package server
 import (
 	"log"
 	"net/http"
-	reflect "reflect"
+
+	"reflect"
 	"runtime"
 
 	"github.com/gofiber/fiber/v2"
@@ -11,6 +12,7 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/gofiber/fiber/v2/middleware/requestid"
 	"github.com/gofiber/swagger"
+	"github.com/gofiber/template/html"
 	"github.com/internal/shared"
 )
 
@@ -30,6 +32,7 @@ func New(appConfig ...AppConfig) *App {
 		App: fiber.New(fiber.Config{
 			DisableStartupMessage: true,
 			ErrorHandler:          shared.ErrorHandler,
+			Views:                 html.New("./views", ".html"),
 		}),
 		appConfig: AppConfig{
 			Recovery:  true,
@@ -82,20 +85,56 @@ func SendString(ctx *fiber.Ctx, body string) error {
 	return ctx.SendString(body)
 }
 
+type Routes struct {
+	routes []Route
+}
+
+type Route struct {
+	Verb   string
+	Path   string
+	Action func(ctx *fiber.Ctx) error
+}
+
+func (r *Routes) Add(verb string, path string, action func(ctx *fiber.Ctx) error) {
+	route := &Route{
+		Verb:   verb,
+		Path:   path,
+		Action: Use(action),
+	}
+	r.routes = append(r.routes, *route)
+}
+
+func (app *App) Routing(f func(*Routes)) {
+	r := new(Routes)
+	f(r)
+
+	for _, route := range r.routes {
+		app.Add(route.Verb, route.Path, route.Action)
+	}
+}
+
+func (app *App) Handlers(handlers []Handler) {
+	for _, handler := range handlers {
+		RegisterHandler(handler)
+	}
+}
+
 func SendJSON(ctx *fiber.Ctx, data interface{}) error {
 	return ctx.JSON(data)
 }
 
 func RegisterHandler(action func(ctx *fiber.Ctx) error) {
-	name := getFuncName(action)
+	name := getFunctionName(action)
 	routes[name] = action
 }
 
+type Handler = func(ctx *fiber.Ctx) error
+
 func Use(action func(ctx *fiber.Ctx) error) func(ctx *fiber.Ctx) error {
-	name := getFuncName(action)
+	name := getFunctionName(action)
 	return routes[name]
 }
 
-func getFuncName(action func(ctx *fiber.Ctx) error) string {
+func getFunctionName(action func(ctx *fiber.Ctx) error) string {
 	return runtime.FuncForPC(reflect.ValueOf(action).Pointer()).Name()
 }

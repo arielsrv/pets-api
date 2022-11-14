@@ -11,3 +11,6 @@ type App func(*sql.Selector)
 
 // AppType is the predicate function for apptype builders.
 type AppType func(*sql.Selector)
+
+// Secret is the predicate function for secret builders.
+type Secret func(*sql.Selector)

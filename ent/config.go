@@ -26,6 +26,7 @@ type config struct {
 type hooks struct {
 	App     []ent.Hook
 	AppType []ent.Hook
+	Secret  []ent.Hook
 }
 
 // Options applies the options on the config object.

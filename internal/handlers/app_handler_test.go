@@ -33,12 +33,17 @@ func (m *MockAppService) CreateApp(*model.CreateAppModel) (*model.AppModel, erro
 	return args.Get(0).(*model.AppModel), args.Error(1)
 }
 
-func (m *MockAppService) GetAppTypes() ([]model.AppType, error) {
+func (m *MockAppService) GetAppTypes() ([]model.AppTypeModel, error) {
 	args := m.Called()
-	return args.Get(0).([]model.AppType), args.Error(1)
+	return args.Get(0).([]model.AppTypeModel), args.Error(1)
 }
 
-func (m *MockAppService) GetApp(string) (*model.AppModel, error) {
+func (m *MockAppService) GetAppByName(string) (*model.AppModel, error) {
+	args := m.Called()
+	return args.Get(0).(*model.AppModel), args.Error(1)
+}
+
+func (m *MockAppService) GetAppById(int64) (*model.AppModel, error) {
 	args := m.Called()
 	return args.Get(0).(*model.AppModel), args.Error(1)
 }
@@ -66,7 +71,7 @@ func TestAppHandler_GetGroups(t *testing.T) {
 
 func TestAppHandler_GetApp(t *testing.T) {
 	appService := new(MockAppService)
-	appService.On("GetApp").Return(GetApp())
+	appService.On("GetAppByName").Return(GetApp())
 
 	appHandler := handlers.NewAppHandler(appService)
 	app := server.New()
@@ -87,7 +92,7 @@ func TestAppHandler_GetApp(t *testing.T) {
 
 func TestAppHandler_GetApp_BadRequestErr(t *testing.T) {
 	appService := new(MockAppService)
-	appService.On("GetApp").Return(GetApp())
+	appService.On("GetAppByName").Return(GetApp())
 
 	appHandler := handlers.NewAppHandler(appService)
 	app := server.New()
@@ -108,7 +113,7 @@ func TestAppHandler_GetApp_BadRequestErr(t *testing.T) {
 
 func TestAppHandler_GetApp_NotFoundErr(t *testing.T) {
 	appService := new(MockAppService)
-	appService.On("GetApp").Return(GetAppNotFound())
+	appService.On("GetAppByName").Return(GetAppNotFound())
 
 	appHandler := handlers.NewAppHandler(appService)
 	app := server.New()
@@ -287,42 +292,20 @@ func TestAppHandler_GetAppTypes_Err(t *testing.T) {
 	assert.Equal(t, "{\"status_code\":500,\"message\":\"internal server error\"}", string(body))
 }
 
-func TestAppHandler_GetAppConf(t *testing.T) {
-	appService := new(MockAppService)
-	appService.On("GetGroups").Return(GetGroups())
-	appService.On("GetAppTypes").Return(GetAppTypes())
-
-	appHandler := handlers.NewAppHandler(appService)
-	app := server.New()
-	app.Add(http.MethodGet, "/apps/conf", appHandler.GetAppConf)
-
-	request := httptest.NewRequest(http.MethodGet, "/apps/conf", nil)
-	response, err := app.Test(request)
-	assert.NoError(t, err)
-	assert.NotNil(t, response)
-	assert.Equal(t, http.StatusOK, response.StatusCode)
-
-	body, err := io.ReadAll(response.Body)
-	assert.NoError(t, err)
-	assert.NotNil(t, body)
-
-	assert.Equal(t, "{\"groups\":[{\"id\":1,\"name\":\"root/group1\"},{\"id\":2,\"name\":\"root/group2\"}],\"types\":[{\"id\":1,\"name\":\"backend\"},{\"id\":2,\"name\":\"frontend\"}]}", string(body))
-}
-
-func GetAppTypesErr() ([]model.AppType, error) {
+func GetAppTypesErr() ([]model.AppTypeModel, error) {
 	return nil, errors.New("internal server error")
 }
 
-func GetAppTypes() ([]model.AppType, error) {
-	var appType1 model.AppType
+func GetAppTypes() ([]model.AppTypeModel, error) {
+	var appType1 model.AppTypeModel
 	appType1.ID = 1
 	appType1.Name = "backend"
 
-	var appType2 model.AppType
+	var appType2 model.AppTypeModel
 	appType2.ID = 2
 	appType2.Name = "frontend"
 
-	var appsType []model.AppType
+	var appsType []model.AppTypeModel
 	appsType = append(appsType, appType1)
 	appsType = append(appsType, appType2)
 

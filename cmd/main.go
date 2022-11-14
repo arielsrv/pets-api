@@ -5,20 +5,19 @@ import (
 	"log"
 	"os"
 
+	"github.com/internal/module"
+
 	_ "github.com/docs"
-	"github.com/internal/application"
 	"github.com/internal/server"
 )
 
-// @title       Golang Template API
+// @title       Pets API
 // @version     1.0
-// @description This is a sample swagger for Golang Template API
-// @BasePath    /.
+// @description Create apps, services and infrastructure.
 func main() {
 	app := server.New()
-
-	application.RegisterHandlers()
-	application.RegisterRoutes(app)
+	app.Handlers(module.Handlers())
+	app.Routing(module.Routes())
 
 	host := os.Getenv("HOST")
 	if host == "" {
@@ -34,5 +33,5 @@ func main() {
 
 	log.Printf("Listening on port %s", port)
 	log.Printf("Open http://%s:%s/ping in the browser", host, port)
-	log.Fatal(app.Listen(address))
+	log.Fatal(app.Start(address))
 }
