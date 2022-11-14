@@ -22,19 +22,8 @@ func NewSecretHandler(appService services.IAppService, secretService services.IS
 	}
 }
 
-// CreateSecret  godoc
-// @Summary     Creates secret for application
-// @Tags        Secrets
-// @Param appId    path int true "App ID"
-// @Param 		createAppSecretModel    body model.CreateAppSecretModel true "Body params"
-// @Router      /apps/{appId}/secrets [post].
 func (h SecretHandler) CreateSecret(ctx *fiber.Ctx) error {
 	appId, err := ctx.ParamsInt("appId")
-	if err != nil {
-		return err
-	}
-
-	appModel, err := h.appService.GetAppById(int64(appId))
 	if err != nil {
 		return err
 	}
@@ -54,7 +43,7 @@ func (h SecretHandler) CreateSecret(ctx *fiber.Ctx) error {
 		return err
 	}
 
-	result, err := h.secretService.SaveSecret(appModel.ID, request)
+	result, err := h.secretService.SaveSecret(int64(appId), request)
 	if err != nil {
 		return err
 	}

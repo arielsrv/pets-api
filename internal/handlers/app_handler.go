@@ -27,14 +27,6 @@ func NewAppHandler(service services.IAppService) *AppHandler {
 	}
 }
 
-// GetGroups  godoc
-// @Summary     Get all groups from GitLab
-// @Description Needed for create a project in a specific group
-// @Tags        Groups
-// @Accept      json
-// @Produce     json
-// @Success     200 {array} model.AppGroupModel
-// @Router      /apps/groups [get].
 func (h AppHandler) GetGroups(ctx *fiber.Ctx) error {
 	result, err := h.service.GetGroups()
 	if err != nil {
@@ -43,11 +35,6 @@ func (h AppHandler) GetGroups(ctx *fiber.Ctx) error {
 	return server.SendJSON(ctx, result)
 }
 
-// CreateApp  godoc
-// @Summary     Creates an IskayPet Application
-// @Tags        Apps
-// @Param 		createAppModel    body model.CreateAppModel true "Body params"
-// @Router      /apps [post].
 func (h AppHandler) CreateApp(ctx *fiber.Ctx) error {
 	request := new(model.CreateAppModel)
 	if err := ctx.BodyParser(request); err != nil {
@@ -77,12 +64,6 @@ func (h AppHandler) CreateApp(ctx *fiber.Ctx) error {
 	return server.SendJSON(ctx, result)
 }
 
-// GetAppTypes  godoc
-// @Summary     Get all application types (backend, frontend, etc.)
-// @Description For example: app_name: users-api, key: token, value: hash
-// PETS_USERS-API_TOKEN
-// @Tags        Apps
-// @Router      /apps/types [get].
 func (h AppHandler) GetAppTypes(ctx *fiber.Ctx) error {
 	result, err := h.service.GetAppTypes()
 	if err != nil {
@@ -92,11 +73,6 @@ func (h AppHandler) GetAppTypes(ctx *fiber.Ctx) error {
 	return server.SendJSON(ctx, result)
 }
 
-// GetApp godoc
-// @Summary     Get relevant info for an IskayPet app
-// @Tags        Apps
-// @Param app_name    query string true "Application name"
-// @Router      /apps/search [get].
 func (h AppHandler) GetApp(ctx *fiber.Ctx) error {
 	appName := ctx.Query("app_name")
 	err := shared.EnsureNotEmpty(appName, "bad request error, missing app_name")

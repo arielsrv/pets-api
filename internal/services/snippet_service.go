@@ -54,14 +54,13 @@ func NewSnippetService(secretService ISecretService) *SnippetService {
 }
 
 func (s SnippetService) GetSecrets(secretID int64) ([]Snippet, error) {
-	secretName, appName, err := s.secretService.GetSecret(secretID)
+	secretName, err := s.secretService.GetSecret(secretID)
 	if err != nil {
 		return nil, err
 	}
 
 	for i, secret := range s.secrets {
-		snippetName := fmt.Sprintf("PETS_%s_%s", strings.ToUpper(appName), strings.ToUpper(secretName))
-		replaced := strings.ReplaceAll(secret.Code, "$PETS_APPNAME_SECRETKEY", snippetName)
+		replaced := strings.ReplaceAll(secret.Code, "$PETS_APPNAME_SECRETKEY", secretName)
 		s.secrets[i].Code = replaced
 	}
 
