@@ -2,10 +2,11 @@ package services
 
 import (
 	"fmt"
-	"github.com/internal/model"
 	"log"
 	"os"
 	"strings"
+
+	"github.com/internal/model"
 
 	"github.com/internal/config"
 )

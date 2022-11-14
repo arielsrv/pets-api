@@ -1,11 +1,12 @@
 package handlers_test
 
 import (
-	"github.com/internal/model"
 	"io"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	"github.com/internal/model"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/template/html"

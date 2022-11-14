@@ -5,7 +5,8 @@ import (
 	"log"
 	"os"
 
-	"github.com/internal/module"
+	"github.com/internal/container"
+	"github.com/internal/routes"
 
 	_ "github.com/docs"
 	"github.com/internal/server"
@@ -16,8 +17,8 @@ import (
 // @description Create apps, services and infrastructure.
 func main() {
 	app := server.New()
-	app.Handlers(module.Handlers())
-	app.Routing(module.Routes())
+	app.Handlers(container.Handlers())
+	app.Routing(routes.Routes())
 
 	host := os.Getenv("HOST")
 	if host == "" {

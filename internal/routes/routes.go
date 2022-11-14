@@ -1,4 +1,4 @@
-package module
+package routes
 
 import (
 	. "net/http"
