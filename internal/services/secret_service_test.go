@@ -90,6 +90,32 @@ func TestSecretService_SaveSecret(t *testing.T) {
 	assert.Equal(t, "/apps/1/secrets/2/snippets", actual.RelativeUrl)
 }
 
+func TestSecretService_SaveSecret_Conflict(t *testing.T) {
+	dataAccessService := infrastructure.NewDataAccessService()
+	dataAccessService.Test(t)
+	defer dataAccessService.Close()
+
+	appService := new(MockAppService)
+	appService.On("GetAppById").Return(GetApp())
+
+	service := services.NewSecretService(dataAccessService, appService)
+	secretModel := new(model.CreateAppSecretModel)
+	secretModel.Key = "MYSECRETKEY"
+	secretModel.Value = "MYSECRETVALUE"
+	actual, err := service.SaveSecret(1, secretModel)
+
+	assert.NoError(t, err)
+	assert.NotNil(t, actual)
+
+	assert.Equal(t, "PETS_MYAPP_MYSECRETKEY", actual.Key)
+	assert.Equal(t, "/apps/1/secrets/2/snippets", actual.RelativeUrl)
+
+	conflict, err := service.SaveSecret(1, secretModel)
+
+	assert.Error(t, err)
+	assert.Nil(t, conflict)
+}
+
 func GetApp() (*model.AppModel, error) {
 	appModel := new(model.AppModel)
 	appModel.ID = 1
