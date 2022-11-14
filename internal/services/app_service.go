@@ -21,7 +21,7 @@ import (
 type IAppService interface {
 	GetGroups() ([]model.AppGroupModel, error)
 	CreateApp(repositoryDto *model.CreateAppModel) (*model.AppModel, error)
-	GetAppTypes() ([]model.AppType, error)
+	GetAppTypes() ([]model.AppTypeModel, error)
 	GetAppByName(appName string) (*model.AppModel, error)
 	GetAppById(appId int64) (*model.AppModel, error)
 }
@@ -112,16 +112,16 @@ func (s *AppService) GetAppById(appId int64) (*model.AppModel, error) {
 	return appModel, nil
 }
 
-func (s *AppService) GetAppTypes() ([]model.AppType, error) {
+func (s *AppService) GetAppTypes() ([]model.AppTypeModel, error) {
 	appTypes, err := s.dataAccess.GetClient().AppType.Query().All(context.Background())
 
 	if err != nil {
 		return nil, err
 	}
 
-	var appTypesModel []model.AppType
+	var appTypesModel []model.AppTypeModel
 	for _, appType := range appTypes {
-		var appTypeModel model.AppType
+		var appTypeModel model.AppTypeModel
 		appTypeModel.ID = appType.ID
 		appTypeModel.Name = appType.Name
 		appTypesModel = append(appTypesModel, appTypeModel)

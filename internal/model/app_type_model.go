@@ -1,8 +1,6 @@
 package model
 
-// AppType Model
-// swagger:model AppType
-type AppType struct {
+type AppTypeModel struct {
 	ID   int    `json:"id,omitempty"`
 	Name string `json:"name,omitempty"`
 }
