@@ -2,15 +2,16 @@ package handlers_test
 
 import (
 	"bytes"
+	"io"
+	"net/http"
+	"net/http/httptest"
+	"testing"
+
 	"github.com/internal/handlers"
 	"github.com/internal/model"
 	"github.com/internal/server"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
-	"io"
-	"net/http"
-	"net/http/httptest"
-	"testing"
 )
 
 type MockSecretService struct {
@@ -23,7 +24,7 @@ func (m *MockSecretService) SaveSecret(int64, *model.CreateAppSecretModel) (*mod
 }
 
 func (m *MockSecretService) GetSecret(int64) (string, error) {
-	//TODO implement me
+	// TODO implement me
 	panic("implement me")
 }
 
