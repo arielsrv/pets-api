@@ -93,7 +93,7 @@ const docTemplate = `{
         "/apps/{appId}/secrets": {
             "post": {
                 "tags": [
-                    "Apps"
+                    "Secrets"
                 ],
                 "summary": "Creates secret for application",
                 "parameters": [

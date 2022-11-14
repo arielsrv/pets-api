@@ -40,7 +40,10 @@ func Handlers() []server.Handler {
 	appService := services.NewAppService(gitLabClient, dataAccess)
 	appHandler := handlers.NewAppHandler(appService)
 
-	snippetService := services.NewSnippetService(appService)
+	secretService := services.NewSecretService(gitLabClient, dataAccess)
+	secretHandler := handlers.NewSecretHandler(appService, secretService)
+
+	snippetService := services.NewSnippetService(secretService)
 	snippetHandler := handlers.NewSnippetHandler(snippetService)
 
 	var handlers []server.Handler
@@ -49,7 +52,7 @@ func Handlers() []server.Handler {
 	handlers = append(handlers, appHandler.GetGroups)
 	handlers = append(handlers, appHandler.GetAppTypes)
 	handlers = append(handlers, appHandler.GetApp)
-	handlers = append(handlers, appHandler.CreateSecret)
+	handlers = append(handlers, secretHandler.CreateSecret)
 	handlers = append(handlers, snippetHandler.GetSnippet)
 
 	return handlers

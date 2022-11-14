@@ -58,7 +58,7 @@ paths:
       responses: {}
       summary: Creates secret for application
       tags:
-      - Apps
+      - Secrets
   /apps/groups:
     get:
       consumes:

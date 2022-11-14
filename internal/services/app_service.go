@@ -6,8 +6,6 @@ import (
 	"net/http"
 	"net/url"
 
-	"github.com/ent/secret"
-
 	"github.com/internal/config"
 
 	"github.com/internal/clients/gitlab"
@@ -26,51 +24,11 @@ type IAppService interface {
 	GetAppTypes() ([]model.AppType, error)
 	GetAppByName(appName string) (*model.AppModel, error)
 	GetAppById(appId int64) (*model.AppModel, error)
-	SaveSecret(appId int64, secretModel *model.CreateAppSecretModel) (*model.AppSecretModel, error)
-	GetSecret(secretID int64) (string, string, error)
 }
 
 type AppService struct {
 	client     gitlab.IGitLabClient
 	dataAccess *infrastructure.DataAccessService
-}
-
-func (s *AppService) GetSecret(secretID int64) (string, string, error) {
-	result, err := s.dataAccess.GetClient().Secret.Query().
-		Where(secret.ID(secretID)).
-		First(context.Background())
-
-	if err != nil {
-		if ent.IsNotFound(err) {
-			return "", "", shared.NewError(http.StatusNotFound, fmt.Sprintf("secret with id %d not found", secretID))
-		}
-		return "", "", err
-	}
-
-	app, err := result.QueryApp().Only(context.Background())
-	if err != nil {
-		return "", "", err
-	}
-
-	return result.Key, app.Name, nil
-}
-
-func (s *AppService) SaveSecret(appId int64, secretModel *model.CreateAppSecretModel) (*model.AppSecretModel, error) {
-	result, err := s.dataAccess.GetClient().Secret.Create().
-		SetKey(secretModel.Key).
-		SetValue(secretModel.Value).
-		SetAppID(appId).
-		Save(context.Background())
-
-	if err != nil {
-		return nil, err
-	}
-
-	model := new(model.AppSecretModel)
-	model.Key = secretModel.Key
-	model.RelativeUrl = fmt.Sprintf("/apps/%d/secrets/%d/snippets", appId, result.ID)
-
-	return model, nil
 }
 
 func NewAppService(client gitlab.IGitLabClient, dataAccess *infrastructure.DataAccessService) *AppService {

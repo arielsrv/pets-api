@@ -39,12 +39,22 @@ type ISnippetService interface {
 }
 
 type SnippetService struct {
-	appService IAppService
-	secrets    []Snippet
+	secretService ISecretService
+	secrets       []Snippet
+}
+
+func NewSnippetService(secretService ISecretService) *SnippetService {
+	var secrets []Snippet
+	secrets = buildSecrets(secrets)
+
+	return &SnippetService{
+		secrets:       secrets,
+		secretService: secretService,
+	}
 }
 
 func (s SnippetService) GetSecrets(secretID int64) ([]Snippet, error) {
-	secretName, appName, err := s.appService.GetSecret(secretID)
+	secretName, appName, err := s.secretService.GetSecret(secretID)
 	if err != nil {
 		return nil, err
 	}
@@ -56,16 +66,6 @@ func (s SnippetService) GetSecrets(secretID int64) ([]Snippet, error) {
 	}
 
 	return s.secrets, nil
-}
-
-func NewSnippetService(appService IAppService) *SnippetService {
-	var secrets []Snippet
-	secrets = buildSecrets(secrets)
-
-	return &SnippetService{
-		secrets:    secrets,
-		appService: appService,
-	}
 }
 
 func buildSecrets(secrets []Snippet) []Snippet {

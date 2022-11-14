@@ -14,7 +14,7 @@ func Routes() func(*server.Routes) {
 		routes.Add(MethodPost, "/apps", AppHandler{}.CreateApp)
 		routes.Add(MethodGet, "/apps/types", AppHandler{}.GetAppTypes)
 		routes.Add(MethodGet, "/apps/search", AppHandler{}.GetApp)
-		routes.Add(MethodPost, "/apps/:appId/secrets", AppHandler{}.CreateSecret)
+		routes.Add(MethodPost, "/apps/:appId/secrets", SecretHandler{}.CreateSecret)
 		routes.Add(MethodGet, "/apps/:appId/secrets/:secretId/snippets", SnippetHandler{}.GetSnippet)
 	}
 	return routes
