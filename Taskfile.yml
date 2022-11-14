@@ -81,10 +81,6 @@ tasks:
     desc: Run [build] task.
     cmds:
       - task: build
-  variables:
-    desc: Run [build] task.
-    cmds:
-      - task: build
   run:
     desc: Run $ENTRY_POINT
     cmds:
