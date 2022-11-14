@@ -8,7 +8,6 @@ import (
 
 	"github.com/ent"
 	"github.com/ent/secret"
-	"github.com/internal/clients/gitlab"
 	"github.com/internal/infrastructure"
 	"github.com/internal/model"
 	"github.com/internal/shared"
@@ -20,13 +19,12 @@ type ISecretService interface {
 }
 
 type SecretService struct {
-	client     gitlab.IGitLabClient
 	dataAccess *infrastructure.DataAccessService
 	appService IAppService
 }
 
-func NewSecretService(client gitlab.IGitLabClient, dataAccess *infrastructure.DataAccessService, appService IAppService) *SecretService {
-	return &SecretService{client: client, dataAccess: dataAccess, appService: appService}
+func NewSecretService(dataAccess *infrastructure.DataAccessService, appService IAppService) *SecretService {
+	return &SecretService{dataAccess: dataAccess, appService: appService}
 }
 
 func (s *SecretService) GetSecret(secretID int64) (string, error) {
