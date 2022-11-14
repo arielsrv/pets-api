@@ -1,6 +1,7 @@
 package handlers_test
 
 import (
+	"github.com/internal/model"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -18,9 +19,9 @@ type MockSnippetService struct {
 	mock.Mock
 }
 
-func (m *MockSnippetService) GetSecrets(int64) ([]services.Snippet, error) {
+func (m *MockSnippetService) GetSecrets(int64) ([]model.SnippetModel, error) {
 	args := m.Called()
-	return args.Get(0).([]services.Snippet), args.Error(1)
+	return args.Get(0).([]model.SnippetModel), args.Error(1)
 }
 
 func TestSnippetHandler_GetSnippet(t *testing.T) {
@@ -47,17 +48,17 @@ func TestSnippetHandler_GetSnippet(t *testing.T) {
 	assert.NotEmpty(t, string(body))
 }
 
-func GetSecrets() ([]services.Snippet, error) {
-	var snippets []services.Snippet
+func GetSecrets() ([]model.SnippetModel, error) {
+	var snippets []model.SnippetModel
 
-	var snippet1 services.Snippet
+	var snippet1 model.SnippetModel
 	snippet1.Language = services.GoLanguage
 	snippet1.Class = services.GoClass
 	snippet1.Code = "main()"
 
 	snippets = append(snippets, snippet1)
 
-	var snippet2 services.Snippet
+	var snippet2 model.SnippetModel
 	snippet2.Language = services.NodeLanguage
 	snippet2.Class = services.NodeClass
 	snippet2.Code = "console.log()"

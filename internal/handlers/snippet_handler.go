@@ -31,6 +31,6 @@ func (h SnippetHandler) GetSnippet(ctx *fiber.Ctx) error {
 	}
 
 	return ctx.Render("snippets/index", fiber.Map{
-		"Snippets": model,
+		"Model": model,
 	})
 }
