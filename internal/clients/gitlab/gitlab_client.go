@@ -19,11 +19,11 @@ type IGitLabClient interface {
 	GetProject(projectID int64) (*responses.ProjectResponse, error)
 }
 
-type GitLabClient struct {
+type Client struct {
 	rb *rest.RequestBuilder
 }
 
-func (g *GitLabClient) GetProject(projectID int64) (*responses.ProjectResponse, error) {
+func (g *Client) GetProject(projectID int64) (*responses.ProjectResponse, error) {
 	response := g.rb.Get(fmt.Sprintf("/projects/%d", projectID))
 	if response.Err != nil {
 		return nil, response.Err
@@ -38,11 +38,11 @@ func (g *GitLabClient) GetProject(projectID int64) (*responses.ProjectResponse, 
 	return &projectResponse, nil
 }
 
-func NewGitLabClient(rb *rest.RequestBuilder) *GitLabClient {
-	return &GitLabClient{rb: rb}
+func NewGitLabClient(rb *rest.RequestBuilder) *Client {
+	return &Client{rb: rb}
 }
 
-func (g *GitLabClient) GetGroups() ([]responses.GroupResponse, error) {
+func (g *Client) GetGroups() ([]responses.GroupResponse, error) {
 	response := g.rb.Get("/groups")
 	if response.Err != nil {
 		return nil, response.Err
@@ -77,7 +77,7 @@ func (g *GitLabClient) GetGroups() ([]responses.GroupResponse, error) {
 	return groups, nil
 }
 
-func (g *GitLabClient) CreateProject(request *requests.CreateProjectRequest) (*responses.CreateProjectResponse, error) {
+func (g *Client) CreateProject(request *requests.CreateProjectRequest) (*responses.CreateProjectResponse, error) {
 	response := g.rb.Post("/projects", request)
 	if response.Err != nil {
 		return nil, response.Err
