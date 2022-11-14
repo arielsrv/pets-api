@@ -118,7 +118,7 @@ func TestAppService_CreateApp_Conflict(t *testing.T) {
 	assert.Equal(t, "duplicated project name users-api", err.Error())
 }
 
-func TestAppService_GetApp(t *testing.T) {
+func TestAppService_GetAppByName(t *testing.T) {
 	client := new(MockClient)
 	client.On("GetProject").Return(GetProject())
 
@@ -128,6 +128,23 @@ func TestAppService_GetApp(t *testing.T) {
 
 	service := services.NewAppService(client, dataAccessService)
 	actual, err := service.GetAppByName("customers-api")
+
+	assert.NoError(t, err)
+	assert.NotNil(t, actual)
+	assert.Equal(t, int64(1), actual.ID)
+	assert.Equal(t, fmt.Sprintf("https://oauth2:%s@domain.com/repo_url", config.String("gitlab.token")), actual.URL)
+}
+
+func TestAppService_GetAppById(t *testing.T) {
+	client := new(MockClient)
+	client.On("GetProject").Return(GetProject())
+
+	dataAccessService := infrastructure.NewDataAccessService()
+	dataAccessService.Test(t)
+	defer dataAccessService.Close()
+
+	service := services.NewAppService(client, dataAccessService)
+	actual, err := service.GetAppById(1)
 
 	assert.NoError(t, err)
 	assert.NotNil(t, actual)
