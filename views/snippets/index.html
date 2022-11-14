@@ -6,9 +6,17 @@
 <body style="color: white; background: black; font-family:AppleSystemUIFont,sans-serif,Helvetica">
 {{range $i, $snippet := .Model}}
     <h2>{{ $snippet.Language }}</h2>
-    <pre>
-        <code class="{{ $snippet.Class }}">{{ $snippet.Code }}</code>
-    </pre>
+    <p>Installation</p>
+    <div>
+        <pre>
+            <code class="language-bash">{{ $snippet.Install }}</code>
+        </pre>
+    </div>
+    <div>
+        <pre>
+            <code class="{{ $snippet.Class }}">{{ $snippet.Code }}</code>
+        </pre>
+    </div>
 {{end}}
 </body>
 </html>

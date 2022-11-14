@@ -50,6 +50,19 @@ func (s *SecretService) SaveSecret(appId int64, secretModel *model.CreateAppSecr
 
 	secretName := fmt.Sprintf("PETS_%s_%s", strings.ToUpper(appModel.Name), strings.ToUpper(secretModel.Key))
 
+	alreadyExist, err := s.dataAccess.GetClient().Secret.
+		Query().
+		Where(secret.Key(secretName)).
+		Exist(context.Background())
+
+	if err != nil {
+		return nil, err
+	}
+
+	if alreadyExist {
+		return nil, shared.NewError(http.StatusConflict, fmt.Sprintf("Secret %s for app already exist. ", secretModel.Key))
+	}
+
 	result, err := s.dataAccess.GetClient().Secret.Create().
 		SetKey(secretName).
 		SetValue(secretModel.Value).

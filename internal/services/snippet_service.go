@@ -30,6 +30,11 @@ const (
 	NodeClass = "language-typescript"
 )
 
+const (
+	GoInstall   = "go get -u gitlab.com/ikp_go-secrets"
+	NodeInstall = "npm install ikp_node-secrets@latest"
+)
+
 type ISnippetService interface {
 	GetSecrets(secretID int64) ([]model.SnippetModel, error)
 }
@@ -64,15 +69,16 @@ func (s SnippetService) GetSecrets(secretID int64) ([]model.SnippetModel, error)
 }
 
 func buildSecrets(secrets []model.SnippetModel) []model.SnippetModel {
-	secrets = append(secrets, buildSnippet(GoLanguage, Secret, GoFile, GoClass))
-	secrets = append(secrets, buildSnippet(NodeLanguage, Secret, NodeFile, NodeClass))
+	secrets = append(secrets, buildSnippet(GoLanguage, Secret, GoFile, GoClass, GoInstall))
+	secrets = append(secrets, buildSnippet(NodeLanguage, Secret, NodeFile, NodeClass, NodeInstall))
 	return secrets
 }
 
-func buildSnippet(language string, snippetType string, file string, class string) model.SnippetModel {
+func buildSnippet(language string, snippetType string, file string, class string, install string) model.SnippetModel {
 	snippet := new(model.SnippetModel)
 	snippet.Class = class
 	snippet.Language = language
+	snippet.Install = install
 	path := fmt.Sprintf("%s/%s/%s", config.String("snippets.folder"), snippetType, file)
 	snippet.Code = getFileContent(path)
 
