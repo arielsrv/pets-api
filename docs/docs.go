@@ -18,14 +18,14 @@ const docTemplate = `{
     "paths": {
         "/ping": {
             "get": {
-                "description": "Ping",
+                "description": "Health",
                 "produces": [
                     "text/plain"
                 ],
                 "tags": [
                     "Check"
                 ],
-                "summary": "Check if the instance is online",
+                "summary": "Check if the instance is healthy or unhealthy",
                 "responses": {
                     "200": {
                         "description": "pong",
@@ -33,45 +33,6 @@ const docTemplate = `{
                             "type": "string"
                         }
                     }
-                }
-            }
-        },
-        "/repositories/groups": {
-            "get": {
-                "description": "Needed for create a project in a specific group",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Groups"
-                ],
-                "summary": "Get all groups",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/model.AppGroupModel"
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    },
-    "definitions": {
-        "model.AppGroupModel": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "integer"
-                },
-                "name": {
-                    "type": "string"
                 }
             }
         }
@@ -82,10 +43,10 @@ const docTemplate = `{
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
 	Host:             "",
-	BasePath:         "/.",
+	BasePath:         "",
 	Schemes:          []string{},
-	Title:            "Golang Template API",
-	Description:      "This is a sample swagger for Golang Template API",
+	Title:            "Pets API",
+	Description:      "Create apps, services and infrastructure.",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 }

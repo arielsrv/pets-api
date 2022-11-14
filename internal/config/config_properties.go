@@ -17,7 +17,7 @@ func init() {
 		// fallback for test
 		err = config.InitGlobalInstance("ini", "../../"+propertiesPath)
 		if err != nil {
-			log.Println("failed to load application properties")
+			log.Println("failed to load module properties")
 		}
 	}
 }

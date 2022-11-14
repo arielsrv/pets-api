@@ -12,6 +12,7 @@ import (
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"github.com/ent/app"
 	"github.com/ent/apptype"
+	"github.com/ent/secret"
 )
 
 // ent aliases to avoid import conflicts in user's code.
@@ -34,6 +35,7 @@ func columnChecker(table string) func(string) error {
 	checks := map[string]func(string) bool{
 		app.Table:     app.ValidColumn,
 		apptype.Table: apptype.ValidColumn,
+		secret.Table:  secret.ValidColumn,
 	}
 	check, ok := checks[table]
 	if !ok {
