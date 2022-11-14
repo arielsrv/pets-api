@@ -32,7 +32,7 @@ func (h AppHandler) GetGroups(ctx *fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
-	return server.SendJSON(ctx, result)
+	return server.SendOk(ctx, result)
 }
 
 func (h AppHandler) CreateApp(ctx *fiber.Ctx) error {
@@ -61,7 +61,7 @@ func (h AppHandler) CreateApp(ctx *fiber.Ctx) error {
 		return err
 	}
 
-	return server.SendJSON(ctx, result)
+	return server.SendCreated(ctx, result)
 }
 
 func (h AppHandler) GetAppTypes(ctx *fiber.Ctx) error {
@@ -70,7 +70,7 @@ func (h AppHandler) GetAppTypes(ctx *fiber.Ctx) error {
 		return err
 	}
 
-	return server.SendJSON(ctx, result)
+	return server.SendOk(ctx, result)
 }
 
 func (h AppHandler) GetApp(ctx *fiber.Ctx) error {
@@ -84,5 +84,5 @@ func (h AppHandler) GetApp(ctx *fiber.Ctx) error {
 		return err
 	}
 
-	return server.SendJSON(ctx, result)
+	return server.SendOk(ctx, result)
 }

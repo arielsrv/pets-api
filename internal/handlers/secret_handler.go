@@ -49,7 +49,6 @@ func (h SecretHandler) CreateSecret(ctx *fiber.Ctx) error {
 	}
 
 	result.RelativeUrl = ctx.BaseURL() + result.RelativeUrl
-	ctx.Status(201)
 
-	return server.SendJSON(ctx, result)
+	return server.SendCreated(ctx, result)
 }

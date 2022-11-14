@@ -183,7 +183,7 @@ func TestRepositoriesHandler_CreateApp(t *testing.T) {
 	response, err := app.Test(request)
 	assert.NoError(t, err)
 	assert.NotNil(t, response)
-	assert.Equal(t, http.StatusOK, response.StatusCode)
+	assert.Equal(t, http.StatusCreated, response.StatusCode)
 
 	body, err := io.ReadAll(response.Body)
 	assert.NoError(t, err)

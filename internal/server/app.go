@@ -119,7 +119,12 @@ func (app *App) Handlers(handlers []Handler) {
 	}
 }
 
-func SendJSON(ctx *fiber.Ctx, data interface{}) error {
+func SendOk(ctx *fiber.Ctx, data interface{}) error {
+	return ctx.JSON(data)
+}
+
+func SendCreated(ctx *fiber.Ctx, data interface{}) error {
+	ctx.Status(http.StatusCreated)
 	return ctx.JSON(data)
 }
 
