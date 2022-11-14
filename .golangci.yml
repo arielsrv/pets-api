@@ -89,7 +89,7 @@ linters-settings:
       modules:
         - github.com/golang/protobuf:
             recommendations:
-              - google.golang.org/protobuf
+              - google.go.org/protobuf
             reason: "see https://developers.google.com/protocol-buffers/docs/reference/go/faq#modules"
         - github.com/satori/go.uuid:
             recommendations:
@@ -215,7 +215,7 @@ linters:
     ## you may want to enable
     #- decorder # checks declaration order and count of types, constants, variables and functions
     #- exhaustruct # checks if all structure fields are initialized
-    #- gci # controls golang package import order and makes it always deterministic
+    #- gci # controls go package import order and makes it always deterministic
     #- godox # detects FIXME, TODO and other comment keywords
     #- goheader # checks is file header matches to pattern
     #- interfacebloat # checks the number of methods inside an interface
@@ -242,7 +242,7 @@ linters:
     #- nlreturn # [too strict and mostly code is not more readable] checks for a new line before return and branch statements to increase code clarity
     #- paralleltest # [too many false positives] detects missing usage of t.Parallel() method in your Go test
     #- tagliatelle # checks the struct tags
-    #- thelper # detects golang test helpers without t.Helper() call and checks the consistency of test helpers
+    #- thelper # detects go test helpers without t.Helper() call and checks the consistency of test helpers
     #- wsl # [too strict and mostly code is not more readable] whitespace linter forces you to use empty lines
 
     ## deprecated

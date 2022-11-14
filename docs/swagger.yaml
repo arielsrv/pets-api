@@ -1,21 +1,12 @@
-basePath: /.
-definitions:
-  model.AppGroupModel:
-    properties:
-      id:
-        type: integer
-      name:
-        type: string
-    type: object
 info:
   contact: {}
-  description: This is a sample swagger for Golang Template API
-  title: Golang Template API
+  description: Create apps, services and infrastructure.
+  title: Pets API
   version: "1.0"
 paths:
   /ping:
     get:
-      description: Ping
+      description: Health
       produces:
       - text/plain
       responses:
@@ -23,24 +14,7 @@ paths:
           description: pong
           schema:
             type: string
-      summary: Check if the instance is online
+      summary: Check if the instance is healthy or unhealthy
       tags:
       - Check
-  /repositories/groups:
-    get:
-      consumes:
-      - application/json
-      description: Needed for create a project in a specific group
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/model.AppGroupModel'
-            type: array
-      summary: Get all groups
-      tags:
-      - Groups
 swagger: "2.0"

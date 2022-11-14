@@ -16,6 +16,8 @@ type Tx struct {
 	App *AppClient
 	// AppType is the client for interacting with the AppType builders.
 	AppType *AppTypeClient
+	// Secret is the client for interacting with the Secret builders.
+	Secret *SecretClient
 
 	// lazily loaded.
 	client     *Client
@@ -149,6 +151,7 @@ func (tx *Tx) Client() *Client {
 func (tx *Tx) init() {
 	tx.App = NewAppClient(tx.config)
 	tx.AppType = NewAppTypeClient(tx.config)
+	tx.Secret = NewSecretClient(tx.config)
 }
 
 // txDriver wraps the given dialect.Tx with a nop dialect.Driver implementation.

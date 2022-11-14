@@ -29,6 +29,7 @@ tasks:
   test:
     desc: Run test.
     cmds:
+      - go test -race -v ./...
       - go test ./...
   coverage:
     desc: Makes report coverage.

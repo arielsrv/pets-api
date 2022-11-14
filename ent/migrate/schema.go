@@ -42,10 +42,33 @@ var (
 		Columns:    AppsTypesColumns,
 		PrimaryKey: []*schema.Column{AppsTypesColumns[0]},
 	}
+	// SecretsColumns holds the columns for the "secrets" table.
+	SecretsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt64, Increment: true},
+		{Name: "key", Type: field.TypeString},
+		{Name: "value", Type: field.TypeString},
+		{Name: "active", Type: field.TypeBool, Default: true},
+		{Name: "app_id", Type: field.TypeInt64},
+	}
+	// SecretsTable holds the schema information for the "secrets" table.
+	SecretsTable = &schema.Table{
+		Name:       "secrets",
+		Columns:    SecretsColumns,
+		PrimaryKey: []*schema.Column{SecretsColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:     "secrets_apps_app",
+				Columns:    []*schema.Column{SecretsColumns[4]},
+				RefColumns: []*schema.Column{AppsColumns[0]},
+				OnDelete:   schema.NoAction,
+			},
+		},
+	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
 		AppsTable,
 		AppsTypesTable,
+		SecretsTable,
 	}
 )
 
@@ -54,4 +77,5 @@ func init() {
 	AppsTypesTable.Annotation = &entsql.Annotation{
 		Table: "apps_types",
 	}
+	SecretsTable.ForeignKeys[0].RefTable = AppsTable
 }

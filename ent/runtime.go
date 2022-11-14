@@ -5,6 +5,7 @@ package ent
 import (
 	"github.com/ent/app"
 	"github.com/ent/schema"
+	"github.com/ent/secret"
 )
 
 // The init function reads all schema descriptors with runtime code
@@ -17,4 +18,10 @@ func init() {
 	appDescActive := appFields[4].Descriptor()
 	// app.DefaultActive holds the default value on creation for the active field.
 	app.DefaultActive = appDescActive.Default.(bool)
+	secretFields := schema.Secret{}.Fields()
+	_ = secretFields
+	// secretDescActive is the schema descriptor for active field.
+	secretDescActive := secretFields[4].Descriptor()
+	// secret.DefaultActive holds the default value on creation for the active field.
+	secret.DefaultActive = secretDescActive.Default.(bool)
 }

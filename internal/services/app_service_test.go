@@ -127,7 +127,7 @@ func TestAppService_GetApp(t *testing.T) {
 	defer dataAccessService.Close()
 
 	service := services.NewAppService(client, dataAccessService)
-	actual, err := service.GetApp("customers-api")
+	actual, err := service.GetAppByName("customers-api")
 
 	assert.NoError(t, err)
 	assert.NotNil(t, actual)
@@ -144,11 +144,11 @@ func TestAppService_GetApp_NotFoundErr(t *testing.T) {
 	defer dataAccessService.Close()
 
 	service := services.NewAppService(client, dataAccessService)
-	actual, err := service.GetApp("loyalty-api")
+	actual, err := service.GetAppByName("loyalty-api")
 
 	assert.Error(t, err)
 	assert.Nil(t, actual)
-	assert.Equal(t, "app with name loyalty-api not found", err.Error())
+	assert.Equal(t, "application with name loyalty-api not found", err.Error())
 }
 
 func TestAppService_GetAppTypes(t *testing.T) {

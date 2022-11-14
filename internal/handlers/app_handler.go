@@ -5,7 +5,6 @@ import (
 	"runtime"
 
 	task "github.com/arielsrv/taskpool"
-
 	"github.com/gofiber/fiber/v2"
 	"github.com/internal/model"
 	"github.com/internal/server"
@@ -28,20 +27,12 @@ func NewAppHandler(service services.IAppService) *AppHandler {
 	}
 }
 
-// GetGroups  godoc
-// @Summary     Get all groups
-// @Description Needed for create a project in a specific group
-// @Tags        Groups
-// @Accept      json
-// @Produce     json
-// @Success     200 {array} model.AppGroupModel
-// @Router      /repositories/groups [get].
 func (h AppHandler) GetGroups(ctx *fiber.Ctx) error {
 	result, err := h.service.GetGroups()
 	if err != nil {
 		return err
 	}
-	return server.SendJSON(ctx, result)
+	return server.SendOk(ctx, result)
 }
 
 func (h AppHandler) CreateApp(ctx *fiber.Ctx) error {
@@ -70,7 +61,7 @@ func (h AppHandler) CreateApp(ctx *fiber.Ctx) error {
 		return err
 	}
 
-	return server.SendJSON(ctx, result)
+	return server.SendCreated(ctx, result)
 }
 
 func (h AppHandler) GetAppTypes(ctx *fiber.Ctx) error {
@@ -79,7 +70,7 @@ func (h AppHandler) GetAppTypes(ctx *fiber.Ctx) error {
 		return err
 	}
 
-	return server.SendJSON(ctx, result)
+	return server.SendOk(ctx, result)
 }
 
 func (h AppHandler) GetApp(ctx *fiber.Ctx) error {
@@ -88,38 +79,10 @@ func (h AppHandler) GetApp(ctx *fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
-	result, err := h.service.GetApp(appName)
+	result, err := h.service.GetAppByName(appName)
 	if err != nil {
 		return err
 	}
 
-	return server.SendJSON(ctx, result)
-}
-
-func (h AppHandler) GetAppConf(ctx *fiber.Ctx) error {
-	var groupsTask *task.Task[[]model.AppGroupModel]
-	var appTypesTask *task.Task[[]model.AppType]
-
-	h.tb.ForkJoin(func(a *task.Awaitable) {
-		groupsTask = task.Await[[]model.AppGroupModel](a, h.service.GetGroups)
-		appTypesTask = task.Await[[]model.AppType](a, h.service.GetAppTypes)
-	})
-
-	if groupsTask.Err != nil {
-		return shared.NewError(http.StatusInternalServerError, "groups task failed")
-	}
-
-	if appTypesTask.Err != nil {
-		return shared.NewError(http.StatusInternalServerError, "appTypes task failed")
-	}
-
-	r := struct {
-		Groups []model.AppGroupModel `json:"groups,omitempty"`
-		Types  []model.AppType       `json:"types,omitempty"`
-	}{
-		Groups: groupsTask.Result,
-		Types:  appTypesTask.Result,
-	}
-
-	return server.SendJSON(ctx, r)
+	return server.SendOk(ctx, result)
 }
