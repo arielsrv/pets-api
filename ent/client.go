@@ -148,7 +148,7 @@ func NewAppClient(c config) *AppClient {
 }
 
 // Use adds a list of mutation hooks to the hooks stack.
-// A call to `Use(f, g, h)` equals to `apps.Hooks(f(g(h())))`.
+// A call to `Use(f, g, h)` equals to `app.Hooks(f(g(h())))`.
 func (c *AppClient) Use(hooks ...Hook) {
 	c.hooks.App = append(c.hooks.App, hooks...)
 }
@@ -360,7 +360,7 @@ func NewSecretClient(c config) *SecretClient {
 }
 
 // Use adds a list of mutation hooks to the hooks stack.
-// A call to `Use(f, g, h)` equals to `secrets.Hooks(f(g(h())))`.
+// A call to `Use(f, g, h)` equals to `secret.Hooks(f(g(h())))`.
 func (c *SecretClient) Use(hooks ...Hook) {
 	c.hooks.Secret = append(c.hooks.Secret, hooks...)
 }
@@ -434,7 +434,7 @@ func (c *SecretClient) GetX(ctx context.Context, id int64) *Secret {
 	return obj
 }
 
-// QueryApp queries the apps edge of a Secret.
+// QueryApp queries the app edge of a Secret.
 func (c *SecretClient) QueryApp(s *Secret) *AppQuery {
 	query := &AppQuery{config: c.config}
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {

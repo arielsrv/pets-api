@@ -3,8 +3,8 @@
 package app
 
 const (
-	// Label holds the string label denoting the apps type in the database.
-	Label = "apps"
+	// Label holds the string label denoting the app type in the database.
+	Label = "app"
 	// FieldID holds the string denoting the id field in the database.
 	FieldID = "id"
 	// FieldName holds the string denoting the name field in the database.
@@ -17,7 +17,7 @@ const (
 	FieldActive = "active"
 	// EdgeAppsTypes holds the string denoting the apps_types edge name in mutations.
 	EdgeAppsTypes = "apps_types"
-	// Table holds the table name of the apps in the database.
+	// Table holds the table name of the app in the database.
 	Table = "apps"
 	// AppsTypesTable is the table that holds the apps_types relation/edge.
 	AppsTypesTable = "apps"
@@ -28,7 +28,7 @@ const (
 	AppsTypesColumn = "app_type_id"
 )
 
-// Columns holds all SQL columns for apps fields.
+// Columns holds all SQL columns for app fields.
 var Columns = []string{
 	FieldID,
 	FieldName,

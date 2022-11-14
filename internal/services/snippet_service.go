@@ -2,7 +2,6 @@ package services
 
 import (
 	"fmt"
-	"github.com/internal/model"
 	"log"
 	"os"
 	"strings"
@@ -11,8 +10,8 @@ import (
 )
 
 const (
-	GoFile   = "go.snippets"
-	NodeFile = "node.snippets"
+	GoFile   = "go.snippet"
+	NodeFile = "node.snippet"
 )
 
 const (
@@ -29,17 +28,23 @@ const (
 	NodeClass = "language-typescript"
 )
 
+type Snippet struct {
+	Language string
+	Class    string
+	Code     string
+}
+
 type ISnippetService interface {
-	GetSecrets(secretID int64) ([]model.SnippetModel, error)
+	GetSecrets(secretID int64) ([]Snippet, error)
 }
 
 type SnippetService struct {
 	secretService ISecretService
-	secrets       []model.SnippetModel
+	secrets       []Snippet
 }
 
 func NewSnippetService(secretService ISecretService) *SnippetService {
-	var secrets []model.SnippetModel
+	var secrets []Snippet
 	secrets = buildSecrets(secrets)
 
 	return &SnippetService{
@@ -48,7 +53,7 @@ func NewSnippetService(secretService ISecretService) *SnippetService {
 	}
 }
 
-func (s SnippetService) GetSecrets(secretID int64) ([]model.SnippetModel, error) {
+func (s SnippetService) GetSecrets(secretID int64) ([]Snippet, error) {
 	secretName, appName, err := s.secretService.GetSecret(secretID)
 	if err != nil {
 		return nil, err
@@ -63,14 +68,14 @@ func (s SnippetService) GetSecrets(secretID int64) ([]model.SnippetModel, error)
 	return s.secrets, nil
 }
 
-func buildSecrets(secrets []model.SnippetModel) []model.SnippetModel {
+func buildSecrets(secrets []Snippet) []Snippet {
 	secrets = append(secrets, buildSnippet(GoLanguage, Secret, GoFile, GoClass))
 	secrets = append(secrets, buildSnippet(NodeLanguage, Secret, NodeFile, NodeClass))
 	return secrets
 }
 
-func buildSnippet(language string, snippetType string, file string, class string) model.SnippetModel {
-	snippet := new(model.SnippetModel)
+func buildSnippet(language string, snippetType string, file string, class string) Snippet {
+	snippet := new(Snippet)
 	snippet.Class = class
 	snippet.Language = language
 	path := fmt.Sprintf("%s/%s/%s", config.String("snippets.folder"), snippetType, file)

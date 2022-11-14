@@ -3,7 +3,6 @@ package services
 import (
 	"context"
 	"fmt"
-	"github.com/internal/model"
 	"net/http"
 	"net/url"
 
@@ -15,13 +14,14 @@ import (
 	"github.com/ent"
 	"github.com/ent/app"
 	"github.com/internal/infrastructure"
+	"github.com/internal/model"
 	"github.com/internal/shared"
 )
 
 type IAppService interface {
 	GetGroups() ([]model.AppGroupModel, error)
-	CreateApp(repositoryDto *model.CreateAppRequestModel) (*model.AppModel, error)
-	GetAppTypes() ([]model.AppTypeModel, error)
+	CreateApp(repositoryDto *model.CreateAppModel) (*model.AppModel, error)
+	GetAppTypes() ([]model.AppType, error)
 	GetAppByName(appName string) (*model.AppModel, error)
 	GetAppById(appId int64) (*model.AppModel, error)
 }
@@ -112,16 +112,16 @@ func (s *AppService) GetAppById(appId int64) (*model.AppModel, error) {
 	return appModel, nil
 }
 
-func (s *AppService) GetAppTypes() ([]model.AppTypeModel, error) {
+func (s *AppService) GetAppTypes() ([]model.AppType, error) {
 	appTypes, err := s.dataAccess.GetClient().AppType.Query().All(context.Background())
 
 	if err != nil {
 		return nil, err
 	}
 
-	var appTypesModel []model.AppTypeModel
+	var appTypesModel []model.AppType
 	for _, appType := range appTypes {
-		var appTypeModel model.AppTypeModel
+		var appTypeModel model.AppType
 		appTypeModel.ID = appType.ID
 		appTypeModel.Name = appType.Name
 		appTypesModel = append(appTypesModel, appTypeModel)
@@ -145,7 +145,7 @@ func (s *AppService) GetGroups() ([]model.AppGroupModel, error) {
 	return groupsDto, nil
 }
 
-func (s *AppService) CreateApp(repositoryDto *model.CreateAppRequestModel) (*model.AppModel, error) {
+func (s *AppService) CreateApp(repositoryDto *model.CreateAppModel) (*model.AppModel, error) {
 	duplicated, err := s.dataAccess.GetClient().App.Query().
 		Where(app.Name(repositoryDto.Name)).
 		Exist(context.Background())
@@ -162,7 +162,7 @@ func (s *AppService) CreateApp(repositoryDto *model.CreateAppRequestModel) (*mod
 	createProjectRequest.Name = fmt.Sprintf("%s%s", config.String("gitlab.prefix"), repositoryDto.Name)
 	createProjectRequest.GroupID = repositoryDto.GroupID
 
-	gitlabResponse, err := s.client.CreateProject(createProjectRequest)
+	response, err := s.client.CreateProject(createProjectRequest)
 
 	if err != nil {
 		return nil, err
@@ -170,7 +170,7 @@ func (s *AppService) CreateApp(repositoryDto *model.CreateAppRequestModel) (*mod
 
 	application, err := s.dataAccess.GetClient().App.Create().
 		SetName(repositoryDto.Name).
-		SetProjectId(gitlabResponse.ID).
+		SetProjectId(response.ID).
 		SetAppTypeID(repositoryDto.AppTypeID).
 		Save(context.Background())
 
@@ -180,7 +180,7 @@ func (s *AppService) CreateApp(repositoryDto *model.CreateAppRequestModel) (*mod
 
 	appModel := new(model.AppModel)
 	appModel.ID = application.ID
-	appModel.URL = gitlabResponse.URL
+	appModel.URL = response.URL
 
 	return appModel, err
 }

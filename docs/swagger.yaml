@@ -1,9 +1,100 @@
+definitions:
+  model.AppGroupModel:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+    type: object
+  model.CreateAppModel:
+    properties:
+      app_type_id:
+        type: integer
+      group_id:
+        type: integer
+      name:
+        type: string
+    type: object
+  model.CreateAppSecretModel:
+    properties:
+      key:
+        type: string
+      value:
+        type: string
+    type: object
 info:
   contact: {}
   description: Create apps, services and infrastructure.
   title: Pets API
   version: "1.0"
 paths:
+  /apps:
+    post:
+      parameters:
+      - description: Body params
+        in: body
+        name: createAppModel
+        required: true
+        schema:
+          $ref: '#/definitions/model.CreateAppModel'
+      responses: {}
+      summary: Creates an IskayPet Application
+      tags:
+      - Apps
+  /apps/{appId}/secrets:
+    post:
+      parameters:
+      - description: App ID
+        in: path
+        name: appId
+        required: true
+        type: integer
+      - description: Body params
+        in: body
+        name: createAppSecretModel
+        required: true
+        schema:
+          $ref: '#/definitions/model.CreateAppSecretModel'
+      responses: {}
+      summary: Creates secret for application
+      tags:
+      - Secrets
+  /apps/groups:
+    get:
+      consumes:
+      - application/json
+      description: Needed for create a project in a specific group
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.AppGroupModel'
+            type: array
+      summary: Get all groups from GitLab
+      tags:
+      - Groups
+  /apps/search:
+    get:
+      parameters:
+      - description: Application name
+        in: query
+        name: app_name
+        required: true
+        type: string
+      responses: {}
+      summary: Get relevant info for an IskayPet app
+      tags:
+      - Apps
+  /apps/types:
+    get:
+      description: 'For example: app_name: users-api, key: token, value: hash'
+      responses: {}
+      summary: Get all application types (backend, frontend, etc.)
+      tags:
+      - Apps
   /ping:
     get:
       description: Health

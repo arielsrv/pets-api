@@ -27,7 +27,7 @@ func (Secret) Fields() []ent.Field {
 // Edges of the Secret.
 func (Secret) Edges() []ent.Edge {
 	return []ent.Edge{
-		edge.To("apps", App.Type).
+		edge.To("app", App.Type).
 			Required().
 			Field("app_id").
 			Unique(),
