@@ -16,7 +16,7 @@ const (
 	// AppsTable is the table that holds the apps relation/edge.
 	AppsTable = "apps"
 	// AppsInverseTable is the table name for the App entity.
-	// It exists in this package in order to avoid circular dependency with the "app" package.
+	// It exists in this package in order to avoid circular dependency with the "apps" package.
 	AppsInverseTable = "apps"
 	// AppsColumn is the table column denoting the apps relation/edge.
 	AppsColumn = "app_type_id"

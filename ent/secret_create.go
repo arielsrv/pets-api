@@ -58,7 +58,7 @@ func (sc *SecretCreate) SetID(i int64) *SecretCreate {
 	return sc
 }
 
-// SetApp sets the "app" edge to the App entity.
+// SetApp sets the "apps" edge to the App entity.
 func (sc *SecretCreate) SetApp(a *App) *SecretCreate {
 	return sc.SetAppID(a.ID)
 }
@@ -161,7 +161,7 @@ func (sc *SecretCreate) check() error {
 		return &ValidationError{Name: "active", err: errors.New(`ent: missing required field "Secret.active"`)}
 	}
 	if _, ok := sc.mutation.AppID(); !ok {
-		return &ValidationError{Name: "app", err: errors.New(`ent: missing required edge "Secret.app"`)}
+		return &ValidationError{Name: "apps", err: errors.New(`ent: missing required edge "Secret.apps"`)}
 	}
 	return nil
 }

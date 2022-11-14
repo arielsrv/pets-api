@@ -1286,17 +1286,17 @@ func (m *SecretMutation) ResetActive() {
 	m.active = nil
 }
 
-// ClearApp clears the "app" edge to the App entity.
+// ClearApp clears the "apps" edge to the App entity.
 func (m *SecretMutation) ClearApp() {
 	m.clearedapp = true
 }
 
-// AppCleared reports if the "app" edge to the App entity was cleared.
+// AppCleared reports if the "apps" edge to the App entity was cleared.
 func (m *SecretMutation) AppCleared() bool {
 	return m.clearedapp
 }
 
-// AppIDs returns the "app" edge IDs in the mutation.
+// AppIDs returns the "apps" edge IDs in the mutation.
 // Note that IDs always returns len(IDs) <= 1 for unique edges, and you should use
 // AppID instead. It exists only for internal usage by the builders.
 func (m *SecretMutation) AppIDs() (ids []int64) {
@@ -1306,7 +1306,7 @@ func (m *SecretMutation) AppIDs() (ids []int64) {
 	return
 }
 
-// ResetApp resets all changes to the "app" edge.
+// ResetApp resets all changes to the "apps" edge.
 func (m *SecretMutation) ResetApp() {
 	m.app = nil
 	m.clearedapp = false

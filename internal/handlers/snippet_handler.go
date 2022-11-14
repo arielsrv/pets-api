@@ -20,7 +20,7 @@ func (h SnippetHandler) GetSnippet(ctx *fiber.Ctx) error {
 		return err
 	}
 
-	err = shared.EnsureInt64(int64(secretId), "bad request error, invalid secret id")
+	err = shared.EnsureInt64(int64(secretId), "bad request error, invalid secrets id")
 	if err != nil {
 		return err
 	}

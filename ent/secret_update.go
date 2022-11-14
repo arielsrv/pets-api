@@ -60,7 +60,7 @@ func (su *SecretUpdate) SetNillableActive(b *bool) *SecretUpdate {
 	return su
 }
 
-// SetApp sets the "app" edge to the App entity.
+// SetApp sets the "apps" edge to the App entity.
 func (su *SecretUpdate) SetApp(a *App) *SecretUpdate {
 	return su.SetAppID(a.ID)
 }
@@ -70,7 +70,7 @@ func (su *SecretUpdate) Mutation() *SecretMutation {
 	return su.mutation
 }
 
-// ClearApp clears the "app" edge to the App entity.
+// ClearApp clears the "apps" edge to the App entity.
 func (su *SecretUpdate) ClearApp() *SecretUpdate {
 	su.mutation.ClearApp()
 	return su
@@ -139,7 +139,7 @@ func (su *SecretUpdate) ExecX(ctx context.Context) {
 // check runs all checks and user-defined validators on the builder.
 func (su *SecretUpdate) check() error {
 	if _, ok := su.mutation.AppID(); su.mutation.AppCleared() && !ok {
-		return errors.New(`ent: clearing a required unique edge "Secret.app"`)
+		return errors.New(`ent: clearing a required unique edge "Secret.apps"`)
 	}
 	return nil
 }
@@ -257,7 +257,7 @@ func (suo *SecretUpdateOne) SetNillableActive(b *bool) *SecretUpdateOne {
 	return suo
 }
 
-// SetApp sets the "app" edge to the App entity.
+// SetApp sets the "apps" edge to the App entity.
 func (suo *SecretUpdateOne) SetApp(a *App) *SecretUpdateOne {
 	return suo.SetAppID(a.ID)
 }
@@ -267,7 +267,7 @@ func (suo *SecretUpdateOne) Mutation() *SecretMutation {
 	return suo.mutation
 }
 
-// ClearApp clears the "app" edge to the App entity.
+// ClearApp clears the "apps" edge to the App entity.
 func (suo *SecretUpdateOne) ClearApp() *SecretUpdateOne {
 	suo.mutation.ClearApp()
 	return suo
@@ -349,7 +349,7 @@ func (suo *SecretUpdateOne) ExecX(ctx context.Context) {
 // check runs all checks and user-defined validators on the builder.
 func (suo *SecretUpdateOne) check() error {
 	if _, ok := suo.mutation.AppID(); suo.mutation.AppCleared() && !ok {
-		return errors.New(`ent: clearing a required unique edge "Secret.app"`)
+		return errors.New(`ent: clearing a required unique edge "Secret.apps"`)
 	}
 	return nil
 }

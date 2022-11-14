@@ -61,7 +61,7 @@ func (sq *SecretQuery) Order(o ...OrderFunc) *SecretQuery {
 	return sq
 }
 
-// QueryApp chains the current query on the "app" edge.
+// QueryApp chains the current query on the "apps" edge.
 func (sq *SecretQuery) QueryApp() *AppQuery {
 	query := &AppQuery{config: sq.config}
 	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
@@ -273,7 +273,7 @@ func (sq *SecretQuery) Clone() *SecretQuery {
 }
 
 // WithApp tells the query-builder to eager-load the nodes that are connected to
-// the "app" edge. The optional arguments are used to configure the query builder of the edge.
+// the "apps" edge. The optional arguments are used to configure the query builder of the edge.
 func (sq *SecretQuery) WithApp(opts ...func(*AppQuery)) *SecretQuery {
 	query := &AppQuery{config: sq.config}
 	for _, opt := range opts {

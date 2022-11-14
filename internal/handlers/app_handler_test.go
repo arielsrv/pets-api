@@ -3,15 +3,15 @@ package handlers_test
 import (
 	"bytes"
 	"errors"
+	"github.com/internal/model"
 	"io"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 
+	"github.com/internal/handlers"
 	"github.com/internal/shared"
 
-	"github.com/internal/handlers"
-	"github.com/internal/model"
 	"github.com/internal/server"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
@@ -28,14 +28,14 @@ func (m *MockAppService) GetGroups() ([]model.AppGroupModel, error) {
 	return args.Get(0).([]model.AppGroupModel), args.Error(1)
 }
 
-func (m *MockAppService) CreateApp(*model.CreateAppModel) (*model.AppModel, error) {
+func (m *MockAppService) CreateApp(*model.CreateAppRequestModel) (*model.AppModel, error) {
 	args := m.Called()
 	return args.Get(0).(*model.AppModel), args.Error(1)
 }
 
-func (m *MockAppService) GetAppTypes() ([]model.AppType, error) {
+func (m *MockAppService) GetAppTypes() ([]model.AppTypeModel, error) {
 	args := m.Called()
-	return args.Get(0).([]model.AppType), args.Error(1)
+	return args.Get(0).([]model.AppTypeModel), args.Error(1)
 }
 
 func (m *MockAppService) GetAppByName(string) (*model.AppModel, error) {
@@ -46,16 +46,6 @@ func (m *MockAppService) GetAppByName(string) (*model.AppModel, error) {
 func (m *MockAppService) GetAppById(int64) (*model.AppModel, error) {
 	args := m.Called()
 	return args.Get(0).(*model.AppModel), args.Error(1)
-}
-
-func (m *MockAppService) SaveSecret(int64, *model.CreateAppSecretModel) (*model.AppSecretModel, error) {
-	args := m.Called()
-	return args.Get(0).(*model.AppSecretModel), args.Error(1)
-}
-
-func (m *MockAppService) GetSecret(int64) (string, string, error) {
-	args := m.Called()
-	return args.Get(0).(string), args.Get(1).(string), args.Error(2)
 }
 
 func TestAppHandler_GetGroups(t *testing.T) {
@@ -139,11 +129,11 @@ func TestAppHandler_GetApp_NotFoundErr(t *testing.T) {
 	assert.NoError(t, err)
 	assert.NotNil(t, body)
 
-	assert.Equal(t, "{\"status_code\":404,\"message\":\"app with name customer-api not found\"}", string(body))
+	assert.Equal(t, "{\"status_code\":404,\"message\":\"apps with name customer-api not found\"}", string(body))
 }
 
 func GetAppNotFound() (*model.AppModel, error) {
-	return nil, shared.NewError(http.StatusNotFound, "app with name customer-api not found")
+	return nil, shared.NewError(http.StatusNotFound, "apps with name customer-api not found")
 }
 
 func GetApp() (*model.AppModel, error) {
@@ -302,20 +292,20 @@ func TestAppHandler_GetAppTypes_Err(t *testing.T) {
 	assert.Equal(t, "{\"status_code\":500,\"message\":\"internal server error\"}", string(body))
 }
 
-func GetAppTypesErr() ([]model.AppType, error) {
+func GetAppTypesErr() ([]model.AppTypeModel, error) {
 	return nil, errors.New("internal server error")
 }
 
-func GetAppTypes() ([]model.AppType, error) {
-	var appType1 model.AppType
+func GetAppTypes() ([]model.AppTypeModel, error) {
+	var appType1 model.AppTypeModel
 	appType1.ID = 1
 	appType1.Name = "backend"
 
-	var appType2 model.AppType
+	var appType2 model.AppTypeModel
 	appType2.ID = 2
 	appType2.Name = "frontend"
 
-	var appsType []model.AppType
+	var appsType []model.AppTypeModel
 	appsType = append(appsType, appType1)
 	appsType = append(appsType, appType2)
 

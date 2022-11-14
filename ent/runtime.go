@@ -16,12 +16,12 @@ func init() {
 	_ = appFields
 	// appDescActive is the schema descriptor for active field.
 	appDescActive := appFields[4].Descriptor()
-	// app.DefaultActive holds the default value on creation for the active field.
+	// apps.DefaultActive holds the default value on creation for the active field.
 	app.DefaultActive = appDescActive.Default.(bool)
 	secretFields := schema.Secret{}.Fields()
 	_ = secretFields
 	// secretDescActive is the schema descriptor for active field.
 	secretDescActive := secretFields[4].Descriptor()
-	// secret.DefaultActive holds the default value on creation for the active field.
+	// secrets.DefaultActive holds the default value on creation for the active field.
 	secret.DefaultActive = secretDescActive.Default.(bool)
 }

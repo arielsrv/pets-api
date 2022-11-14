@@ -355,7 +355,7 @@ func ActiveNEQ(v bool) predicate.Secret {
 	})
 }
 
-// HasApp applies the HasEdge predicate on the "app" edge.
+// HasApp applies the HasEdge predicate on the "apps" edge.
 func HasApp() predicate.Secret {
 	return predicate.Secret(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
@@ -367,7 +367,7 @@ func HasApp() predicate.Secret {
 	})
 }
 
-// HasAppWith applies the HasEdge predicate on the "app" edge with a given conditions (other predicates).
+// HasAppWith applies the HasEdge predicate on the "apps" edge with a given conditions (other predicates).
 func HasAppWith(preds ...predicate.App) predicate.Secret {
 	return predicate.Secret(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(

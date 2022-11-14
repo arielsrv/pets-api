@@ -31,8 +31,8 @@ type Secret struct {
 
 // SecretEdges holds the relations/edges for other nodes in the graph.
 type SecretEdges struct {
-	// App holds the value of the app edge.
-	App *App `json:"app,omitempty"`
+	// App holds the value of the apps edge.
+	App *App `json:"apps,omitempty"`
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
 	loadedTypes [1]bool
@@ -48,7 +48,7 @@ func (e SecretEdges) AppOrErr() (*App, error) {
 		}
 		return e.App, nil
 	}
-	return nil, &NotLoadedError{edge: "app"}
+	return nil, &NotLoadedError{edge: "apps"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -112,7 +112,7 @@ func (s *Secret) assignValues(columns []string, values []any) error {
 	return nil
 }
 
-// QueryApp queries the "app" edge of the Secret entity.
+// QueryApp queries the "apps" edge of the Secret entity.
 func (s *Secret) QueryApp() *AppQuery {
 	return (&SecretClient{config: s.config}).QueryApp(s)
 }

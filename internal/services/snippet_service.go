@@ -2,6 +2,7 @@ package services
 
 import (
 	"fmt"
+	"github.com/internal/model"
 	"log"
 	"os"
 	"strings"
@@ -10,8 +11,8 @@ import (
 )
 
 const (
-	GoFile   = "go.snippet"
-	NodeFile = "node.snippet"
+	GoFile   = "go.snippets"
+	NodeFile = "node.snippets"
 )
 
 const (
@@ -28,23 +29,17 @@ const (
 	NodeClass = "language-typescript"
 )
 
-type Snippet struct {
-	Language string
-	Class    string
-	Code     string
-}
-
 type ISnippetService interface {
-	GetSecrets(secretID int64) ([]Snippet, error)
+	GetSecrets(secretID int64) ([]model.SnippetModel, error)
 }
 
 type SnippetService struct {
 	secretService ISecretService
-	secrets       []Snippet
+	secrets       []model.SnippetModel
 }
 
 func NewSnippetService(secretService ISecretService) *SnippetService {
-	var secrets []Snippet
+	var secrets []model.SnippetModel
 	secrets = buildSecrets(secrets)
 
 	return &SnippetService{
@@ -53,7 +48,7 @@ func NewSnippetService(secretService ISecretService) *SnippetService {
 	}
 }
 
-func (s SnippetService) GetSecrets(secretID int64) ([]Snippet, error) {
+func (s SnippetService) GetSecrets(secretID int64) ([]model.SnippetModel, error) {
 	secretName, appName, err := s.secretService.GetSecret(secretID)
 	if err != nil {
 		return nil, err
@@ -68,14 +63,14 @@ func (s SnippetService) GetSecrets(secretID int64) ([]Snippet, error) {
 	return s.secrets, nil
 }
 
-func buildSecrets(secrets []Snippet) []Snippet {
+func buildSecrets(secrets []model.SnippetModel) []model.SnippetModel {
 	secrets = append(secrets, buildSnippet(GoLanguage, Secret, GoFile, GoClass))
 	secrets = append(secrets, buildSnippet(NodeLanguage, Secret, NodeFile, NodeClass))
 	return secrets
 }
 
-func buildSnippet(language string, snippetType string, file string, class string) Snippet {
-	snippet := new(Snippet)
+func buildSnippet(language string, snippetType string, file string, class string) model.SnippetModel {
+	snippet := new(model.SnippetModel)
 	snippet.Class = class
 	snippet.Language = language
 	path := fmt.Sprintf("%s/%s/%s", config.String("snippets.folder"), snippetType, file)

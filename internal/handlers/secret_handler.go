@@ -1,10 +1,10 @@
 package handlers
 
 import (
+	"github.com/internal/model"
 	"net/http"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/internal/model"
 	"github.com/internal/server"
 	"github.com/internal/services"
 	"github.com/internal/shared"
@@ -22,12 +22,6 @@ func NewSecretHandler(appService services.IAppService, secretService services.IS
 	}
 }
 
-// CreateSecret  godoc
-// @Summary     Creates secret for application
-// @Tags        Secrets
-// @Param appId    path int true "App ID"
-// @Param 		createAppSecretModel    body model.CreateAppSecretModel true "Body params"
-// @Router      /apps/{appId}/secrets [post].
 func (h SecretHandler) CreateSecret(ctx *fiber.Ctx) error {
 	appId, err := ctx.ParamsInt("appId")
 	if err != nil {
@@ -39,7 +33,7 @@ func (h SecretHandler) CreateSecret(ctx *fiber.Ctx) error {
 		return err
 	}
 
-	request := new(model.CreateAppSecretModel)
+	request := new(model.CreateSecretRequestModel)
 	if err = ctx.BodyParser(request); err != nil {
 		return shared.NewError(http.StatusBadRequest, "bad request error, missing key and value properties")
 	}

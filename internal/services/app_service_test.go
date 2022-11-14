@@ -3,6 +3,7 @@ package services_test
 import (
 	"errors"
 	"fmt"
+	"github.com/internal/model"
 	"testing"
 
 	"github.com/internal/clients/gitlab/responses"
@@ -13,8 +14,6 @@ import (
 	"github.com/ent"
 
 	"github.com/internal/infrastructure"
-
-	"github.com/internal/model"
 
 	"github.com/internal/services"
 	"github.com/stretchr/testify/assert"
@@ -87,7 +86,7 @@ func TestAppService_CreateRepository(t *testing.T) {
 	defer dataAccessService.Close()
 
 	service := services.NewAppService(client, dataAccessService)
-	appModel := new(model.CreateAppModel)
+	appModel := new(model.CreateAppRequestModel)
 	appModel.Name = "my project name"
 	appModel.AppTypeID = 1
 	actual, err := service.CreateApp(appModel)
@@ -104,7 +103,7 @@ func TestAppService_CreateApp_Conflict(t *testing.T) {
 	defer dataAccessService.Close()
 
 	service := services.NewAppService(client, dataAccessService)
-	repositoryModel := new(model.CreateAppModel)
+	repositoryModel := new(model.CreateAppRequestModel)
 	repositoryModel.Name = "users-api"
 	repositoryModel.GroupID = 1
 	repositoryModel.AppTypeID = 1

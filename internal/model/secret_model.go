@@ -1,6 +1,6 @@
 package model
 
-type AppSecretModel struct {
+type SecretModel struct {
 	Key         string `json:"key,omitempty"`
 	RelativeUrl string `json:"url,omitempty"`
 }

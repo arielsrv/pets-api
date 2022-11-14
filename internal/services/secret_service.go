@@ -3,18 +3,18 @@ package services
 import (
 	"context"
 	"fmt"
+	"github.com/internal/model"
 	"net/http"
 
 	"github.com/ent"
 	"github.com/ent/secret"
 	"github.com/internal/clients/gitlab"
 	"github.com/internal/infrastructure"
-	"github.com/internal/model"
 	"github.com/internal/shared"
 )
 
 type ISecretService interface {
-	SaveSecret(appId int64, secretModel *model.CreateAppSecretModel) (*model.AppSecretModel, error)
+	SaveSecret(appId int64, secretModel *model.CreateSecretRequestModel) (*model.SecretModel, error)
 	GetSecret(secretID int64) (string, string, error)
 }
 
@@ -34,7 +34,7 @@ func (s *SecretService) GetSecret(secretID int64) (string, string, error) {
 
 	if err != nil {
 		if ent.IsNotFound(err) {
-			return "", "", shared.NewError(http.StatusNotFound, fmt.Sprintf("secret with id %d not found", secretID))
+			return "", "", shared.NewError(http.StatusNotFound, fmt.Sprintf("secrets with id %d not found", secretID))
 		}
 		return "", "", err
 	}
@@ -47,7 +47,7 @@ func (s *SecretService) GetSecret(secretID int64) (string, string, error) {
 	return result.Key, app.Name, nil
 }
 
-func (s *SecretService) SaveSecret(appId int64, secretModel *model.CreateAppSecretModel) (*model.AppSecretModel, error) {
+func (s *SecretService) SaveSecret(appId int64, secretModel *model.CreateSecretRequestModel) (*model.SecretModel, error) {
 	result, err := s.dataAccess.GetClient().Secret.Create().
 		SetKey(secretModel.Key).
 		SetValue(secretModel.Value).
@@ -58,7 +58,7 @@ func (s *SecretService) SaveSecret(appId int64, secretModel *model.CreateAppSecr
 		return nil, err
 	}
 
-	model := new(model.AppSecretModel)
+	model := new(model.SecretModel)
 	model.Key = secretModel.Key
 	model.RelativeUrl = fmt.Sprintf("/apps/%d/secrets/%d/snippets", appId, result.ID)
 

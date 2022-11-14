@@ -6,11 +6,11 @@ import (
 	"entgo.io/ent/dialect/sql"
 )
 
-// App is the predicate function for app builders.
+// App is the predicate function for apps builders.
 type App func(*sql.Selector)
 
 // AppType is the predicate function for apptype builders.
 type AppType func(*sql.Selector)
 
-// Secret is the predicate function for secret builders.
+// Secret is the predicate function for secrets builders.
 type Secret func(*sql.Selector)

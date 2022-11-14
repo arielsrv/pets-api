@@ -3,8 +3,8 @@
 package secret
 
 const (
-	// Label holds the string label denoting the secret type in the database.
-	Label = "secret"
+	// Label holds the string label denoting the secrets type in the database.
+	Label = "secrets"
 	// FieldID holds the string denoting the id field in the database.
 	FieldID = "id"
 	// FieldKey holds the string denoting the key field in the database.
@@ -15,20 +15,20 @@ const (
 	FieldAppID = "app_id"
 	// FieldActive holds the string denoting the active field in the database.
 	FieldActive = "active"
-	// EdgeApp holds the string denoting the app edge name in mutations.
-	EdgeApp = "app"
-	// Table holds the table name of the secret in the database.
+	// EdgeApp holds the string denoting the apps edge name in mutations.
+	EdgeApp = "apps"
+	// Table holds the table name of the secrets in the database.
 	Table = "secrets"
-	// AppTable is the table that holds the app relation/edge.
+	// AppTable is the table that holds the apps relation/edge.
 	AppTable = "secrets"
 	// AppInverseTable is the table name for the App entity.
-	// It exists in this package in order to avoid circular dependency with the "app" package.
+	// It exists in this package in order to avoid circular dependency with the "apps" package.
 	AppInverseTable = "apps"
-	// AppColumn is the table column denoting the app relation/edge.
+	// AppColumn is the table column denoting the apps relation/edge.
 	AppColumn = "app_id"
 )
 
-// Columns holds all SQL columns for secret fields.
+// Columns holds all SQL columns for secrets fields.
 var Columns = []string{
 	FieldID,
 	FieldKey,
