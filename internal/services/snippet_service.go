@@ -12,27 +12,15 @@ import (
 )
 
 const (
-	GoFile   = "go.snippet"
-	NodeFile = "node.snippet"
-)
-
-const (
-	Secret = "secrets"
-)
-
-const (
+	Secret       = "secrets"
+	GoFile       = "go.snippet"
 	GoLanguage   = "Golang"
+	GoClass      = "language-golang"
+	GoInstall    = "go get -u gitlab.com/ikp_go-secrets"
+	NodeFile     = "node.snippet"
 	NodeLanguage = "Node.js"
-)
-
-const (
-	GoClass   = "language-golang"
-	NodeClass = "language-typescript"
-)
-
-const (
-	GoInstall   = "go get -u gitlab.com/ikp_go-secrets"
-	NodeInstall = "npm install ikp_node-secrets@latest"
+	NodeClass    = "language-typescript"
+	NodeInstall  = "npm install ikp_node-secrets@latest"
 )
 
 type ISnippetService interface {
