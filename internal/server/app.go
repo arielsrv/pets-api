@@ -18,6 +18,8 @@ import (
 
 var routes = make(map[string]func(ctx *fiber.Ctx) error)
 
+type Handler = func(ctx *fiber.Ctx) error
+
 type App struct {
 	*fiber.App
 	appConfig AppConfig
@@ -77,14 +79,6 @@ type AppConfig struct {
 	Logger    bool
 }
 
-func SendString(ctx *fiber.Ctx, body string) error {
-	if body == "" {
-		ctx.Status(http.StatusNotFound)
-	}
-
-	return ctx.SendString(body)
-}
-
 type Routes struct {
 	routes []Route
 }
@@ -119,21 +113,10 @@ func (app *App) Handlers(handlers []Handler) {
 	}
 }
 
-func SendOk(ctx *fiber.Ctx, data interface{}) error {
-	return ctx.JSON(data)
-}
-
-func SendCreated(ctx *fiber.Ctx, data interface{}) error {
-	ctx.Status(http.StatusCreated)
-	return ctx.JSON(data)
-}
-
 func RegisterHandler(action func(ctx *fiber.Ctx) error) {
 	name := getFunctionName(action)
 	routes[name] = action
 }
-
-type Handler = func(ctx *fiber.Ctx) error
 
 func Use(action func(ctx *fiber.Ctx) error) func(ctx *fiber.Ctx) error {
 	name := getFunctionName(action)
@@ -142,4 +125,21 @@ func Use(action func(ctx *fiber.Ctx) error) func(ctx *fiber.Ctx) error {
 
 func getFunctionName(action func(ctx *fiber.Ctx) error) string {
 	return runtime.FuncForPC(reflect.ValueOf(action).Pointer()).Name()
+}
+
+func SendString(ctx *fiber.Ctx, body string) error {
+	if body == "" {
+		ctx.Status(http.StatusNotFound)
+	}
+
+	return ctx.SendString(body)
+}
+
+func SendOk(ctx *fiber.Ctx, data interface{}) error {
+	return ctx.JSON(data)
+}
+
+func SendCreated(ctx *fiber.Ctx, data interface{}) error {
+	ctx.Status(http.StatusCreated)
+	return ctx.JSON(data)
 }
