@@ -113,11 +113,11 @@ func (app *App) Routing(f func(*Routes)) {
 
 func (app *App) Handlers(handlers []Handler) {
 	for _, handler := range handlers {
-		RegisterHandler(handler)
+		registerHandler(handler)
 	}
 }
 
-func RegisterHandler(action func(ctx *fiber.Ctx) error) {
+func registerHandler(action func(ctx *fiber.Ctx) error) {
 	name := getFunctionName(action)
 	routes[name] = action
 }

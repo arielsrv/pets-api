@@ -2,9 +2,7 @@ package handlers
 
 import (
 	"net/http"
-	"runtime"
 
-	task "github.com/arielsrv/taskpool"
 	"github.com/gofiber/fiber/v2"
 	"github.com/internal/model"
 	"github.com/internal/server"
@@ -14,16 +12,11 @@ import (
 
 type AppHandler struct {
 	service services.IAppService
-	tb      task.Builder
 }
 
 func NewAppHandler(service services.IAppService) *AppHandler {
-	tb := task.Builder{
-		MaxWorkers: runtime.NumCPU() - 1,
-	}
 	return &AppHandler{
 		service: service,
-		tb:      tb,
 	}
 }
 

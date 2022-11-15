@@ -5,7 +5,6 @@ go 1.19
 require (
 	entgo.io/ent v0.11.4
 	github.com/arielsrv/golang-toolkit/rest v0.0.4
-	github.com/arielsrv/taskpool v0.0.4
 	github.com/beego/beego/v2 v2.0.5
 	github.com/go-sql-driver/mysql v1.6.0
 	github.com/gofiber/fiber/v2 v2.39.0
@@ -23,7 +22,6 @@ require (
 	github.com/PuerkitoBio/purell v1.1.1 // indirect
 	github.com/PuerkitoBio/urlesc v0.0.0-20170810143723-de5bf2ad4578 // indirect
 	github.com/agext/levenshtein v1.2.1 // indirect
-	github.com/alitto/pond v1.8.2 // indirect
 	github.com/andybalholm/brotli v1.0.4 // indirect
 	github.com/apparentlymart/go-textseg/v13 v13.0.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
