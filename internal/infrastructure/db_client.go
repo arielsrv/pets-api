@@ -15,8 +15,8 @@ import (
 )
 
 type DbClient struct {
-	dbMtx  sync.Once
-	client *ent.Client
+	dbMtx sync.Once
+	*ent.Client
 }
 
 func NewDbClient() *DbClient {
@@ -38,10 +38,10 @@ func (d *DbClient) Open() *ent.Client {
 		if err = dbClient.Schema.Create(context.Background()); err != nil {
 			log.Fatalf("failed creating schema resources: %v", err)
 		}
-		d.client = dbClient
+		d.Client = dbClient
 	})
 
-	return d.client
+	return d.Client
 }
 
 func (d *DbClient) Test(t *testing.T) *ent.Client {
@@ -50,11 +50,11 @@ func (d *DbClient) Test(t *testing.T) *ent.Client {
 			enttest.WithOptions(ent.Debug()),
 		}
 		dbClient := enttest.Open(t, "sqlite3", "file:ent?mode=memory&cache=shared&_fk=1", opts...)
-		d.client = dbClient
-		Seeds(d.client)
+		d.Client = dbClient
+		Seeds(d.Client)
 	})
 
-	return d.client
+	return d.Client
 }
 
 func Seeds(client *ent.Client) {
@@ -64,9 +64,9 @@ func Seeds(client *ent.Client) {
 }
 
 func (d *DbClient) GetClient() *ent.Client {
-	return d.client
+	return d.Client
 }
 
 func (d *DbClient) Close() error {
-	return d.client.Close()
+	return d.Client.Close()
 }
