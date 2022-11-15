@@ -19,8 +19,8 @@ import (
 )
 
 func Handlers() []server.Handler {
-	dataAccess := infrastructure.NewDataAccessService()
-	dataAccess.Open()
+	dbClient := infrastructure.NewDbClient()
+	dbClient.Open()
 
 	pingService := services.NewPingService()
 	pingHandler := handlers.NewPingHandler(pingService)
@@ -37,10 +37,10 @@ func Handlers() []server.Handler {
 	}
 
 	gitLabClient := gitlab.NewGitLabClient(gitLabRb)
-	appService := services.NewAppService(gitLabClient, dataAccess)
+	appService := services.NewAppService(gitLabClient, dbClient)
 	appHandler := handlers.NewAppHandler(appService)
 
-	secretService := services.NewSecretService(dataAccess, appService)
+	secretService := services.NewSecretService(dbClient, appService)
 	secretHandler := handlers.NewSecretHandler(appService, secretService)
 
 	snippetService := services.NewSnippetService(secretService)

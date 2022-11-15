@@ -40,13 +40,13 @@ func (m *MockAppService) GetAppById(int64) (*model.AppModel, error) {
 }
 
 func TestSecretService_GetSecret(t *testing.T) {
-	dataAccessService := infrastructure.NewDataAccessService()
-	dataAccessService.Test(t)
-	defer dataAccessService.Close()
+	dbClient := infrastructure.NewDbClient()
+	dbClient.Test(t)
+	defer dbClient.Close()
 
 	appService := new(MockAppService)
 
-	service := services.NewSecretService(dataAccessService, appService)
+	service := services.NewSecretService(dbClient, appService)
 	actual, err := service.GetSecret(1)
 
 	assert.NoError(t, err)
@@ -56,13 +56,13 @@ func TestSecretService_GetSecret(t *testing.T) {
 }
 
 func TestSecretService_GetSecret_NotFound(t *testing.T) {
-	dataAccessService := infrastructure.NewDataAccessService()
-	dataAccessService.Test(t)
-	defer dataAccessService.Close()
+	dbClient := infrastructure.NewDbClient()
+	dbClient.Test(t)
+	defer dbClient.Close()
 
 	appService := new(MockAppService)
 
-	service := services.NewSecretService(dataAccessService, appService)
+	service := services.NewSecretService(dbClient, appService)
 	actual, err := service.GetSecret(2)
 
 	assert.Error(t, err)
@@ -70,14 +70,14 @@ func TestSecretService_GetSecret_NotFound(t *testing.T) {
 }
 
 func TestSecretService_SaveSecret(t *testing.T) {
-	dataAccessService := infrastructure.NewDataAccessService()
-	dataAccessService.Test(t)
-	defer dataAccessService.Close()
+	dbClient := infrastructure.NewDbClient()
+	dbClient.Test(t)
+	defer dbClient.Close()
 
 	appService := new(MockAppService)
 	appService.On("GetAppById").Return(GetApp())
 
-	service := services.NewSecretService(dataAccessService, appService)
+	service := services.NewSecretService(dbClient, appService)
 	secretModel := new(model.CreateAppSecretModel)
 	secretModel.Key = "MYSECRETKEY"
 	secretModel.Value = "MYSECRETVALUE"
@@ -91,14 +91,14 @@ func TestSecretService_SaveSecret(t *testing.T) {
 }
 
 func TestSecretService_SaveSecret_Conflict(t *testing.T) {
-	dataAccessService := infrastructure.NewDataAccessService()
-	dataAccessService.Test(t)
-	defer dataAccessService.Close()
+	dbClient := infrastructure.NewDbClient()
+	dbClient.Test(t)
+	defer dbClient.Close()
 
 	appService := new(MockAppService)
 	appService.On("GetAppById").Return(GetApp())
 
-	service := services.NewSecretService(dataAccessService, appService)
+	service := services.NewSecretService(dbClient, appService)
 	secretModel := new(model.CreateAppSecretModel)
 	secretModel.Key = "MYSECRETKEY"
 	secretModel.Value = "MYSECRETVALUE"

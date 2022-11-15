@@ -44,11 +44,11 @@ func TestAppService_GetGroups(t *testing.T) {
 	client := new(MockClient)
 	client.On("GetGroups").Return(GetGroups())
 
-	dataAccessService := infrastructure.NewDataAccessService()
-	dataAccessService.Test(t)
-	defer dataAccessService.Close()
+	dbClient := infrastructure.NewDbClient()
+	dbClient.Test(t)
+	defer dbClient.Close()
 
-	service := services.NewAppService(client, dataAccessService)
+	service := services.NewAppService(client, dbClient)
 	actual, err := service.GetGroups()
 
 	assert.NoError(t, err)
@@ -64,11 +64,11 @@ func TestAppService_GetGroups_Err(t *testing.T) {
 	client := new(MockClient)
 	client.On("GetGroups").Return(GetGroupsError())
 
-	dataAccessService := infrastructure.NewDataAccessService()
-	dataAccessService.Test(t)
-	defer dataAccessService.Close()
+	dbClient := infrastructure.NewDbClient()
+	dbClient.Test(t)
+	defer dbClient.Close()
 
-	service := services.NewAppService(client, dataAccessService)
+	service := services.NewAppService(client, dbClient)
 	actual, err := service.GetGroups()
 
 	assert.Error(t, err)
@@ -82,11 +82,11 @@ func GetGroupsError() ([]responses.GroupResponse, error) {
 func TestAppService_CreateRepository(t *testing.T) {
 	client := new(MockClient)
 	client.On("CreateProject").Return(GetCreateProjectResponse())
-	dataAccessService := infrastructure.NewDataAccessService()
-	dataAccessService.Test(t)
-	defer dataAccessService.Close()
+	dbClient := infrastructure.NewDbClient()
+	dbClient.Test(t)
+	defer dbClient.Close()
 
-	service := services.NewAppService(client, dataAccessService)
+	service := services.NewAppService(client, dbClient)
 	appModel := new(model.CreateAppModel)
 	appModel.Name = "my project name"
 	appModel.AppTypeID = 1
@@ -99,11 +99,11 @@ func TestAppService_CreateRepository(t *testing.T) {
 func TestAppService_CreateApp_Conflict(t *testing.T) {
 	client := new(MockClient)
 	client.On("CreateProject").Return(GetCreateProjectResponse())
-	dataAccessService := infrastructure.NewDataAccessService()
-	dataAccessService.Test(t)
-	defer dataAccessService.Close()
+	dbClient := infrastructure.NewDbClient()
+	dbClient.Test(t)
+	defer dbClient.Close()
 
-	service := services.NewAppService(client, dataAccessService)
+	service := services.NewAppService(client, dbClient)
 	repositoryModel := new(model.CreateAppModel)
 	repositoryModel.Name = "users-api"
 	repositoryModel.GroupID = 1
@@ -122,11 +122,11 @@ func TestAppService_GetAppByName(t *testing.T) {
 	client := new(MockClient)
 	client.On("GetProject").Return(GetProject())
 
-	dataAccessService := infrastructure.NewDataAccessService()
-	dataAccessService.Test(t)
-	defer dataAccessService.Close()
+	dbClient := infrastructure.NewDbClient()
+	dbClient.Test(t)
+	defer dbClient.Close()
 
-	service := services.NewAppService(client, dataAccessService)
+	service := services.NewAppService(client, dbClient)
 	actual, err := service.GetAppByName("customers-api")
 
 	assert.NoError(t, err)
@@ -139,11 +139,11 @@ func TestAppService_GetAppById(t *testing.T) {
 	client := new(MockClient)
 	client.On("GetProject").Return(GetProject())
 
-	dataAccessService := infrastructure.NewDataAccessService()
-	dataAccessService.Test(t)
-	defer dataAccessService.Close()
+	dbClient := infrastructure.NewDbClient()
+	dbClient.Test(t)
+	defer dbClient.Close()
 
-	service := services.NewAppService(client, dataAccessService)
+	service := services.NewAppService(client, dbClient)
 	actual, err := service.GetAppById(1)
 
 	assert.NoError(t, err)
@@ -156,11 +156,11 @@ func TestAppService_GetApp_NotFoundErr(t *testing.T) {
 	client := new(MockClient)
 	client.On("GetProject").Return(GetProjectNotFoundErr())
 
-	dataAccessService := infrastructure.NewDataAccessService()
-	dataAccessService.Test(t)
-	defer dataAccessService.Close()
+	dbClient := infrastructure.NewDbClient()
+	dbClient.Test(t)
+	defer dbClient.Close()
 
-	service := services.NewAppService(client, dataAccessService)
+	service := services.NewAppService(client, dbClient)
 	actual, err := service.GetAppByName("loyalty-api")
 
 	assert.Error(t, err)
@@ -170,11 +170,11 @@ func TestAppService_GetApp_NotFoundErr(t *testing.T) {
 
 func TestAppService_GetAppTypes(t *testing.T) {
 	client := new(MockClient)
-	dataAccessService := infrastructure.NewDataAccessService()
-	dataAccessService.Test(t)
-	defer dataAccessService.Close()
+	dbClient := infrastructure.NewDbClient()
+	dbClient.Test(t)
+	defer dbClient.Close()
 
-	service := services.NewAppService(client, dataAccessService)
+	service := services.NewAppService(client, dbClient)
 	actual, err := service.GetAppTypes()
 
 	assert.NoError(t, err)
@@ -186,11 +186,11 @@ func TestAppService_GetAppTypes(t *testing.T) {
 
 func TestAppService_GetAppTypes_Err(t *testing.T) {
 	client := new(MockClient)
-	dataAccessService := infrastructure.NewDataAccessService()
-	dataAccessService.Test(t)
-	dataAccessService.Close()
+	dbClient := infrastructure.NewDbClient()
+	dbClient.Test(t)
+	dbClient.Close()
 
-	service := services.NewAppService(client, dataAccessService)
+	service := services.NewAppService(client, dbClient)
 	actual, err := service.GetAppTypes()
 
 	assert.Error(t, err)

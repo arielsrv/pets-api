@@ -28,15 +28,15 @@ type IAppService interface {
 
 type AppService struct {
 	gitLabClient gitlab.IGitLabClient
-	dataAccess   *infrastructure.DataAccessService
+	dbClient     *infrastructure.DbClient
 }
 
-func NewAppService(gitLabClient gitlab.IGitLabClient, dataAccess *infrastructure.DataAccessService) *AppService {
-	return &AppService{gitLabClient: gitLabClient, dataAccess: dataAccess}
+func NewAppService(gitLabClient gitlab.IGitLabClient, dbClient *infrastructure.DbClient) *AppService {
+	return &AppService{gitLabClient: gitLabClient, dbClient: dbClient}
 }
 
 func (s *AppService) GetAppByName(appName string) (*model.AppModel, error) {
-	application, err := s.dataAccess.GetClient().App.Query().
+	application, err := s.dbClient.GetClient().App.Query().
 		Where(app.Name(appName)).
 		First(context.Background())
 
@@ -74,7 +74,7 @@ func (s *AppService) GetAppByName(appName string) (*model.AppModel, error) {
 }
 
 func (s *AppService) GetAppById(appId int64) (*model.AppModel, error) {
-	application, err := s.dataAccess.GetClient().App.Query().
+	application, err := s.dbClient.GetClient().App.Query().
 		Where(app.ID(appId)).
 		First(context.Background())
 
@@ -113,7 +113,7 @@ func (s *AppService) GetAppById(appId int64) (*model.AppModel, error) {
 }
 
 func (s *AppService) GetAppTypes() ([]model.AppTypeModel, error) {
-	appTypes, err := s.dataAccess.GetClient().AppType.Query().All(context.Background())
+	appTypes, err := s.dbClient.GetClient().AppType.Query().All(context.Background())
 
 	if err != nil {
 		return nil, err
@@ -148,7 +148,7 @@ func (s *AppService) GetGroups() ([]model.AppGroupModel, error) {
 }
 
 func (s *AppService) CreateApp(repositoryDto *model.CreateAppModel) (*model.AppModel, error) {
-	duplicated, err := s.dataAccess.GetClient().App.Query().
+	duplicated, err := s.dbClient.GetClient().App.Query().
 		Where(app.Name(repositoryDto.Name)).
 		Exist(context.Background())
 
@@ -170,7 +170,7 @@ func (s *AppService) CreateApp(repositoryDto *model.CreateAppModel) (*model.AppM
 		return nil, err
 	}
 
-	application, err := s.dataAccess.GetClient().App.Create().
+	application, err := s.dbClient.GetClient().App.Create().
 		SetName(repositoryDto.Name).
 		SetProjectId(response.ID).
 		SetAppTypeID(repositoryDto.AppTypeID).
