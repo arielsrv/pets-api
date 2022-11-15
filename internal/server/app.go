@@ -1,7 +1,6 @@
 package server
 
 import (
-	"github.com/gofiber/fiber/v2/middleware/favicon"
 	"log"
 	"net/http"
 
@@ -70,9 +69,9 @@ func New(appConfig ...AppConfig) *App {
 		app.Add(http.MethodGet, "/swagger/*", swagger.HandlerDefault)
 	}
 
-	app.Use(favicon.New(favicon.Config{
-		File: "./favicon.ico",
-	}))
+	// app.Use(favicon.New(favicon.Config{
+	//     File: "./favicon.ico",
+	// }))
 
 	return app
 }

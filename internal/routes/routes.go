@@ -1,21 +1,22 @@
 package routes
 
 import (
-	. "net/http"
+	"net/http"
 
-	. "github.com/internal/handlers"
+	"github.com/internal/handlers"
+
 	"github.com/internal/server"
 )
 
 func Routes() func(*server.Routes) {
 	routes := func(routes *server.Routes) {
-		routes.Add(MethodGet, "/ping", PingHandler{}.Ping)
-		routes.Add(MethodGet, "/apps/groups", AppHandler{}.GetGroups)
-		routes.Add(MethodPost, "/apps", AppHandler{}.CreateApp)
-		routes.Add(MethodGet, "/apps/types", AppHandler{}.GetAppTypes)
-		routes.Add(MethodGet, "/apps/search", AppHandler{}.GetApp)
-		routes.Add(MethodPost, "/apps/:appId/secrets", SecretHandler{}.CreateSecret)
-		routes.Add(MethodGet, "/apps/:appId/secrets/:secretId/snippets", SnippetHandler{}.GetSnippet)
+		routes.Add(http.MethodGet, "/ping", handlers.PingHandler{}.Ping)
+		routes.Add(http.MethodGet, "/apps/groups", handlers.AppHandler{}.GetGroups)
+		routes.Add(http.MethodPost, "/apps", handlers.AppHandler{}.CreateApp)
+		routes.Add(http.MethodGet, "/apps/types", handlers.AppHandler{}.GetAppTypes)
+		routes.Add(http.MethodGet, "/apps/search", handlers.AppHandler{}.GetApp)
+		routes.Add(http.MethodPost, "/apps/:appId/secrets", handlers.SecretHandler{}.CreateSecret)
+		routes.Add(http.MethodGet, "/apps/:appId/secrets/:secretId/snippets", handlers.SnippetHandler{}.GetSnippet)
 	}
 	return routes
 }

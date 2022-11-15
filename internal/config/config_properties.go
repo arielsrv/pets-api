@@ -2,9 +2,9 @@ package config
 
 import (
 	"log"
-	. "os"
-	. "strconv"
-	. "strings"
+	"os"
+	"strconv"
+	"strings"
 
 	"github.com/beego/beego/v2/core/config"
 )
@@ -29,7 +29,7 @@ func init() {
 func String(key string) string {
 	value := config.DefaultString(key, "")
 	if value == "" {
-		return Getenv(ToUpper(Replace(key, ".", "_", -1)))
+		return os.Getenv(strings.ToUpper(strings.ReplaceAll(key, ".", "_")))
 	}
 	return value
 }
@@ -41,7 +41,7 @@ func String(key string) string {
 func Int(key string) int {
 	value := config.DefaultInt(key, 0)
 	if value == 0 {
-		env, err := Atoi(Getenv(ToUpper(Replace(key, ".", "_", -1))))
+		env, err := strconv.Atoi(os.Getenv(strings.ToUpper(strings.ReplaceAll(key, ".", "_"))))
 		if err != nil {
 			return 0
 		}
