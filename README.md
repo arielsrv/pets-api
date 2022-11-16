@@ -11,6 +11,11 @@
 - [Golang Dependencies Update](https://github.com/oligot/go-mod-upgrade)
 - [ent - An Entity Framework For Go](https://github.com/ent/ent)
 
+## Developer tools (optional if you want to browse api with SSL self-signed certificate )
+
+- [NGINX](https://golangci-lint.run/)
+- [MKCERT](https://taskfile.dev/)
+
 ### For macOs
 
 ```shell
@@ -18,69 +23,8 @@ brew install go-task/tap/go-task
 brew install golangci-lint
 go install github.com/oligot/go-mod-upgrade@latest
 go install entgo.io/ent/cmd/ent@latest
-```
-
-## template
-
-```go
-
-package main
-
-import (
-	_ "github.com/docs" // only for Swagger
-	"github.com/internal/handlers"
-	"github.com/internal/server"
-	"github.com/internal/services"
-	"log"
-	"net/http"
-)
-
-func main() {
-	app := server.New(server.Config{
-		Recovery:  true,
-		Swagger:   false,
-		RequestID: true,
-		Logger:    true,
-	})
-
-	pingService := services.NewPingService()
-	pingHandler := handlers.NewPingHandler(pingService)
-
-	app.Add(http.MethodGet, "/ping", pingHandler.Ping)
-
-	log.Fatal(app.Start("localhost:8080"))
-}
-```
-
-## benchmark
-
-```go
-package handlers_test
-
-import (
-	_ "github.com/docs" // only for swagger
-	"github.com/internal/handlers"
-	"github.com/internal/server"
-	"github.com/internal/services"
-	"log"
-	"net/http"
-)
-
-func main() {
-	app := server.New(server.Config{
-		Recovery:  true,
-		Swagger:   false,
-		RequestID: true,
-		Logger:    true,
-	})
-
-	pingService := services.NewPingService()
-	pingHandler := handlers.NewPingHandler(pingService)
-
-	app.Add(http.MethodGet, "/ping", pingHandler.Ping)
-
-	log.Fatal(app.Start("localhost:8080"))
-}
+brew install mkcert
+brew install nginx
 ```
 
 ```shell
@@ -134,6 +78,16 @@ task download upgrade
 
 ```shell
 task swagger
+```
+
+## add database entity model
+```shell
+task add-entity -- entity_name
+```
+
+## build database model
+```shell
+task build-model
 ```
 
 ## example request
