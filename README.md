@@ -13,8 +13,8 @@
 
 ## Developer tools (optional if you want to browse api with SSL self-signed certificate )
 
-- [NGINX](https://golangci-lint.run/)
-- [MKCERT](https://taskfile.dev/)
+- [NGINX](https://www.nginx.com/)
+- [mkcert](https://github.com/FiloSottile/mkcert)
 
 ### For macOs
 
