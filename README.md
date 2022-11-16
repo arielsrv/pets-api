@@ -4,11 +4,12 @@
 ![Coverage](https://img.shields.io/badge/Coverage-87.9%25-brightgreen)
 [![Update release version.](https://github.com/tj-actions/coverage-badge-go/workflows/Update%20release%20version./badge.svg)](https://github.com/tj-actions/coverage-badge-go/actions?query=workflow%3A%22Update+release+version.%22)
 
-## Developer tools
+## Developer tools (required)
 
 - [Golang Lint](https://golangci-lint.run/)
 - [Golang Task](https://taskfile.dev/)
 - [Golang Dependencies Update](https://github.com/oligot/go-mod-upgrade)
+- [ent - An Entity Framework For Go](https://github.com/ent/ent)
 
 ### For macOs
 
@@ -16,6 +17,7 @@
 brew install go-task/tap/go-task
 brew install golangci-lint
 go install github.com/oligot/go-mod-upgrade@latest
+go install entgo.io/ent/cmd/ent@latest
 ```
 
 ## template
