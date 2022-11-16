@@ -3,6 +3,8 @@ package handlers
 import (
 	"net/http"
 
+	"github.com/ent/property"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/internal/model"
 	"github.com/internal/server"
@@ -44,7 +46,7 @@ func (h AppHandler) CreateApp(ctx *fiber.Ctx) error {
 		return err
 	}
 
-	err = shared.EnsureInt(request.AppTypeID, "bad request error, invalid app type")
+	err = shared.EnsureEnum(request.AppTypeID, property.AppTypeValues, "bad request error, invalid app type")
 	if err != nil {
 		return err
 	}

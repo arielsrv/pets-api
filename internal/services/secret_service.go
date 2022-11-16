@@ -74,8 +74,9 @@ func (s *SecretService) SaveSecret(appId int64, secretModel *model.CreateAppSecr
 	}
 
 	model := new(model.AppSecretModel)
+	model.OriginalKey = secretModel.Key
 	model.Key = result.Key
-	model.RelativeUrl = fmt.Sprintf("/apps/%d/secrets/%d/snippets", appId, result.ID)
+	model.SnippetUrl = fmt.Sprintf("/apps/%d/secrets/%d/snippets", appId, result.ID)
 
 	return model, nil
 }

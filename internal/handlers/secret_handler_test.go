@@ -52,13 +52,13 @@ func TestSecretHandler_CreateSecret(t *testing.T) {
 	assert.NoError(t, err)
 	assert.NotNil(t, body)
 
-	assert.Equal(t, "{\"key\":\"my_secret_key\",\"url\":\"http://example.com/relative_url\"}", string(body))
+	assert.Equal(t, "{\"key\":\"my_secret_key\",\"snippet_url\":\"/relative_url\"}", string(body))
 }
 
 func GetNewSecret() (*model.AppSecretModel, error) {
 	model := new(model.AppSecretModel)
 	model.Key = "my_secret_key"
-	model.RelativeUrl = "/relative_url"
+	model.SnippetUrl = "/relative_url"
 
 	return model, nil
 }

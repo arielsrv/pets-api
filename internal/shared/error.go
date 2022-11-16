@@ -66,3 +66,17 @@ func EnsureInt64(value int64, message string) error {
 	}
 	return nil
 }
+
+func EnsureEnum[T comparable](value T, elements []T, message string) error {
+	valid := false
+	for _, element := range elements {
+		if value == element {
+			valid = true
+			continue
+		}
+	}
+	if !valid {
+		return NewError(http.StatusBadRequest, message)
+	}
+	return nil
+}

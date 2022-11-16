@@ -3,6 +3,11 @@ package property
 type AppType int
 
 const (
-	Backend  = 1
-	Frontend = 2
+	Backend  AppType = iota + 1
+	Frontend         = 2
 )
+
+var AppTypeValues = []AppType{
+	Backend,
+	Frontend,
+}

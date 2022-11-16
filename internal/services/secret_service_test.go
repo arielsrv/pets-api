@@ -87,7 +87,7 @@ func TestSecretService_SaveSecret(t *testing.T) {
 	assert.NotNil(t, actual)
 
 	assert.Equal(t, "PETS_MYAPP_MYSECRETKEY", actual.Key)
-	assert.Equal(t, "/apps/1/secrets/2/snippets", actual.RelativeUrl)
+	assert.Equal(t, "/apps/1/secrets/2/snippets", actual.SnippetUrl)
 }
 
 func TestSecretService_SaveSecret_Conflict(t *testing.T) {
@@ -108,7 +108,7 @@ func TestSecretService_SaveSecret_Conflict(t *testing.T) {
 	assert.NotNil(t, actual)
 
 	assert.Equal(t, "PETS_MYAPP_MYSECRETKEY", actual.Key)
-	assert.Equal(t, "/apps/1/secrets/2/snippets", actual.RelativeUrl)
+	assert.Equal(t, "/apps/1/secrets/2/snippets", actual.SnippetUrl)
 
 	conflict, err := service.SaveSecret(1, secretModel)
 

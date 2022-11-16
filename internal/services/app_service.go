@@ -147,9 +147,9 @@ func (s *AppService) GetGroups() ([]model.AppGroupModel, error) {
 	return groupsDto, nil
 }
 
-func (s *AppService) CreateApp(repositoryDto *model.CreateAppModel) (*model.AppModel, error) {
+func (s *AppService) CreateApp(createAppModel *model.CreateAppModel) (*model.AppModel, error) {
 	duplicated, err := s.dbClient.GetClient().App.Query().
-		Where(app.Name(repositoryDto.Name)).
+		Where(app.Name(createAppModel.Name)).
 		Exist(context.Background())
 
 	if err != nil {
@@ -157,12 +157,12 @@ func (s *AppService) CreateApp(repositoryDto *model.CreateAppModel) (*model.AppM
 	}
 
 	if duplicated {
-		return nil, shared.NewError(http.StatusConflict, fmt.Sprintf("duplicated project name %s", repositoryDto.Name))
+		return nil, shared.NewError(http.StatusConflict, fmt.Sprintf("duplicated project name %s", createAppModel.Name))
 	}
 
 	createProjectRequest := new(requests.CreateProjectRequest)
-	createProjectRequest.Name = fmt.Sprintf("%s%s", config.String("gitlab.prefix"), repositoryDto.Name)
-	createProjectRequest.GroupID = repositoryDto.GroupID
+	createProjectRequest.Name = fmt.Sprintf("%s%s", config.String("gitlab.prefix"), createAppModel.Name)
+	createProjectRequest.GroupID = createAppModel.GroupID
 
 	response, err := s.gitLabClient.CreateProject(createProjectRequest)
 
@@ -171,9 +171,9 @@ func (s *AppService) CreateApp(repositoryDto *model.CreateAppModel) (*model.AppM
 	}
 
 	application, err := s.dbClient.GetClient().App.Create().
-		SetName(repositoryDto.Name).
+		SetName(createAppModel.Name).
 		SetProjectId(response.ID).
-		SetAppTypeID(repositoryDto.AppTypeID).
+		SetAppTypeID(int(createAppModel.AppTypeID)).
 		Save(context.Background())
 
 	if err != nil {

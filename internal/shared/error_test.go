@@ -6,6 +6,8 @@ import (
 	"net/http"
 	"testing"
 
+	"github.com/ent/property"
+
 	"github.com/internal/shared"
 
 	"github.com/gofiber/fiber/v2"
@@ -97,4 +99,15 @@ func TestEnsureInt_Ok(t *testing.T) {
 func TestEnsureInt64_Ok(t *testing.T) {
 	err := shared.EnsureInt64(int64(1), "invalid value")
 	assert.NoError(t, err)
+}
+
+func TestEnsureEnum(t *testing.T) {
+	err := shared.EnsureEnum(property.Backend, property.AppTypeValues, "invalid value")
+	assert.NoError(t, err)
+}
+
+func TestEnsureEnum_Err(t *testing.T) {
+	err := shared.EnsureEnum(0, property.AppTypeValues, "invalid value")
+	assert.Error(t, err)
+	assert.Equal(t, "invalid value", err.Error())
 }
