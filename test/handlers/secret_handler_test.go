@@ -7,9 +7,9 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/internal/handlers"
-	"github.com/internal/model"
-	"github.com/internal/server"
+	"github.com/src/handlers"
+	"github.com/src/model"
+	"github.com/src/server"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )

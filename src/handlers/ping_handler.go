@@ -2,8 +2,8 @@ package handlers
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"github.com/internal/server"
-	"github.com/internal/services"
+	"github.com/src/server"
+	"github.com/src/services"
 )
 
 type IPingHandler interface {

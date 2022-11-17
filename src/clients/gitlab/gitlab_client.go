@@ -5,10 +5,10 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/internal/clients/gitlab/responses"
+	"github.com/src/clients/gitlab/responses"
 
-	"github.com/internal/clients/gitlab/requests"
-	"github.com/internal/shared"
+	"github.com/src/clients/gitlab/requests"
+	"github.com/src/shared"
 
 	"github.com/arielsrv/golang-toolkit/rest"
 )

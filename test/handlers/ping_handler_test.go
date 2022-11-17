@@ -6,8 +6,8 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/internal/handlers"
-	"github.com/internal/server"
+	"github.com/src/handlers"
+	"github.com/src/server"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/suite"
 )

@@ -8,7 +8,7 @@ import (
 
 	"github.com/ent/property"
 
-	"github.com/internal/shared"
+	"github.com/src/shared"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/stretchr/testify/assert"
@@ -27,7 +27,7 @@ func TestErrorHandler(t *testing.T) {
 	app := fiber.New()
 	ctx := app.AcquireCtx(&fasthttp.RequestCtx{})
 	defer app.ReleaseCtx(ctx)
-	err := shared.ErrorHandler(ctx, errors.New("internal server error"))
+	err := shared.ErrorHandler(ctx, errors.New("src server error"))
 	assert.NoError(t, err)
 	assert.Equal(t, http.StatusInternalServerError, ctx.Context().Response.StatusCode())
 
@@ -35,14 +35,14 @@ func TestErrorHandler(t *testing.T) {
 	err = json.Unmarshal(ctx.Response().Body(), &apiError)
 	assert.NoError(t, err)
 	assert.Equal(t, http.StatusInternalServerError, apiError.StatusCode)
-	assert.Equal(t, "internal server error", apiError.Message)
+	assert.Equal(t, "src server error", apiError.Message)
 }
 
 func TestErrorHandler_FiberError(t *testing.T) {
 	app := fiber.New()
 	ctx := app.AcquireCtx(&fasthttp.RequestCtx{})
 	defer app.ReleaseCtx(ctx)
-	err := shared.ErrorHandler(ctx, fiber.NewError(http.StatusInternalServerError, "internal server error"))
+	err := shared.ErrorHandler(ctx, fiber.NewError(http.StatusInternalServerError, "src server error"))
 	assert.NoError(t, err)
 	assert.Equal(t, http.StatusInternalServerError, ctx.Context().Response.StatusCode())
 
@@ -50,14 +50,14 @@ func TestErrorHandler_FiberError(t *testing.T) {
 	err = json.Unmarshal(ctx.Response().Body(), &apiError)
 	assert.NoError(t, err)
 	assert.Equal(t, http.StatusInternalServerError, apiError.StatusCode)
-	assert.Equal(t, "internal server error", apiError.Message)
+	assert.Equal(t, "src server error", apiError.Message)
 }
 
 func TestErrorHandler_ApiError(t *testing.T) {
 	app := fiber.New()
 	ctx := app.AcquireCtx(&fasthttp.RequestCtx{})
 	defer app.ReleaseCtx(ctx)
-	err := shared.ErrorHandler(ctx, shared.NewError(http.StatusInternalServerError, "internal server error"))
+	err := shared.ErrorHandler(ctx, shared.NewError(http.StatusInternalServerError, "src server error"))
 	assert.NoError(t, err)
 	assert.Equal(t, http.StatusInternalServerError, ctx.Context().Response.StatusCode())
 
@@ -65,7 +65,7 @@ func TestErrorHandler_ApiError(t *testing.T) {
 	err = json.Unmarshal(ctx.Response().Body(), &apiError)
 	assert.NoError(t, err)
 	assert.Equal(t, http.StatusInternalServerError, apiError.StatusCode)
-	assert.Equal(t, "internal server error", apiError.Message)
+	assert.Equal(t, "src server error", apiError.Message)
 }
 
 func TestEnsureNotEmpty(t *testing.T) {

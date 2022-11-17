@@ -13,7 +13,7 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/requestid"
 	"github.com/gofiber/swagger"
 	"github.com/gofiber/template/html"
-	"github.com/internal/shared"
+	"github.com/src/shared"
 )
 
 var routes = make(map[string]func(ctx *fiber.Ctx) error)

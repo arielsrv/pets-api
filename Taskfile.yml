@@ -2,15 +2,15 @@
 version: '3'
 
 env:
-  ENTRY_POINT: cmd/main.go
+  ENTRY_POINT: src/main.go
   BUILD_FOLDER: build
   EXECUTABLE: server
   COVERAGE_OUT_FILE: coverage.out
   COVERAGE_HTML_FILE: coverage.html
   SWAGGER_COVERAGE: "\
-    ../internal/handlers,\
-    ../internal/model,\
-    ../internal/services"
+    ../src/handlers,\
+    ../src/model,\
+    ../src/services"
   SWAGGER_OUTPUT_FOLDER: docs
 
 tasks:
@@ -35,7 +35,7 @@ tasks:
     desc: Makes report coverage.
     cmds:
       - echo files $COVERAGE_OUT_FILE, $COVERAGE_HTML_FILE // -coverpkg=./... all files
-      - go test -v -cover -coverpkg "./internal/..." "./test/..." -covermode=count -coverprofile=$COVERAGE_OUT_FILE
+      - go test -v -cover -coverpkg "./src/..." "./test/..." -covermode=count -coverprofile=$COVERAGE_OUT_FILE
       - go tool cover -html $COVERAGE_OUT_FILE -o $COVERAGE_HTML_FILE
       - go tool cover -func=$COVERAGE_OUT_FILE -o=$COVERAGE_OUT_FILE
   clean:
@@ -53,7 +53,7 @@ tasks:
       - go-mod-upgrade
   swagger:
     desc: Generate RESTful API documentation with Swagger.
-    dir: cmd
+    dir: src
     cmds:
       - go install github.com/swaggo/swag/cmd/swag@latest
       - swag init -d ./,$SWAGGER_COVERAGE -o ../$SWAGGER_OUTPUT_FOLDER

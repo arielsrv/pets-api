@@ -3,9 +3,9 @@ package services_test
 import (
 	"testing"
 
-	"github.com/internal/infrastructure"
-	"github.com/internal/model"
-	"github.com/internal/services"
+	"github.com/src/infrastructure"
+	"github.com/src/model"
+	"github.com/src/services"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )

@@ -6,9 +6,9 @@ import (
 	"os"
 	"strings"
 
-	"github.com/internal/model"
+	"github.com/src/model"
 
-	"github.com/internal/config"
+	"github.com/src/config"
 )
 
 const (

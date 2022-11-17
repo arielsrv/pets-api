@@ -5,11 +5,11 @@ import (
 	"log"
 	"os"
 
-	"github.com/internal/container"
-	"github.com/internal/routes"
+	"github.com/src/container"
+	"github.com/src/routes"
 
 	_ "github.com/docs"
-	"github.com/internal/server"
+	"github.com/src/server"
 )
 
 // @title       Pets API

@@ -5,18 +5,18 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/internal/clients/gitlab/responses"
-	"github.com/internal/config"
+	"github.com/src/clients/gitlab/responses"
+	"github.com/src/config"
 
-	"github.com/internal/clients/gitlab/requests"
+	"github.com/src/clients/gitlab/requests"
 
 	"github.com/ent"
 
-	"github.com/internal/infrastructure"
+	"github.com/src/infrastructure"
 
-	"github.com/internal/model"
+	"github.com/src/model"
 
-	"github.com/internal/services"
+	"github.com/src/services"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )
@@ -76,7 +76,7 @@ func TestAppService_GetGroups_Err(t *testing.T) {
 }
 
 func GetGroupsError() ([]responses.GroupResponse, error) {
-	return nil, errors.New("internal server error")
+	return nil, errors.New("src server error")
 }
 
 func TestAppService_CreateRepository(t *testing.T) {

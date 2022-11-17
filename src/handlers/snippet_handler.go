@@ -2,8 +2,8 @@ package handlers
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"github.com/internal/services"
-	"github.com/internal/shared"
+	"github.com/src/services"
+	"github.com/src/shared"
 )
 
 type SnippetHandler struct {

@@ -6,16 +6,16 @@ import (
 	"net/http"
 	"net/url"
 
-	"github.com/internal/config"
+	"github.com/src/config"
 
-	"github.com/internal/clients/gitlab"
-	"github.com/internal/clients/gitlab/requests"
+	"github.com/src/clients/gitlab"
+	"github.com/src/clients/gitlab/requests"
 
 	"github.com/ent"
 	"github.com/ent/app"
-	"github.com/internal/infrastructure"
-	"github.com/internal/model"
-	"github.com/internal/shared"
+	"github.com/src/infrastructure"
+	"github.com/src/model"
+	"github.com/src/shared"
 )
 
 type IAppService interface {

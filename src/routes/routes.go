@@ -3,9 +3,9 @@ package routes
 import (
 	"net/http"
 
-	"github.com/internal/handlers"
+	"github.com/src/handlers"
 
-	"github.com/internal/server"
+	"github.com/src/server"
 )
 
 func Routes() func(*server.Routes) {

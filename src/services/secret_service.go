@@ -8,9 +8,9 @@ import (
 
 	"github.com/ent"
 	"github.com/ent/secret"
-	"github.com/internal/infrastructure"
-	"github.com/internal/model"
-	"github.com/internal/shared"
+	"github.com/src/infrastructure"
+	"github.com/src/model"
+	"github.com/src/shared"
 )
 
 type ISecretService interface {

@@ -6,10 +6,10 @@ import (
 	"github.com/ent/property"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/internal/model"
-	"github.com/internal/server"
-	"github.com/internal/services"
-	"github.com/internal/shared"
+	"github.com/src/model"
+	"github.com/src/server"
+	"github.com/src/services"
+	"github.com/src/shared"
 )
 
 type AppHandler struct {

@@ -3,7 +3,7 @@ package config_test
 import (
 	"testing"
 
-	"github.com/internal/config"
+	"github.com/src/config"
 	"github.com/stretchr/testify/assert"
 )
 

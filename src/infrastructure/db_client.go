@@ -7,7 +7,7 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/internal/config"
+	"github.com/src/config"
 
 	"github.com/ent"
 	"github.com/ent/enttest"

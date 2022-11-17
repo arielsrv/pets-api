@@ -5,17 +5,17 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/internal/config"
+	"github.com/src/config"
 
-	"github.com/internal/clients/gitlab"
+	"github.com/src/clients/gitlab"
 
-	"github.com/internal/infrastructure"
+	"github.com/src/infrastructure"
 
 	"github.com/arielsrv/golang-toolkit/rest"
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/internal/handlers"
-	"github.com/internal/server"
-	"github.com/internal/services"
+	"github.com/src/handlers"
+	"github.com/src/server"
+	"github.com/src/services"
 )
 
 func Handlers() []server.Handler {

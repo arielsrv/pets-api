@@ -6,12 +6,12 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/internal/model"
+	"github.com/src/model"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/template/html"
-	"github.com/internal/handlers"
-	"github.com/internal/services"
+	"github.com/src/handlers"
+	"github.com/src/services"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )

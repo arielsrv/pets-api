@@ -8,11 +8,11 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/internal/shared"
+	"github.com/src/shared"
 
-	"github.com/internal/handlers"
-	"github.com/internal/model"
-	"github.com/internal/server"
+	"github.com/src/handlers"
+	"github.com/src/model"
+	"github.com/src/server"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 
@@ -160,11 +160,11 @@ func TestAppHandler_GetGroups_Err(t *testing.T) {
 	assert.NoError(t, err)
 	assert.NotNil(t, body)
 
-	assert.Equal(t, "{\"status_code\":500,\"message\":\"internal server error\"}", string(body))
+	assert.Equal(t, "{\"status_code\":500,\"message\":\"src server error\"}", string(body))
 }
 
 func GetGroupsErr() ([]model.AppGroupModel, error) {
-	return nil, errors.New("internal server error")
+	return nil, errors.New("src server error")
 }
 
 func TestRepositoriesHandler_CreateApp(t *testing.T) {
@@ -220,11 +220,11 @@ func TestRepositoriesHandler_CreateApp_Err(t *testing.T) {
 	assert.NoError(t, err)
 	assert.NotNil(t, body)
 
-	assert.Equal(t, "{\"status_code\":500,\"message\":\"internal server error\"}", string(body))
+	assert.Equal(t, "{\"status_code\":500,\"message\":\"src server error\"}", string(body))
 }
 
 func GetCreateError() (*model.AppModel, error) {
-	return nil, errors.New("internal server error")
+	return nil, errors.New("src server error")
 }
 
 func TestRepositoriesHandler_CreateApp_BadRequest_Err(t *testing.T) {
@@ -289,11 +289,11 @@ func TestAppHandler_GetAppTypes_Err(t *testing.T) {
 	assert.NoError(t, err)
 	assert.NotNil(t, body)
 
-	assert.Equal(t, "{\"status_code\":500,\"message\":\"internal server error\"}", string(body))
+	assert.Equal(t, "{\"status_code\":500,\"message\":\"src server error\"}", string(body))
 }
 
 func GetAppTypesErr() ([]model.AppTypeModel, error) {
-	return nil, errors.New("internal server error")
+	return nil, errors.New("src server error")
 }
 
 func GetAppTypes() ([]model.AppTypeModel, error) {
