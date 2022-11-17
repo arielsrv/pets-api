@@ -1,4 +1,4 @@
-package main
+package application
 
 import (
 	"fmt"
@@ -7,15 +7,10 @@ import (
 
 	"github.com/internal/container"
 	"github.com/internal/routes"
-
-	_ "github.com/docs"
 	"github.com/internal/server"
 )
 
-// @title       Pets API
-// @version     1.0
-// @description Create apps, services and infrastructure.
-func main() {
+func Run() error {
 	app := server.New()
 	app.Handlers(container.Handlers())
 	app.Routing(routes.Routes())
@@ -34,5 +29,6 @@ func main() {
 
 	log.Printf("Listening on port %s", port)
 	log.Printf("Open http://%s:%s/ping in the browser", host, port)
-	log.Fatal(app.Start(address))
+
+	return app.Start(address)
 }

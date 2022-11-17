@@ -9,10 +9,16 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/beego/beego/v2/core/config"
+	"github.com/go-chassis/go-archaius"
+	"github.com/go-chassis/openlog"
 )
 
-//nolint:nolintlint,gochecknoinits
+type Env string
+
+const (
+	Dev Env = "dev"
+)
+
 func init() {
 	_, caller, _, _ := runtime.Caller(0)
 	root := path.Join(path.Dir(caller), "../..")
@@ -20,11 +26,23 @@ func init() {
 	if err != nil {
 		log.Fatalln(err)
 	}
-	propertiesPath := fmt.Sprintf("%s/resources/config/application.properties", root)
-	err = config.InitGlobalInstance("ini", propertiesPath)
-	if err != nil {
-		log.Println("failed to load module properties")
+
+	env := os.Getenv("env")
+	if env == "" {
+		os.Setenv("env", string(Dev))
+		env = string(Dev)
 	}
+
+	propertiesPath := fmt.Sprintf("%s/resources/config", root)
+	err = archaius.Init(archaius.WithRequiredFiles([]string{
+		fmt.Sprintf("%s/application.yml", propertiesPath),
+		fmt.Sprintf("%s/%s/application.yml", propertiesPath, env),
+	}))
+	if err != nil {
+		openlog.Error("Error:" + err.Error())
+	}
+
+	log.Println(archaius.GetString("app.env", ""))
 }
 
 // String function will try config key from config files,
@@ -32,7 +50,7 @@ func init() {
 // fallback to environment variables
 // String don't produce error.
 func String(key string) string {
-	value := config.DefaultString(key, "")
+	value := archaius.GetString(key, "")
 	if value == "" {
 		return os.Getenv(strings.ToUpper(strings.ReplaceAll(key, ".", "_")))
 	}
@@ -44,7 +62,7 @@ func String(key string) string {
 // fallback to environment variables
 // Int don't produce error.
 func Int(key string) int {
-	value := config.DefaultInt(key, 0)
+	value := archaius.GetInt(key, 0)
 	if value == 0 {
 		env, err := strconv.Atoi(os.Getenv(strings.ToUpper(strings.ReplaceAll(key, ".", "_"))))
 		if err != nil {
