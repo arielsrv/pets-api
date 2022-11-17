@@ -2,12 +2,12 @@
 version: '3'
 
 env:
-  ENTRY_POINT: cmd/main.go
+  ENTRY_POINT: program
+  SOURCE_FOLDER: src/main
   BUILD_FOLDER: build
-  EXECUTABLE: server
   COVERAGE_OUT_FILE: coverage.out
   COVERAGE_HTML_FILE: coverage.html
-  SWAGGER_INPUT_FOLDER: "../internal"
+  SWAGGER_INPUT_FOLDER: "../src/main"
   SWAGGER_OUTPUT_FOLDER: docs
 
 tasks:
@@ -61,9 +61,9 @@ tasks:
       - server
     interactive: true
     cmds:
-      - mkdir -p $BUILD_FOLDER
-      - go build -v $ENTRY_POINT
-      - mv main $BUILD_FOLDER/$EXECUTABLE
+      - mkdir -p $BUILD_FOLDER/..
+      - go build -v $SOURCE_FOLDER/$ENTRY_POINT.go
+      - mv $ENTRY_POINT $BUILD_FOLDER
   all:
     desc: Run relevant tasks.
     cmds:
