@@ -76,11 +76,7 @@ func buildSnippet(language string, snippetType string, file string, class string
 func getFileContent(path string) string {
 	content, err := os.ReadFile(path)
 	if err != nil {
-		// fallback for test
-		content, err = os.ReadFile("../../" + path)
-		if err != nil {
-			log.Fatalln(err)
-		}
+		log.Fatalln(err)
 	}
 
 	return string(content)

@@ -1,8 +1,11 @@
 package config
 
 import (
+	"fmt"
 	"log"
 	"os"
+	"path"
+	"runtime"
 	"strconv"
 	"strings"
 
@@ -11,14 +14,16 @@ import (
 
 //nolint:nolintlint,gochecknoinits
 func init() {
-	propertiesPath := "resources/application.properties"
-	err := config.InitGlobalInstance("ini", propertiesPath)
+	_, caller, _, _ := runtime.Caller(0)
+	root := path.Join(path.Dir(caller), "../..")
+	err := os.Chdir(root)
 	if err != nil {
-		// fallback for test
-		err = config.InitGlobalInstance("ini", "../../"+propertiesPath)
-		if err != nil {
-			log.Println("failed to load module properties")
-		}
+		log.Fatalln(err)
+	}
+	propertiesPath := fmt.Sprintf("%s/resources/config/application.properties", root)
+	err = config.InitGlobalInstance("ini", propertiesPath)
+	if err != nil {
+		log.Println("failed to load module properties")
 	}
 }
 

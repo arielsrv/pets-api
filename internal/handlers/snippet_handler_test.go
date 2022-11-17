@@ -6,10 +6,10 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	"github.com/internal/server"
+
 	"github.com/internal/model"
 
-	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/template/html"
 	"github.com/internal/handlers"
 	"github.com/internal/services"
 	"github.com/stretchr/testify/assert"
@@ -30,9 +30,7 @@ func TestSnippetHandler_GetSnippet(t *testing.T) {
 	snippetService.On("GetSecrets").Return(GetSecrets())
 	snippetHandler := handlers.NewSnippetHandler(snippetService)
 
-	app := fiber.New(fiber.Config{
-		Views: html.New("./../../views", ".html"),
-	})
+	app := server.New()
 
 	app.Add(http.MethodGet, "/apps/:appId/secrets/:secretId/snippets", snippetHandler.GetSnippet)
 
