@@ -3,9 +3,10 @@ package services
 import (
 	"context"
 	"fmt"
-	"github.com/src/main/app/server"
 	"net/http"
 	"strings"
+
+	"github.com/src/main/app/server"
 
 	"github.com/src/main/app/ent"
 	"github.com/src/main/app/ent/secret"

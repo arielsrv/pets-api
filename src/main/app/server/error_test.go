@@ -3,9 +3,10 @@ package server_test
 import (
 	"encoding/json"
 	"errors"
-	"github.com/src/main/app/server"
 	"net/http"
 	"testing"
+
+	"github.com/src/main/app/server"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/src/main/app/ent/property"
