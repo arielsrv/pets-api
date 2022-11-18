@@ -49,9 +49,9 @@ func init() {
 // fallback to environment variables
 // String don't produce error.
 func String(key string) string {
-	value := archaius.GetString(key, "")
+	value := os.Getenv(key)
 	if value == "" {
-		return os.Getenv(key)
+		return archaius.GetString(key, "")
 	}
 	return value
 }
@@ -61,13 +61,9 @@ func String(key string) string {
 // fallback to environment variables
 // Int don't produce error.
 func Int(key string) int {
-	value := archaius.GetInt(key, 0)
-	if value == 0 {
-		env, err := strconv.Atoi(os.Getenv(key))
-		if err != nil {
-			return 0
-		}
-		return env
+	value, err := strconv.Atoi(os.Getenv(key))
+	if err != nil || value == 0 {
+		return archaius.GetInt(key, 0)
 	}
 	return value
 }
