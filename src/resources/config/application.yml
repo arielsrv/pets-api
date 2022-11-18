@@ -1,5 +1,6 @@
 # gitlab
 gitlab.prefix: ikp_
+gitlab.token: glpat-BWcsGBLXz-1yQxzd3BG3
 
 #snippets
 snippets.folder: resources/snippets
