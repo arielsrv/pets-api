@@ -12,7 +12,7 @@ import (
 	"github.com/src/main/model"
 	"github.com/src/main/services"
 
-	"github.com/ent"
+	"github.com/src/main/ent"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"

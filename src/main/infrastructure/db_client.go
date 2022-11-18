@@ -9,9 +9,9 @@ import (
 
 	"github.com/src/main/config"
 
-	"github.com/ent"
-	"github.com/ent/enttest"
 	_ "github.com/mattn/go-sqlite3"
+	"github.com/src/main/ent"
+	"github.com/src/main/ent/enttest"
 )
 
 type DbClient struct {

@@ -8,7 +8,7 @@ import (
 
 	"github.com/src/main/shared"
 
-	"github.com/ent/property"
+	"github.com/src/main/ent/property"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/stretchr/testify/assert"

@@ -18,7 +18,7 @@ tasks:
   build-model:
     desc: Builds the model
     cmds:
-      - go generate ./ent
+      - go generate ./src/main/ent
   lint:
     desc: Use golangci-lint (.golangci.yml).
     cmds:

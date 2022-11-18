@@ -14,8 +14,8 @@ import (
 	"github.com/src/main/infrastructure"
 	"github.com/src/main/shared"
 
-	"github.com/ent"
-	"github.com/ent/app"
+	"github.com/src/main/ent"
+	"github.com/src/main/ent/app"
 )
 
 type IAppService interface {

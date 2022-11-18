@@ -1,6 +1,6 @@
 package model
 
-import "github.com/ent/property"
+import "github.com/src/main/ent/property"
 
 type CreateAppModel struct {
 	Name      string           `json:"name,omitempty"`
