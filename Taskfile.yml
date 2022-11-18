@@ -8,7 +8,7 @@ env:
   COVERAGE_OUT_FILE: coverage.out
   COVERAGE_HTML_FILE: coverage.html
   SWAGGER_INPUT_FOLDER: "../src/main"
-  SWAGGER_OUTPUT_FOLDER: docs
+  SWAGGER_OUTPUT_FOLDER: src/resources/docs
 
 tasks:
   add-entity:

@@ -5,7 +5,7 @@ import (
 
 	"github.com/src/main/application"
 
-	_ "github.com/docs"
+	_ "github.com/src/resources/docs"
 )
 
 // @title       Pets API
