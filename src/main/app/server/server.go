@@ -1,9 +1,10 @@
 package server
 
 import (
-	"github.com/src/main/app/config"
 	"log"
 	"net/http"
+
+	"github.com/src/main/app/config"
 
 	"reflect"
 	"runtime"

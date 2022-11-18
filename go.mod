@@ -7,7 +7,7 @@ require (
 	github.com/arielsrv/golang-toolkit/rest v0.0.4
 	github.com/go-chassis/go-archaius v1.5.6
 	github.com/go-sql-driver/mysql v1.6.0
-	github.com/gofiber/fiber/v2 v2.39.0
+	github.com/gofiber/fiber/v2 v2.40.0
 	github.com/gofiber/swagger v0.1.7
 	github.com/gofiber/template v1.7.2
 	github.com/mattn/go-sqlite3 v1.14.16
