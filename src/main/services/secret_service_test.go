@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/src/main/infrastructure"
-	model2 "github.com/src/main/model"
+	"github.com/src/main/model"
 	"github.com/src/main/services"
 
 	"github.com/stretchr/testify/assert"
@@ -15,29 +15,29 @@ type MockAppService struct {
 	mock.Mock
 }
 
-func (m *MockAppService) GetGroups() ([]model2.AppGroupModel, error) {
+func (m *MockAppService) GetGroups() ([]model.AppGroupModel, error) {
 	// TODO implement me
 	panic("implement me")
 }
 
-func (m *MockAppService) CreateApp(*model2.CreateAppModel) (*model2.AppModel, error) {
+func (m *MockAppService) CreateApp(*model.CreateAppModel) (*model.AppModel, error) {
 	// TODO implement me
 	panic("implement me")
 }
 
-func (m *MockAppService) GetAppTypes() ([]model2.AppTypeModel, error) {
+func (m *MockAppService) GetAppTypes() ([]model.AppTypeModel, error) {
 	// TODO implement me
 	panic("implement me")
 }
 
-func (m *MockAppService) GetAppByName(string) (*model2.AppModel, error) {
+func (m *MockAppService) GetAppByName(string) (*model.AppModel, error) {
 	// TODO implement me
 	panic("implement me")
 }
 
-func (m *MockAppService) GetAppById(int64) (*model2.AppModel, error) {
+func (m *MockAppService) GetAppById(int64) (*model.AppModel, error) {
 	args := m.Called()
-	return args.Get(0).(*model2.AppModel), args.Error(1)
+	return args.Get(0).(*model.AppModel), args.Error(1)
 }
 
 func TestSecretService_GetSecret(t *testing.T) {
@@ -79,7 +79,7 @@ func TestSecretService_SaveSecret(t *testing.T) {
 	appService.On("GetAppById").Return(GetApp())
 
 	service := services.NewSecretService(dbClient, appService)
-	secretModel := new(model2.CreateAppSecretModel)
+	secretModel := new(model.CreateAppSecretModel)
 	secretModel.Key = "MYSECRETKEY"
 	secretModel.Value = "MYSECRETVALUE"
 	actual, err := service.SaveSecret(1, secretModel)
@@ -100,7 +100,7 @@ func TestSecretService_SaveSecret_Conflict(t *testing.T) {
 	appService.On("GetAppById").Return(GetApp())
 
 	service := services.NewSecretService(dbClient, appService)
-	secretModel := new(model2.CreateAppSecretModel)
+	secretModel := new(model.CreateAppSecretModel)
 	secretModel.Key = "MYSECRETKEY"
 	secretModel.Value = "MYSECRETVALUE"
 	actual, err := service.SaveSecret(1, secretModel)
@@ -117,8 +117,8 @@ func TestSecretService_SaveSecret_Conflict(t *testing.T) {
 	assert.Nil(t, conflict)
 }
 
-func GetApp() (*model2.AppModel, error) {
-	appModel := new(model2.AppModel)
+func GetApp() (*model.AppModel, error) {
+	appModel := new(model.AppModel)
 	appModel.ID = 1
 	appModel.Name = "MyApp"
 	appModel.URL = "/apps/1/secrets/2/snippets"

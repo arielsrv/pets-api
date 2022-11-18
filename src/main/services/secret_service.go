@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	"github.com/src/main/infrastructure"
-	model2 "github.com/src/main/model"
+	"github.com/src/main/model"
 	"github.com/src/main/shared"
 
 	"github.com/ent"
@@ -15,7 +15,7 @@ import (
 )
 
 type ISecretService interface {
-	SaveSecret(appId int64, secretModel *model2.CreateAppSecretModel) (*model2.AppSecretModel, error)
+	SaveSecret(appId int64, secretModel *model.CreateAppSecretModel) (*model.AppSecretModel, error)
 	GetSecret(secretID int64) (string, error)
 }
 
@@ -43,7 +43,7 @@ func (s *SecretService) GetSecret(secretID int64) (string, error) {
 	return result.Key, nil
 }
 
-func (s *SecretService) SaveSecret(appId int64, secretModel *model2.CreateAppSecretModel) (*model2.AppSecretModel, error) {
+func (s *SecretService) SaveSecret(appId int64, secretModel *model.CreateAppSecretModel) (*model.AppSecretModel, error) {
 	appModel, err := s.appService.GetAppById(appId)
 	if err != nil {
 		return nil, err
@@ -74,7 +74,7 @@ func (s *SecretService) SaveSecret(appId int64, secretModel *model2.CreateAppSec
 		return nil, err
 	}
 
-	model := new(model2.AppSecretModel)
+	model := new(model.AppSecretModel)
 	model.OriginalKey = secretModel.Key
 	model.Key = result.Key
 	model.SnippetUrl = fmt.Sprintf("/apps/%d/secrets/%d/snippets", appId, result.ID)

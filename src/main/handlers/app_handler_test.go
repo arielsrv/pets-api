@@ -8,8 +8,9 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	"github.com/src/main/model"
+
 	"github.com/src/main/handlers"
-	model2 "github.com/src/main/model"
 	"github.com/src/main/server"
 	"github.com/src/main/shared"
 
@@ -23,29 +24,29 @@ type MockAppService struct {
 	mock.Mock
 }
 
-func (m *MockAppService) GetGroups() ([]model2.AppGroupModel, error) {
+func (m *MockAppService) GetGroups() ([]model.AppGroupModel, error) {
 	args := m.Called()
-	return args.Get(0).([]model2.AppGroupModel), args.Error(1)
+	return args.Get(0).([]model.AppGroupModel), args.Error(1)
 }
 
-func (m *MockAppService) CreateApp(*model2.CreateAppModel) (*model2.AppModel, error) {
+func (m *MockAppService) CreateApp(*model.CreateAppModel) (*model.AppModel, error) {
 	args := m.Called()
-	return args.Get(0).(*model2.AppModel), args.Error(1)
+	return args.Get(0).(*model.AppModel), args.Error(1)
 }
 
-func (m *MockAppService) GetAppTypes() ([]model2.AppTypeModel, error) {
+func (m *MockAppService) GetAppTypes() ([]model.AppTypeModel, error) {
 	args := m.Called()
-	return args.Get(0).([]model2.AppTypeModel), args.Error(1)
+	return args.Get(0).([]model.AppTypeModel), args.Error(1)
 }
 
-func (m *MockAppService) GetAppByName(string) (*model2.AppModel, error) {
+func (m *MockAppService) GetAppByName(string) (*model.AppModel, error) {
 	args := m.Called()
-	return args.Get(0).(*model2.AppModel), args.Error(1)
+	return args.Get(0).(*model.AppModel), args.Error(1)
 }
 
-func (m *MockAppService) GetAppById(int64) (*model2.AppModel, error) {
+func (m *MockAppService) GetAppById(int64) (*model.AppModel, error) {
 	args := m.Called()
-	return args.Get(0).(*model2.AppModel), args.Error(1)
+	return args.Get(0).(*model.AppModel), args.Error(1)
 }
 
 func TestAppHandler_GetGroups(t *testing.T) {
@@ -132,12 +133,12 @@ func TestAppHandler_GetApp_NotFoundErr(t *testing.T) {
 	assert.Equal(t, "{\"status_code\":404,\"message\":\"app with name customer-api not found\"}", string(body))
 }
 
-func GetAppNotFound() (*model2.AppModel, error) {
+func GetAppNotFound() (*model.AppModel, error) {
 	return nil, shared.NewError(http.StatusNotFound, "app with name customer-api not found")
 }
 
-func GetApp() (*model2.AppModel, error) {
-	appModel := new(model2.AppModel)
+func GetApp() (*model.AppModel, error) {
+	appModel := new(model.AppModel)
 	appModel.ID = 1
 	appModel.URL = "repo_url"
 	return appModel, nil
@@ -163,7 +164,7 @@ func TestAppHandler_GetGroups_Err(t *testing.T) {
 	assert.Equal(t, "{\"status_code\":500,\"message\":\"src server error\"}", string(body))
 }
 
-func GetGroupsErr() ([]model2.AppGroupModel, error) {
+func GetGroupsErr() ([]model.AppGroupModel, error) {
 	return nil, errors.New("src server error")
 }
 
@@ -192,8 +193,8 @@ func TestRepositoriesHandler_CreateApp(t *testing.T) {
 	assert.Equal(t, "{\"id\":1}", string(body))
 }
 
-func GetCreateApp() (*model2.AppModel, error) {
-	appModel := new(model2.AppModel)
+func GetCreateApp() (*model.AppModel, error) {
+	appModel := new(model.AppModel)
 	appModel.ID = 1
 	return appModel, nil
 }
@@ -223,7 +224,7 @@ func TestRepositoriesHandler_CreateApp_Err(t *testing.T) {
 	assert.Equal(t, "{\"status_code\":500,\"message\":\"src server error\"}", string(body))
 }
 
-func GetCreateError() (*model2.AppModel, error) {
+func GetCreateError() (*model.AppModel, error) {
 	return nil, errors.New("src server error")
 }
 
@@ -292,35 +293,35 @@ func TestAppHandler_GetAppTypes_Err(t *testing.T) {
 	assert.Equal(t, "{\"status_code\":500,\"message\":\"src server error\"}", string(body))
 }
 
-func GetAppTypesErr() ([]model2.AppTypeModel, error) {
+func GetAppTypesErr() ([]model.AppTypeModel, error) {
 	return nil, errors.New("src server error")
 }
 
-func GetAppTypes() ([]model2.AppTypeModel, error) {
-	var appType1 model2.AppTypeModel
+func GetAppTypes() ([]model.AppTypeModel, error) {
+	var appType1 model.AppTypeModel
 	appType1.ID = 1
 	appType1.Name = "backend"
 
-	var appType2 model2.AppTypeModel
+	var appType2 model.AppTypeModel
 	appType2.ID = 2
 	appType2.Name = "frontend"
 
-	var appsType []model2.AppTypeModel
+	var appsType []model.AppTypeModel
 	appsType = append(appsType, appType1)
 	appsType = append(appsType, appType2)
 
 	return appsType, nil
 }
 
-func GetGroups() ([]model2.AppGroupModel, error) {
-	var group1 model2.AppGroupModel
+func GetGroups() ([]model.AppGroupModel, error) {
+	var group1 model.AppGroupModel
 	group1.ID = 1
 	group1.Name = "root/group1"
-	var group2 model2.AppGroupModel
+	var group2 model.AppGroupModel
 	group2.ID = 2
 	group2.Name = "root/group2"
 
-	var groups []model2.AppGroupModel
+	var groups []model.AppGroupModel
 	groups = append(groups, group1)
 	groups = append(groups, group2)
 

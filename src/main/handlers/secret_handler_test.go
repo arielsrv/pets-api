@@ -7,8 +7,9 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	"github.com/src/main/model"
+
 	"github.com/src/main/handlers"
-	model2 "github.com/src/main/model"
 	"github.com/src/main/server"
 
 	"github.com/stretchr/testify/assert"
@@ -19,9 +20,9 @@ type MockSecretService struct {
 	mock.Mock
 }
 
-func (m *MockSecretService) SaveSecret(int64, *model2.CreateAppSecretModel) (*model2.AppSecretModel, error) {
+func (m *MockSecretService) SaveSecret(int64, *model.CreateAppSecretModel) (*model.AppSecretModel, error) {
 	args := m.Called()
-	return args.Get(0).(*model2.AppSecretModel), args.Error(1)
+	return args.Get(0).(*model.AppSecretModel), args.Error(1)
 }
 
 func (m *MockSecretService) GetSecret(int64) (string, error) {
@@ -56,8 +57,8 @@ func TestSecretHandler_CreateSecret(t *testing.T) {
 	assert.Equal(t, "{\"key\":\"my_secret_key\",\"snippet_url\":\"/relative_url\"}", string(body))
 }
 
-func GetNewSecret() (*model2.AppSecretModel, error) {
-	model := new(model2.AppSecretModel)
+func GetNewSecret() (*model.AppSecretModel, error) {
+	model := new(model.AppSecretModel)
 	model.Key = "my_secret_key"
 	model.SnippetUrl = "/relative_url"
 

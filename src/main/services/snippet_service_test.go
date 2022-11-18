@@ -3,7 +3,7 @@ package services_test
 import (
 	"testing"
 
-	model2 "github.com/src/main/model"
+	"github.com/src/main/model"
 	"github.com/src/main/services"
 
 	"github.com/stretchr/testify/assert"
@@ -14,7 +14,7 @@ type MockSecretService struct {
 	mock.Mock
 }
 
-func (m *MockSecretService) SaveSecret(int64, *model2.CreateAppSecretModel) (*model2.AppSecretModel, error) {
+func (m *MockSecretService) SaveSecret(int64, *model.CreateAppSecretModel) (*model.AppSecretModel, error) {
 	// TODO implement me
 	panic("implement me")
 }

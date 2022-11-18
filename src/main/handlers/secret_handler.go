@@ -3,20 +3,21 @@ package handlers
 import (
 	"net/http"
 
+	"github.com/src/main/services"
+
 	"github.com/src/main/model"
 	"github.com/src/main/server"
-	services2 "github.com/src/main/services"
 	"github.com/src/main/shared"
 
 	"github.com/gofiber/fiber/v2"
 )
 
 type SecretHandler struct {
-	appService    services2.IAppService
-	secretService services2.ISecretService
+	appService    services.IAppService
+	secretService services.ISecretService
 }
 
-func NewSecretHandler(appService services2.IAppService, secretService services2.ISecretService) *SecretHandler {
+func NewSecretHandler(appService services.IAppService, secretService services.ISecretService) *SecretHandler {
 	return &SecretHandler{
 		appService:    appService,
 		secretService: secretService,
