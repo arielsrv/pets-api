@@ -6,11 +6,12 @@ import (
 	"net/http"
 	"net/url"
 
+	"github.com/src/main/model"
+
 	"github.com/src/main/clients/gitlab"
 	"github.com/src/main/clients/gitlab/requests"
 	"github.com/src/main/config"
 	"github.com/src/main/infrastructure"
-	model2 "github.com/src/main/model"
 	"github.com/src/main/shared"
 
 	"github.com/ent"
@@ -18,11 +19,11 @@ import (
 )
 
 type IAppService interface {
-	GetGroups() ([]model2.AppGroupModel, error)
-	CreateApp(createAppModel *model2.CreateAppModel) (*model2.AppModel, error)
-	GetAppTypes() ([]model2.AppTypeModel, error)
-	GetAppByName(appName string) (*model2.AppModel, error)
-	GetAppById(appId int64) (*model2.AppModel, error)
+	GetGroups() ([]model.AppGroupModel, error)
+	CreateApp(createAppModel *model.CreateAppModel) (*model.AppModel, error)
+	GetAppTypes() ([]model.AppTypeModel, error)
+	GetAppByName(appName string) (*model.AppModel, error)
+	GetAppById(appId int64) (*model.AppModel, error)
 }
 
 type AppService struct {
@@ -34,7 +35,7 @@ func NewAppService(gitLabClient gitlab.IGitLabClient, dbClient *infrastructure.D
 	return &AppService{gitLabClient: gitLabClient, dbClient: dbClient}
 }
 
-func (s *AppService) GetAppByName(appName string) (*model2.AppModel, error) {
+func (s *AppService) GetAppByName(appName string) (*model.AppModel, error) {
 	application, err := s.dbClient.GetClient().App.Query().
 		Where(app.Name(appName)).
 		First(context.Background())
@@ -65,14 +66,14 @@ func (s *AppService) GetAppByName(appName string) (*model2.AppModel, error) {
 		repoURL.Host,
 		repoURL.Path)
 
-	appModel := new(model2.AppModel)
+	appModel := new(model.AppModel)
 	appModel.ID = application.ID
 	appModel.URL = secureURL
 
 	return appModel, nil
 }
 
-func (s *AppService) GetAppById(appId int64) (*model2.AppModel, error) {
+func (s *AppService) GetAppById(appId int64) (*model.AppModel, error) {
 	application, err := s.dbClient.GetClient().App.Query().
 		Where(app.ID(appId)).
 		First(context.Background())
@@ -103,7 +104,7 @@ func (s *AppService) GetAppById(appId int64) (*model2.AppModel, error) {
 		repoURL.Host,
 		repoURL.Path)
 
-	appModel := new(model2.AppModel)
+	appModel := new(model.AppModel)
 	appModel.ID = application.ID
 	appModel.Name = application.Name
 	appModel.URL = secureURL
@@ -111,16 +112,16 @@ func (s *AppService) GetAppById(appId int64) (*model2.AppModel, error) {
 	return appModel, nil
 }
 
-func (s *AppService) GetAppTypes() ([]model2.AppTypeModel, error) {
+func (s *AppService) GetAppTypes() ([]model.AppTypeModel, error) {
 	appTypes, err := s.dbClient.GetClient().AppType.Query().All(context.Background())
 
 	if err != nil {
 		return nil, err
 	}
 
-	var appTypesModel []model2.AppTypeModel
+	var appTypesModel []model.AppTypeModel
 	for _, appType := range appTypes {
-		var appTypeModel model2.AppTypeModel
+		var appTypeModel model.AppTypeModel
 		appTypeModel.ID = appType.ID
 		appTypeModel.Name = appType.Name
 		appTypesModel = append(appTypesModel, appTypeModel)
@@ -129,15 +130,15 @@ func (s *AppService) GetAppTypes() ([]model2.AppTypeModel, error) {
 	return appTypesModel, nil
 }
 
-func (s *AppService) GetGroups() ([]model2.AppGroupModel, error) {
+func (s *AppService) GetGroups() ([]model.AppGroupModel, error) {
 	groupsResponse, err := s.gitLabClient.GetGroups()
 	if err != nil {
 		return nil, err
 	}
 
-	var groupsDto []model2.AppGroupModel
+	var groupsDto []model.AppGroupModel
 	for _, groupResponse := range groupsResponse {
-		var groupDto model2.AppGroupModel
+		var groupDto model.AppGroupModel
 		groupDto.ID = groupResponse.ID
 		groupDto.Name = groupResponse.Path
 		groupsDto = append(groupsDto, groupDto)
@@ -146,7 +147,7 @@ func (s *AppService) GetGroups() ([]model2.AppGroupModel, error) {
 	return groupsDto, nil
 }
 
-func (s *AppService) CreateApp(createAppModel *model2.CreateAppModel) (*model2.AppModel, error) {
+func (s *AppService) CreateApp(createAppModel *model.CreateAppModel) (*model.AppModel, error) {
 	duplicated, err := s.dbClient.GetClient().App.Query().
 		Where(app.Name(createAppModel.Name)).
 		Exist(context.Background())
@@ -179,7 +180,7 @@ func (s *AppService) CreateApp(createAppModel *model2.CreateAppModel) (*model2.A
 		return nil, err
 	}
 
-	appModel := new(model2.AppModel)
+	appModel := new(model.AppModel)
 	appModel.ID = application.ID
 	appModel.URL = response.URL
 
