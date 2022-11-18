@@ -21,3 +21,4 @@ build/
 coverage.html
 coverage.out
 .DS_Store
+cmd/

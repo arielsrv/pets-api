@@ -1,0 +1,5 @@
+# gitlab
+gitlab.prefix: ikp_
+
+# snippets
+snippets.folder: resources/snippets
