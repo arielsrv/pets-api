@@ -3,7 +3,6 @@ package server
 import (
 	"log"
 	"net/http"
-	"os"
 
 	"github.com/src/main/app/shared"
 
@@ -32,7 +31,6 @@ func (app *App) Start(addr string) error {
 }
 
 func New(appConfig ...AppConfig) *App {
-	log.Println(os.Getwd())
 	app := &App{
 		App: fiber.New(fiber.Config{
 			DisableStartupMessage: true,
