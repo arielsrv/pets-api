@@ -7,7 +7,6 @@ import (
 	"path"
 	"runtime"
 	"strconv"
-	"strings"
 
 	"github.com/go-chassis/go-archaius"
 )
@@ -52,7 +51,7 @@ func init() {
 func String(key string) string {
 	value := archaius.GetString(key, "")
 	if value == "" {
-		return os.Getenv(strings.ToUpper(strings.ReplaceAll(key, ".", "_")))
+		return os.Getenv(key)
 	}
 	return value
 }
@@ -64,7 +63,7 @@ func String(key string) string {
 func Int(key string) int {
 	value := archaius.GetInt(key, 0)
 	if value == 0 {
-		env, err := strconv.Atoi(os.Getenv(strings.ToUpper(strings.ReplaceAll(key, ".", "_"))))
+		env, err := strconv.Atoi(os.Getenv(key))
 		if err != nil {
 			return 0
 		}

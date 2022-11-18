@@ -2,11 +2,11 @@ package container
 
 import (
 	"fmt"
-	"github.com/src/main/secrets"
 	"log"
 	"net/http"
-	"os"
 	"time"
+
+	"github.com/src/main/secrets"
 
 	"github.com/src/main/handlers"
 	"github.com/src/main/services"
@@ -23,7 +23,6 @@ import (
 var secretStore = secrets.NewSecretStore()
 
 func Handlers() []server.Handler {
-
 	connectionString := getConnectionString()
 	dbClient := infrastructure.NewDbClient(connectionString)
 	dbClient.Open()
@@ -72,7 +71,7 @@ func getConnectionString() string {
 		}
 		return secret.Value
 	} else {
-		return os.Getenv("SECRETS_STORE_PROD_CONNECTION_STRING_KEY_NAME")
+		return config.String("mysql.connection-string")
 	}
 }
 

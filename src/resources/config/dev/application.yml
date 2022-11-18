@@ -1,4 +1,6 @@
 app.env: dev
+mysql:
+  connection-string: root:a300p011@tcp(localhost:3306)/pets?parseTime=True
 
 # rest
 gitlab.client.baseurl: https://gitlab.tiendanimal.com:8088/api/v4

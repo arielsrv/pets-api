@@ -1,7 +1,6 @@
 package secrets
 
 import (
-	"errors"
 	"fmt"
 	"os"
 )
@@ -28,7 +27,7 @@ func (s *SecretStore) GetSecret(key string) *Secret {
 	secret.Key = key
 	secret.Value = os.Getenv(key)
 	if secret.Value == "" {
-		secret.Err = errors.New(fmt.Sprintf("missing secret: %s", key))
+		secret.Err = fmt.Errorf("missing secret: %s", key)
 	}
 
 	return secret
