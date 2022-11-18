@@ -41,7 +41,7 @@ func TestAppService_GetGroups(t *testing.T) {
 	client := new(MockClient)
 	client.On("GetGroups").Return(GetGroups())
 
-	dbClient := infrastructure.NewDbClient()
+	dbClient := infrastructure.NewDbClient("")
 	dbClient.Test(t)
 	defer dbClient.Close()
 
@@ -61,7 +61,7 @@ func TestAppService_GetGroups_Err(t *testing.T) {
 	client := new(MockClient)
 	client.On("GetGroups").Return(GetGroupsError())
 
-	dbClient := infrastructure.NewDbClient()
+	dbClient := infrastructure.NewDbClient("")
 	dbClient.Test(t)
 	defer dbClient.Close()
 
@@ -79,7 +79,7 @@ func GetGroupsError() ([]responses.GroupResponse, error) {
 func TestAppService_CreateRepository(t *testing.T) {
 	client := new(MockClient)
 	client.On("CreateProject").Return(GetCreateProjectResponse())
-	dbClient := infrastructure.NewDbClient()
+	dbClient := infrastructure.NewDbClient("")
 	dbClient.Test(t)
 	defer dbClient.Close()
 
@@ -96,7 +96,7 @@ func TestAppService_CreateRepository(t *testing.T) {
 func TestAppService_CreateApp_Conflict(t *testing.T) {
 	client := new(MockClient)
 	client.On("CreateProject").Return(GetCreateProjectResponse())
-	dbClient := infrastructure.NewDbClient()
+	dbClient := infrastructure.NewDbClient("")
 	dbClient.Test(t)
 	defer dbClient.Close()
 
@@ -119,7 +119,7 @@ func TestAppService_GetAppByName(t *testing.T) {
 	client := new(MockClient)
 	client.On("GetProject").Return(GetProject())
 
-	dbClient := infrastructure.NewDbClient()
+	dbClient := infrastructure.NewDbClient("")
 	dbClient.Test(t)
 	defer dbClient.Close()
 
@@ -136,7 +136,7 @@ func TestAppService_GetAppById(t *testing.T) {
 	client := new(MockClient)
 	client.On("GetProject").Return(GetProject())
 
-	dbClient := infrastructure.NewDbClient()
+	dbClient := infrastructure.NewDbClient("")
 	dbClient.Test(t)
 	defer dbClient.Close()
 
@@ -153,7 +153,7 @@ func TestAppService_GetApp_NotFoundErr(t *testing.T) {
 	client := new(MockClient)
 	client.On("GetProject").Return(GetProjectNotFoundErr())
 
-	dbClient := infrastructure.NewDbClient()
+	dbClient := infrastructure.NewDbClient("")
 	dbClient.Test(t)
 	defer dbClient.Close()
 
@@ -167,7 +167,7 @@ func TestAppService_GetApp_NotFoundErr(t *testing.T) {
 
 func TestAppService_GetAppTypes(t *testing.T) {
 	client := new(MockClient)
-	dbClient := infrastructure.NewDbClient()
+	dbClient := infrastructure.NewDbClient("")
 	dbClient.Test(t)
 	defer dbClient.Close()
 
@@ -183,7 +183,7 @@ func TestAppService_GetAppTypes(t *testing.T) {
 
 func TestAppService_GetAppTypes_Err(t *testing.T) {
 	client := new(MockClient)
-	dbClient := infrastructure.NewDbClient()
+	dbClient := infrastructure.NewDbClient("")
 	dbClient.Test(t)
 	dbClient.Close()
 

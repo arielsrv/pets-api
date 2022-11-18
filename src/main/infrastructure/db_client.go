@@ -2,12 +2,9 @@ package infrastructure
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"sync"
 	"testing"
-
-	"github.com/src/main/config"
 
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/src/main/ent"
@@ -17,20 +14,18 @@ import (
 type DbClient struct {
 	dbMtx sync.Once
 	*ent.Client
+	connectionString string
 }
 
-func NewDbClient() *DbClient {
-	return &DbClient{}
+func NewDbClient(connectionString string) *DbClient {
+	return &DbClient{
+		connectionString: connectionString,
+	}
 }
 
 func (d *DbClient) Open() *ent.Client {
 	d.dbMtx.Do(func() {
-		user := config.String("database.user")
-		password := config.String("database.password")
-		host := config.String("database.host")
-		port := config.String("database.port")
-		dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/pets?parseTime=True", user, password, host, port)
-		dbClient, err := ent.Open("mysql", dsn)
+		dbClient, err := ent.Open("mysql", d.connectionString)
 		if err != nil {
 			log.Fatalf("failed opening connection to mysql: %v", err)
 		}

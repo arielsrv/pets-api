@@ -2,7 +2,10 @@ package container
 
 import (
 	"fmt"
+	"github.com/src/main/secrets"
+	"log"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/src/main/handlers"
@@ -17,8 +20,12 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
+var secretStore = secrets.NewSecretStore()
+
 func Handlers() []server.Handler {
-	dbClient := infrastructure.NewDbClient()
+
+	connectionString := getConnectionString()
+	dbClient := infrastructure.NewDbClient(connectionString)
 	dbClient.Open()
 
 	pingService := services.NewPingService()
@@ -26,7 +33,7 @@ func Handlers() []server.Handler {
 	gitLabRb := &rest.RequestBuilder{
 		BaseURL: config.String("gitlab.client.baseurl"),
 		Headers: http.Header{
-			"Authorization": {fmt.Sprintf("Bearer %s", config.String("gitlab.token"))},
+			"Authorization": {fmt.Sprintf("Bearer %s", getGitLabToken())},
 		},
 		Timeout:        time.Millisecond * time.Duration(config.Int("gitlab.client.pool.timeout")),
 		ConnectTimeout: time.Millisecond * time.Duration(config.Int("gitlab.client.socket.connection-timeout")),
@@ -55,4 +62,24 @@ func Handlers() []server.Handler {
 	handlers = append(handlers, snippetHandler.GetSnippet)
 
 	return handlers
+}
+
+func getConnectionString() string {
+	if config.String("app.env") != "dev" {
+		secret := secretStore.GetSecret("SECRETS_STORE_PROD_CONNECTION_STRING_KEY_NAME")
+		if secret.Err != nil {
+			log.Fatalln(secret.Err)
+		}
+		return secret.Value
+	} else {
+		return os.Getenv("SECRETS_STORE_PROD_CONNECTION_STRING_KEY_NAME")
+	}
+}
+
+func getGitLabToken() string {
+	secret := secretStore.GetSecret("SECRETS_STORE_GITLAB_TOKEN_KEY_NAME")
+	if secret.Err != nil {
+		log.Fatalln(secret.Err)
+	}
+	return secret.Value
 }
