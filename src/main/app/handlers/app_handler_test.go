@@ -12,8 +12,6 @@ import (
 
 	"github.com/src/main/app/handlers"
 	"github.com/src/main/app/server"
-	"github.com/src/main/app/shared"
-
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 
@@ -134,7 +132,7 @@ func TestAppHandler_GetApp_NotFoundErr(t *testing.T) {
 }
 
 func GetAppNotFound() (*model.AppModel, error) {
-	return nil, shared.NewError(http.StatusNotFound, "app with name customer-api not found")
+	return nil, server.NewError(http.StatusNotFound, "app with name customer-api not found")
 }
 
 func GetApp() (*model.AppModel, error) {
@@ -230,7 +228,7 @@ func GetCreateError() (*model.AppModel, error) {
 
 func TestRepositoriesHandler_CreateApp_BadRequest_Err(t *testing.T) {
 	appService := new(MockAppService)
-	appService.On("CreateApp").Return(shared.NewError(http.StatusBadRequest, "bad request error"))
+	appService.On("CreateApp").Return(server.NewError(http.StatusBadRequest, "bad request error"))
 	appHandler := handlers.NewAppHandler(appService)
 	app := server.New()
 	app.Add(http.MethodPost, "/repositories", appHandler.CreateApp)

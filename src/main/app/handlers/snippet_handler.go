@@ -2,8 +2,8 @@ package handlers
 
 import (
 	"github.com/gofiber/fiber/v2"
+	"github.com/src/main/app/server"
 	"github.com/src/main/app/services"
-	"github.com/src/main/app/shared"
 )
 
 type SnippetHandler struct {
@@ -20,7 +20,7 @@ func (h SnippetHandler) GetSnippet(ctx *fiber.Ctx) error {
 		return err
 	}
 
-	err = shared.EnsureInt64(int64(secretId), "bad request error, invalid secret id")
+	err = server.EnsureInt64(int64(secretId), "bad request error, invalid secret id")
 	if err != nil {
 		return err
 	}

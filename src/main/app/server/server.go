@@ -4,8 +4,6 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/src/main/app/shared"
-
 	"reflect"
 	"runtime"
 
@@ -34,7 +32,7 @@ func New(appConfig ...AppConfig) *App {
 	app := &App{
 		App: fiber.New(fiber.Config{
 			DisableStartupMessage: true,
-			ErrorHandler:          shared.ErrorHandler,
+			ErrorHandler:          ErrorHandler,
 			Views:                 html.New("./main/app/views", ".html"),
 		}),
 		appConfig: AppConfig{

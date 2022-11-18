@@ -3,12 +3,10 @@ package handlers
 import (
 	"net/http"
 
+	"github.com/src/main/app/ent/property"
 	"github.com/src/main/app/model"
 	"github.com/src/main/app/server"
 	"github.com/src/main/app/services"
-	"github.com/src/main/app/shared"
-
-	"github.com/src/main/app/ent/property"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -34,20 +32,20 @@ func (h AppHandler) GetGroups(ctx *fiber.Ctx) error {
 func (h AppHandler) CreateApp(ctx *fiber.Ctx) error {
 	request := new(model.CreateAppModel)
 	if err := ctx.BodyParser(request); err != nil {
-		return shared.NewError(http.StatusBadRequest, "bad request error")
+		return server.NewError(http.StatusBadRequest, "bad request error")
 	}
 
-	err := shared.EnsureNotEmpty(request.Name, "bad request error, missing name")
+	err := server.EnsureNotEmpty(request.Name, "bad request error, missing name")
 	if err != nil {
 		return err
 	}
 
-	err = shared.EnsureInt64(request.GroupID, "bad request error, invalid group id")
+	err = server.EnsureInt64(request.GroupID, "bad request error, invalid group id")
 	if err != nil {
 		return err
 	}
 
-	err = shared.EnsureEnum(request.AppTypeID, property.AppTypeValues, "bad request error, invalid app type")
+	err = server.EnsureEnum(request.AppTypeID, property.AppTypeValues, "bad request error, invalid app type")
 	if err != nil {
 		return err
 	}
@@ -71,7 +69,7 @@ func (h AppHandler) GetAppTypes(ctx *fiber.Ctx) error {
 
 func (h AppHandler) GetApp(ctx *fiber.Ctx) error {
 	appName := ctx.Query("app_name")
-	err := shared.EnsureNotEmpty(appName, "bad request error, missing app_name")
+	err := server.EnsureNotEmpty(appName, "bad request error, missing app_name")
 	if err != nil {
 		return err
 	}

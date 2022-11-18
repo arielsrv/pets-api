@@ -3,15 +3,14 @@ package services
 import (
 	"context"
 	"fmt"
+	"github.com/src/main/app/server"
 	"net/http"
 	"strings"
 
-	"github.com/src/main/app/infrastructure"
-	"github.com/src/main/app/model"
-	"github.com/src/main/app/shared"
-
 	"github.com/src/main/app/ent"
 	"github.com/src/main/app/ent/secret"
+	"github.com/src/main/app/infrastructure"
+	"github.com/src/main/app/model"
 )
 
 type ISecretService interface {
@@ -35,7 +34,7 @@ func (s *SecretService) GetSecret(secretID int64) (string, error) {
 
 	if err != nil {
 		if ent.IsNotFound(err) {
-			return "", shared.NewError(http.StatusNotFound, fmt.Sprintf("secret with id %d not found", secretID))
+			return "", server.NewError(http.StatusNotFound, fmt.Sprintf("secret with id %d not found", secretID))
 		}
 		return "", err
 	}
@@ -61,7 +60,7 @@ func (s *SecretService) SaveSecret(appId int64, secretModel *model.CreateAppSecr
 	}
 
 	if alreadyExist {
-		return nil, shared.NewError(http.StatusConflict, fmt.Sprintf("Secret %s for app already exist. ", secretModel.Key))
+		return nil, server.NewError(http.StatusConflict, fmt.Sprintf("Secret %s for app already exist. ", secretModel.Key))
 	}
 
 	result, err := s.dbClient.GetClient().Secret.Create().

@@ -3,18 +3,17 @@ package services
 import (
 	"context"
 	"fmt"
+	"github.com/src/main/app/server"
 	"net/http"
 	"net/url"
 
 	"github.com/src/main/app/clients/gitlab"
 	"github.com/src/main/app/clients/gitlab/requests"
 	"github.com/src/main/app/config"
-	"github.com/src/main/app/infrastructure"
-	"github.com/src/main/app/model"
-	"github.com/src/main/app/shared"
-
 	"github.com/src/main/app/ent"
 	"github.com/src/main/app/ent/app"
+	"github.com/src/main/app/infrastructure"
+	"github.com/src/main/app/model"
 )
 
 type IAppService interface {
@@ -41,7 +40,7 @@ func (s *AppService) GetAppByName(appName string) (*model.AppModel, error) {
 
 	if err != nil {
 		if ent.IsNotFound(err) {
-			return nil, shared.NewError(http.StatusNotFound, fmt.Sprintf("application with name %s not found", appName))
+			return nil, server.NewError(http.StatusNotFound, fmt.Sprintf("application with name %s not found", appName))
 		}
 		return nil, err
 	}
@@ -79,7 +78,7 @@ func (s *AppService) GetAppById(appId int64) (*model.AppModel, error) {
 
 	if err != nil {
 		if ent.IsNotFound(err) {
-			return nil, shared.NewError(http.StatusNotFound, fmt.Sprintf("application with name %d not found", appId))
+			return nil, server.NewError(http.StatusNotFound, fmt.Sprintf("application with name %d not found", appId))
 		}
 		return nil, err
 	}
@@ -156,7 +155,7 @@ func (s *AppService) CreateApp(createAppModel *model.CreateAppModel) (*model.App
 	}
 
 	if duplicated {
-		return nil, shared.NewError(http.StatusConflict, fmt.Sprintf("duplicated project name %s", createAppModel.Name))
+		return nil, server.NewError(http.StatusConflict, fmt.Sprintf("duplicated project name %s", createAppModel.Name))
 	}
 
 	createProjectRequest := new(requests.CreateProjectRequest)

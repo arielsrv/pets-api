@@ -10,7 +10,6 @@ import (
 	"github.com/src/main/app/config"
 	"github.com/src/main/app/handlers"
 	"github.com/src/main/app/infrastructure"
-	"github.com/src/main/app/secrets"
 	"github.com/src/main/app/server"
 	"github.com/src/main/app/services"
 
@@ -18,7 +17,15 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-var secretStore = secrets.NewSecretStore()
+var secretStore = ProvideSecretStore()
+
+func ProvideSecretStore() infrastructure.ISecretStore {
+	if config.String("app.env") != "dev" {
+		return infrastructure.NewSecretStore()
+	} else {
+		return infrastructure.NewLocalSecretStore()
+	}
+}
 
 func Handlers() []server.Handler {
 	connectionString := getConnectionString()
@@ -62,15 +69,11 @@ func Handlers() []server.Handler {
 }
 
 func getConnectionString() string {
-	if config.String("app.env") != "dev" {
-		secret := secretStore.GetSecret("SECRETS_STORE_PROD_CONNECTION_STRING_KEY_NAME")
-		if secret.Err != nil {
-			log.Fatalln(secret.Err)
-		}
-		return secret.Value
-	} else {
-		return config.String("mysql.connection-string")
+	secret := secretStore.GetSecret("SECRETS_STORE_PROD_CONNECTION_STRING_KEY_NAME")
+	if secret.Err != nil {
+		log.Fatalln(secret.Err)
 	}
+	return secret.Value
 }
 
 func getGitLabToken() string {

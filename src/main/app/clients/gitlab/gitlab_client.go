@@ -2,16 +2,15 @@ package gitlab
 
 import (
 	"fmt"
+	"github.com/src/main/app/server"
 
 	"github.com/src/main/app/clients/gitlab/responses"
 
 	"net/http"
 	"strconv"
 
-	"github.com/src/main/app/clients/gitlab/requests"
-	"github.com/src/main/app/shared"
-
 	"github.com/arielsrv/golang-toolkit/rest"
+	"github.com/src/main/app/clients/gitlab/requests"
 )
 
 type IGitLabClient interface {
@@ -30,7 +29,7 @@ func (g *Client) GetProject(projectID int64) (*responses.ProjectResponse, error)
 		return nil, response.Err
 	}
 	if response.StatusCode != http.StatusOK {
-		return nil, shared.NewError(response.StatusCode, response.String())
+		return nil, server.NewError(response.StatusCode, response.String())
 	}
 
 	var projectResponse responses.ProjectResponse
@@ -49,7 +48,7 @@ func (g *Client) GetGroups() ([]responses.GroupResponse, error) {
 		return nil, response.Err
 	}
 	if response.StatusCode != http.StatusOK {
-		return nil, shared.NewError(response.StatusCode, response.String())
+		return nil, server.NewError(response.StatusCode, response.String())
 	}
 	var groups []responses.GroupResponse
 	response.FillUp(&groups)
@@ -67,7 +66,7 @@ func (g *Client) GetGroups() ([]responses.GroupResponse, error) {
 		})
 		for i := range pages {
 			if pages[i].Response().StatusCode != http.StatusOK {
-				return nil, shared.NewError(response.StatusCode, response.String())
+				return nil, server.NewError(response.StatusCode, response.String())
 			}
 			var page []responses.GroupResponse
 			pages[i].Response().FillUp(&page)
@@ -84,7 +83,7 @@ func (g *Client) CreateProject(request *requests.CreateProjectRequest) (*respons
 		return nil, response.Err
 	}
 	if response.StatusCode != http.StatusCreated {
-		return nil, shared.NewError(response.StatusCode, response.String())
+		return nil, server.NewError(response.StatusCode, response.String())
 	}
 
 	var createProjectResponse responses.CreateProjectResponse

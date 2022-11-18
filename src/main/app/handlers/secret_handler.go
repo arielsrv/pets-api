@@ -5,11 +5,9 @@ import (
 
 	"github.com/src/main/app/services"
 
+	"github.com/gofiber/fiber/v2"
 	"github.com/src/main/app/model"
 	"github.com/src/main/app/server"
-	"github.com/src/main/app/shared"
-
-	"github.com/gofiber/fiber/v2"
 )
 
 type SecretHandler struct {
@@ -32,15 +30,15 @@ func (h SecretHandler) CreateSecret(ctx *fiber.Ctx) error {
 
 	request := new(model.CreateAppSecretModel)
 	if err = ctx.BodyParser(request); err != nil {
-		return shared.NewError(http.StatusBadRequest, "bad request error, missing key and value properties")
+		return server.NewError(http.StatusBadRequest, "bad request error, missing key and value properties")
 	}
 
-	err = shared.EnsureNotEmpty(request.Key, "bad request error, missing key")
+	err = server.EnsureNotEmpty(request.Key, "bad request error, missing key")
 	if err != nil {
 		return err
 	}
 
-	err = shared.EnsureNotEmpty(request.Value, "bad request error, missing value")
+	err = server.EnsureNotEmpty(request.Value, "bad request error, missing value")
 	if err != nil {
 		return err
 	}
