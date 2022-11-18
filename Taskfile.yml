@@ -9,12 +9,13 @@ env:
   COVERAGE_HTML_FILE: coverage.html
   SWAGGER_INPUT_FOLDER: "../src/main"
   SWAGGER_OUTPUT_FOLDER: src/resources/docs
+  ORM_OUTPUT_FOLDER: src/main/ent/schema
 
 tasks:
   add-entity:
     desc: Add db entity, $ task add-entity -- entity_name
     cmds:
-      - go run -mod=mod entgo.io/ent/cmd/ent init {{.CLI_ARGS}}
+      - go run -mod=mod entgo.io/ent/cmd/ent init {{.CLI_ARGS}} --target $ORM_OUTPUT_FOLDER
   build-model:
     desc: Builds the model
     cmds:
