@@ -3,8 +3,7 @@ package main
 import (
 	"log"
 
-	"github.com/src/main/application"
-
+	"github.com/src/main/app"
 	_ "github.com/src/resources/docs"
 )
 
@@ -12,7 +11,7 @@ import (
 // @version     1.0
 // @description Create apps, services and infrastructure.
 func main() {
-	if err := application.Run(); err != nil {
+	if err := app.Run(); err != nil {
 		log.Fatal(err)
 	}
 }

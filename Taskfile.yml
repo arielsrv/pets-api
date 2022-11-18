@@ -7,19 +7,19 @@ env:
   BUILD_FOLDER: build
   COVERAGE_OUT_FILE: coverage.out
   COVERAGE_HTML_FILE: coverage.html
-  SWAGGER_INPUT_FOLDER: "../src/main"
+  SWAGGER_INPUT_FOLDER: src/main
   SWAGGER_OUTPUT_FOLDER: src/resources/docs
-  ORM_OUTPUT_FOLDER: src/main/ent/schema
+  ORM_OUTPUT_FOLDER: src/main/app/ent
 
 tasks:
   add-entity:
     desc: Add db entity, $ task add-entity -- entity_name
     cmds:
-      - go run -mod=mod entgo.io/ent/cmd/ent init {{.CLI_ARGS}} --target $ORM_OUTPUT_FOLDER
+      - go run -mod=mod entgo.io/ent/cmd/ent init {{.CLI_ARGS}} --target $ORM_OUTPUT_FOLDER/schema
   build-model:
     desc: Builds the model
     cmds:
-      - go generate ./src/main/ent
+      - go generate ./$ORM_OUTPUT_FOLDER
   lint:
     desc: Use golangci-lint (.golangci.yml).
     cmds:
@@ -51,10 +51,9 @@ tasks:
       - go-mod-upgrade
   swagger:
     desc: Generate RESTful API documentation with Swagger.
-    dir: cmd
     cmds:
       - go install github.com/swaggo/swag/cmd/swag@latest
-      - swag init -d ./,$SWAGGER_INPUT_FOLDER -g $SWAGGER_INPUT_FOLDER/program.go -o ../$SWAGGER_OUTPUT_FOLDER
+      - swag init -d $SWAGGER_INPUT_FOLDER -g $ENTRY_POINT.go -o $SWAGGER_OUTPUT_FOLDER
       - swag fmt
   build:
     desc: Build the go EXECUTABLE.
@@ -83,4 +82,4 @@ tasks:
     desc: Run $ENTRY_POINT
     cmds:
       - echo '{{OS}}'
-      - ./$BUILD_FOLDER/$EXECUTABLE
+      - ./$BUILD_FOLDER/$ENTRY_POINT

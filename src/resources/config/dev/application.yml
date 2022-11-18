@@ -1,8 +1,9 @@
 app.env: dev
+
 mysql:
   connection-string: root:a300p011@tcp(localhost:3306)/pets?parseTime=True
 
-# rest
+# rest-clients
 gitlab.client.baseurl: https://gitlab.tiendanimal.com:8088/api/v4
 gitlab.client.pool.size: 20
 gitlab.client.pool.timeout: 20000
