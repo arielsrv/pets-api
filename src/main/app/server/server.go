@@ -1,6 +1,7 @@
 package server
 
 import (
+	"github.com/src/main/app/config"
 	"log"
 	"net/http"
 
@@ -33,7 +34,7 @@ func New(appConfig ...AppConfig) *App {
 		App: fiber.New(fiber.Config{
 			DisableStartupMessage: true,
 			ErrorHandler:          ErrorHandler,
-			Views:                 html.New("./main/app/views", ".html"),
+			Views:                 html.New(config.String("views.folder"), ".html"),
 		}),
 		appConfig: AppConfig{
 			Recovery:  true,

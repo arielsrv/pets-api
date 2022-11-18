@@ -1,5 +1,3 @@
-# gitlab
+views.folder: ./main/app/views
 gitlab.prefix: ikp_
-
-# snippets
 snippets.folder: resources/snippets
