@@ -5,12 +5,13 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/src/main/handlers"
+	"github.com/src/main/services"
+
 	"github.com/src/main/clients/gitlab"
 	"github.com/src/main/config"
-	handlers2 "github.com/src/main/handlers"
 	"github.com/src/main/infrastructure"
 	"github.com/src/main/server"
-	services2 "github.com/src/main/services"
 
 	"github.com/arielsrv/golang-toolkit/rest"
 	_ "github.com/go-sql-driver/mysql"
@@ -20,8 +21,8 @@ func Handlers() []server.Handler {
 	dbClient := infrastructure.NewDbClient()
 	dbClient.Open()
 
-	pingService := services2.NewPingService()
-	pingHandler := handlers2.NewPingHandler(pingService)
+	pingService := services.NewPingService()
+	pingHandler := handlers.NewPingHandler(pingService)
 	gitLabRb := &rest.RequestBuilder{
 		BaseURL: config.String("gitlab.client.baseurl"),
 		Headers: http.Header{
@@ -35,14 +36,14 @@ func Handlers() []server.Handler {
 	}
 
 	gitLabClient := gitlab.NewGitLabClient(gitLabRb)
-	appService := services2.NewAppService(gitLabClient, dbClient)
-	appHandler := handlers2.NewAppHandler(appService)
+	appService := services.NewAppService(gitLabClient, dbClient)
+	appHandler := handlers.NewAppHandler(appService)
 
-	secretService := services2.NewSecretService(dbClient, appService)
-	secretHandler := handlers2.NewSecretHandler(appService, secretService)
+	secretService := services.NewSecretService(dbClient, appService)
+	secretHandler := handlers.NewSecretHandler(appService, secretService)
 
-	snippetService := services2.NewSnippetService(secretService)
-	snippetHandler := handlers2.NewSnippetHandler(snippetService)
+	snippetService := services.NewSnippetService(secretService)
+	snippetHandler := handlers.NewSnippetHandler(snippetService)
 
 	var handlers []server.Handler
 	handlers = append(handlers, pingHandler.Ping)

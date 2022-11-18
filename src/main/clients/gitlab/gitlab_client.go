@@ -2,27 +2,29 @@ package gitlab
 
 import (
 	"fmt"
+
+	"github.com/src/main/clients/gitlab/responses"
+
 	"net/http"
 	"strconv"
 
 	"github.com/src/main/clients/gitlab/requests"
-	responses2 "github.com/src/main/clients/gitlab/responses"
 	"github.com/src/main/shared"
 
 	"github.com/arielsrv/golang-toolkit/rest"
 )
 
 type IGitLabClient interface {
-	GetGroups() ([]responses2.GroupResponse, error)
-	CreateProject(request *requests.CreateProjectRequest) (*responses2.CreateProjectResponse, error)
-	GetProject(projectID int64) (*responses2.ProjectResponse, error)
+	GetGroups() ([]responses.GroupResponse, error)
+	CreateProject(request *requests.CreateProjectRequest) (*responses.CreateProjectResponse, error)
+	GetProject(projectID int64) (*responses.ProjectResponse, error)
 }
 
 type Client struct {
 	rb *rest.RequestBuilder
 }
 
-func (g *Client) GetProject(projectID int64) (*responses2.ProjectResponse, error) {
+func (g *Client) GetProject(projectID int64) (*responses.ProjectResponse, error) {
 	response := g.rb.Get(fmt.Sprintf("/projects/%d", projectID))
 	if response.Err != nil {
 		return nil, response.Err
@@ -31,7 +33,7 @@ func (g *Client) GetProject(projectID int64) (*responses2.ProjectResponse, error
 		return nil, shared.NewError(response.StatusCode, response.String())
 	}
 
-	var projectResponse responses2.ProjectResponse
+	var projectResponse responses.ProjectResponse
 	response.FillUp(&projectResponse)
 
 	return &projectResponse, nil
@@ -41,7 +43,7 @@ func NewGitLabClient(rb *rest.RequestBuilder) *Client {
 	return &Client{rb: rb}
 }
 
-func (g *Client) GetGroups() ([]responses2.GroupResponse, error) {
+func (g *Client) GetGroups() ([]responses.GroupResponse, error) {
 	response := g.rb.Get("/groups")
 	if response.Err != nil {
 		return nil, response.Err
@@ -49,7 +51,7 @@ func (g *Client) GetGroups() ([]responses2.GroupResponse, error) {
 	if response.StatusCode != http.StatusOK {
 		return nil, shared.NewError(response.StatusCode, response.String())
 	}
-	var groups []responses2.GroupResponse
+	var groups []responses.GroupResponse
 	response.FillUp(&groups)
 
 	total, err := strconv.Atoi(response.Response.Header.Get("x-total-pages"))
@@ -67,7 +69,7 @@ func (g *Client) GetGroups() ([]responses2.GroupResponse, error) {
 			if pages[i].Response().StatusCode != http.StatusOK {
 				return nil, shared.NewError(response.StatusCode, response.String())
 			}
-			var page []responses2.GroupResponse
+			var page []responses.GroupResponse
 			pages[i].Response().FillUp(&page)
 			groups = append(groups, page...)
 		}
@@ -76,7 +78,7 @@ func (g *Client) GetGroups() ([]responses2.GroupResponse, error) {
 	return groups, nil
 }
 
-func (g *Client) CreateProject(request *requests.CreateProjectRequest) (*responses2.CreateProjectResponse, error) {
+func (g *Client) CreateProject(request *requests.CreateProjectRequest) (*responses.CreateProjectResponse, error) {
 	response := g.rb.Post("/projects", request)
 	if response.Err != nil {
 		return nil, response.Err
@@ -85,7 +87,7 @@ func (g *Client) CreateProject(request *requests.CreateProjectRequest) (*respons
 		return nil, shared.NewError(response.StatusCode, response.String())
 	}
 
-	var createProjectResponse responses2.CreateProjectResponse
+	var createProjectResponse responses.CreateProjectResponse
 	response.FillUp(&createProjectResponse)
 
 	return &createProjectResponse, nil

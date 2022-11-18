@@ -10,7 +10,6 @@ import (
 	"strings"
 
 	"github.com/go-chassis/go-archaius"
-	"github.com/go-chassis/openlog"
 )
 
 type Env string
@@ -29,6 +28,7 @@ func init() {
 
 	env := os.Getenv("env")
 	if env == "" {
+		log.Println("Missing env variable, setting default env ...")
 		os.Setenv("env", string(Dev))
 		env = string(Dev)
 	}
@@ -39,10 +39,10 @@ func init() {
 		fmt.Sprintf("%s/%s/application.yml", propertiesPath, env),
 	}))
 	if err != nil {
-		openlog.Error("Error:" + err.Error())
+		log.Fatalln(err)
 	}
 
-	log.Println(archaius.GetString("app.env", ""))
+	log.Printf("env mode: %s", archaius.GetString("app.env", ""))
 }
 
 // String function will try config key from config files,

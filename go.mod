@@ -6,7 +6,6 @@ require (
 	entgo.io/ent v0.11.4
 	github.com/arielsrv/golang-toolkit/rest v0.0.4
 	github.com/go-chassis/go-archaius v1.5.6
-	github.com/go-chassis/openlog v1.1.3
 	github.com/go-sql-driver/mysql v1.6.0
 	github.com/gofiber/fiber/v2 v2.39.0
 	github.com/gofiber/swagger v0.1.7
@@ -27,6 +26,7 @@ require (
 	github.com/apparentlymart/go-textseg/v13 v13.0.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/fsnotify/fsnotify v1.6.0 // indirect
+	github.com/go-chassis/openlog v1.1.3 // indirect
 	github.com/go-openapi/inflect v0.19.0 // indirect
 	github.com/go-openapi/jsonpointer v0.19.5 // indirect
 	github.com/go-openapi/jsonreference v0.19.6 // indirect
