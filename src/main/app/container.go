@@ -20,7 +20,7 @@ import (
 var secretStore = ProvideSecretStore()
 
 func ProvideSecretStore() infrastructure.ISecretStore {
-	if config.String("app.env") != "dev" {
+	if config.GetEnv() != "dev" {
 		return infrastructure.NewSecretStore()
 	} else {
 		return infrastructure.NewLocalSecretStore()

@@ -6,6 +6,7 @@ import (
 	"os"
 	"path"
 	"runtime"
+	"strings"
 
 	"github.com/go-chassis/go-archaius"
 )
@@ -13,7 +14,8 @@ import (
 type Env string
 
 const (
-	Dev Env = "dev"
+	Dev  Env = "dev"
+	Prod Env = "prod"
 )
 
 func init() {
@@ -24,20 +26,31 @@ func init() {
 		log.Fatalln(err)
 	}
 
-	env := os.Getenv("env")
-	if env == "" {
-		log.Println("INFO: missing env variable, setting default env ...")
-		os.Setenv("env", string(Dev))
-		env = string(Dev)
-	}
+	env := GetEnv()
+	scope := GetScope()
 
 	propertiesPath := fmt.Sprintf("%s/resources/config", root)
+
+	var compositeConfig []string
+
+	scopeConfig := fmt.Sprintf("%s/%s/%s.config.yml", propertiesPath, env, scope)
+	if _, err = os.Stat(scopeConfig); err == nil {
+		compositeConfig = append(compositeConfig, scopeConfig)
+	}
+
+	envConfig := fmt.Sprintf("%s/%s/config.yml", propertiesPath, env)
+	if _, err = os.Stat(envConfig); err == nil {
+		compositeConfig = append(compositeConfig, envConfig)
+	}
+
+	sharedConfig := fmt.Sprintf("%s/config.yml", propertiesPath)
+	if _, err = os.Stat(sharedConfig); err == nil {
+		compositeConfig = append(compositeConfig, sharedConfig)
+	}
+
 	err = archaius.Init(
-		archaius.WithRequiredFiles([]string{
-			fmt.Sprintf("%s/application.yml", propertiesPath),
-			fmt.Sprintf("%s/%s/application.yml", propertiesPath, env),
-		}),
 		archaius.WithENVSource(),
+		archaius.WithRequiredFiles(compositeConfig),
 	)
 
 	if err != nil {
@@ -45,6 +58,22 @@ func init() {
 	}
 
 	log.Printf("INFO: env mode: %s", archaius.GetString("app.env", ""))
+}
+
+func GetScope() string {
+	return strings.ToLower(os.Getenv("SCOPE"))
+}
+
+func GetEnv() string {
+	env := os.Getenv("app.env")
+	if env != "" {
+		return env
+	}
+	scope := GetScope()
+	if scope == "" {
+		return string(Dev)
+	}
+	return string(Prod)
 }
 
 func String(key string) string {

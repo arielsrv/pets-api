@@ -1,3 +1,4 @@
 views.folder: ./main/app/views
 gitlab.prefix: ikp_
 snippets.folder: resources/snippets
+value: shared
