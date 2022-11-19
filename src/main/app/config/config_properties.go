@@ -2,11 +2,12 @@ package config
 
 import (
 	"fmt"
-	"github.com/go-chassis/go-archaius"
 	"log"
 	"os"
 	"path"
 	"runtime"
+
+	"github.com/go-chassis/go-archaius"
 )
 
 type Env string

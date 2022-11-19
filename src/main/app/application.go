@@ -2,9 +2,10 @@ package app
 
 import (
 	"fmt"
+	"log"
+
 	"github.com/src/main/app/config"
 	"github.com/src/main/app/server"
-	"log"
 )
 
 func Run() error {

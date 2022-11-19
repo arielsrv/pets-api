@@ -2,6 +2,7 @@ package infrastructure
 
 import (
 	"fmt"
+
 	"github.com/src/main/app/config"
 )
 
