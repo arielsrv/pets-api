@@ -1,22 +1,37 @@
-# golang-template
+# pets-api
 
 [![CI](https://github.com/tj-actions/coverage-badge-go/workflows/CI/badge.svg)](https://github.com/tj-actions/coverage-badge-go/actions?query=workflow%3ACI)
 ![Coverage](https://img.shields.io/badge/Coverage-76.6%25-brightgreen)
 [![Update release version.](https://github.com/tj-actions/coverage-badge-go/workflows/Update%20release%20version./badge.svg)](https://github.com/tj-actions/coverage-badge-go/actions?query=workflow%3A%22Update+release+version.%22)
 
-## Developer tools (required)
+## Table of contents
+* [Project setup](#project-setup)
+    * [Required](#required)
+    * [Optional](#optional)
+    * [Script](#script)
+* [Tasks](#task)
+    * [Test](#test)
+    * [Build](#build)
+* [Configuration](#configuration)
+* [Environment](#enviroment)
+
+## Project setup
+
+Install the following dependencies
+
+### Required (required)
 
 - [Golang Lint](https://golangci-lint.run/)
 - [Golang Task](https://taskfile.dev/)
 - [Golang Dependencies Update](https://github.com/oligot/go-mod-upgrade)
 - [ent - An Entity Framework For Go](https://github.com/ent/ent)
 
-## Developer tools (optional if you want to browse api with SSL self-signed certificate )
+### Optional (optional if you want to browse api with SSL self-signed certificate )
 
 - [NGINX](https://www.nginx.com/)
 - [mkcert](https://github.com/FiloSottile/mkcert)
 
-### For macOs
+### Script
 
 ```shell
 brew install go-task/tap/go-task
@@ -27,92 +42,37 @@ brew install mkcert
 brew install nginx
 ```
 
-## benchmark
+##Task
 
-```shell
-go test ./... -bench=.
-```
-
-````text
-goos: darwin
-goarch: arm64
-pkg: github.com/internal/handlers
-BenchmarkPingHandler_Ping-8        22664             53260 ns/op
-````
-
-## building
-
-```shell
-task build
-```
-
-## running (from output binary)
-
-```shell
-task run
-```
-
-## lint [included rules](.golangci.yml)
-
-```shell
-task lint
-```
-
-## test
+### Test
 
 ```shell
 task test
 ```
 
-## coverage
+### Build
 
 ```shell
-task coverage
+task build
 ```
 
-## upgrade packages
+## Configuration
 
-```shell
-task download upgrade
+Environment configuration is based on Archaius Config, you should use a similar folder structure.
+SCOPE env variable in remote environment is required
+
+```
+└── config (domain code shared across versions)
+    ├── config.yml (shared config)
+    └── dev
+        └── config.xml (for local development)
+    └── prod (for remote environment)
+        └── config.xml (base config)
+        └── {environment}.config.xml (base config)
 ```
 
-## swagger [docs](/docs)
+The SDK provides a simple configuration hierarchy
 
-```shell
-task swagger
-```
-
-## add database entity model
-```shell
-task add-entity -- entity_name
-```
-
-## build database model
-```shell
-task build-model
-```
-
-## example request
-
-```shell
-curl 'http://localhost:8080/ping' --verbose
-```
-
-```text
-*   Trying 127.0.0.1:8080...
-* Connected to localhost (127.0.0.1) port 8080 (#0)
-> GET /ping HTTP/1.1
-> Host: localhost:8080
-> User-Agent: curl/7.85.0
-> Accept: */*
->
-* Mark bundle as not supporting multiuse
-< HTTP/1.1 200 OK
-< Date: Tue, 13 Sep 2022 11:57:44 GMT
-< Content-Type: text/plain; charset=utf-8
-< Content-Length: 4
-< X-Request-Id: e9f18d4a-6a5f-46c1-bef2-880a5c78535d
-<
-* Connection #0 to host localhost left intact
-pong
-```
+* resources/config/config.properties (shared config)
+* resources/config/{environment}/config.properties (override shared config by environment)
+* resources/config/{environment}/{scope}.config.properties (override env and shared config by scope)
