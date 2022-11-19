@@ -19,14 +19,16 @@
 
 Install the following dependencies
 
-### Required (required)
+### Required
 
 - [Golang Lint](https://golangci-lint.run/)
 - [Golang Task](https://taskfile.dev/)
 - [Golang Dependencies Update](https://github.com/oligot/go-mod-upgrade)
 - [ent - An Entity Framework For Go](https://github.com/ent/ent)
 
-### Optional (optional if you want to browse api with SSL self-signed certificate )
+### Optional
+
+If you want to browse api with SSL self-signed certificate
 
 - [NGINX](https://www.nginx.com/)
 - [mkcert](https://github.com/FiloSottile/mkcert)
@@ -62,7 +64,7 @@ Environment configuration is based on Archaius Config, you should use a similar 
 SCOPE env variable in remote environment is required
 
 ```
-└── config (domain code shared across versions)
+└── config
     ├── config.yml (shared config)
     └── dev
         └── config.xml (for local development)
