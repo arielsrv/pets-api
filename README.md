@@ -42,7 +42,7 @@ brew install mkcert
 brew install nginx
 ```
 
-##Task
+## Tasks
 
 ### Test
 
