@@ -81,5 +81,5 @@ The SDK provides a simple configuration hierarchy
 
 ## Environment
 
-SECRETS_STORE_PETS_API-GITLAB_TOKEN_KEY_NAME={gitlab_access_token}
+SECRETS_STORE_GITLAB_TOKEN_KEY_NAME={gitlab_access_token}
 SECRETS_STORE_PROD_CONNECTION_STRING_KEY_NAME={mysql_connection_string}
