@@ -112,7 +112,9 @@ func (s *AppService) GetAppById(appId int64) (*model.AppModel, error) {
 }
 
 func (s *AppService) GetAppTypes() ([]model.AppTypeModel, error) {
-	appTypes, err := s.dbClient.GetClient().AppType.Query().All(context.Background())
+	appTypes, err := s.dbClient.GetClient().AppType.
+		Query().
+		All(context.Background())
 
 	if err != nil {
 		return nil, err

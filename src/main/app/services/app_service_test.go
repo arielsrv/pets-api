@@ -1,6 +1,7 @@
 package services_test
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"testing"
@@ -41,8 +42,8 @@ func TestAppService_GetGroups(t *testing.T) {
 	client := new(MockClient)
 	client.On("GetGroups").Return(GetGroups())
 
-	dbClient := infrastructure.NewDbClient("")
-	dbClient.Test(t)
+	dbClient := infrastructure.NewDbClient(infrastructure.NewSQLiteClient(t))
+	dbClient.Open()
 	defer dbClient.Close()
 
 	service := services.NewAppService(client, dbClient)
@@ -61,8 +62,8 @@ func TestAppService_GetGroups_Err(t *testing.T) {
 	client := new(MockClient)
 	client.On("GetGroups").Return(GetGroupsError())
 
-	dbClient := infrastructure.NewDbClient("")
-	dbClient.Test(t)
+	dbClient := infrastructure.NewDbClient(infrastructure.NewSQLiteClient(t))
+	dbClient.Open()
 	defer dbClient.Close()
 
 	service := services.NewAppService(client, dbClient)
@@ -79,9 +80,12 @@ func GetGroupsError() ([]responses.GroupResponse, error) {
 func TestAppService_CreateRepository(t *testing.T) {
 	client := new(MockClient)
 	client.On("CreateProject").Return(GetCreateProjectResponse())
-	dbClient := infrastructure.NewDbClient("")
-	dbClient.Test(t)
+
+	dbClient := infrastructure.NewDbClient(infrastructure.NewSQLiteClient(t))
+	dbClient.Open()
 	defer dbClient.Close()
+
+	dbClient.AppType.Create().SetID(1).SetName("backend").Save(context.Background())
 
 	service := services.NewAppService(client, dbClient)
 	appModel := new(model.CreateAppModel)
@@ -96,9 +100,12 @@ func TestAppService_CreateRepository(t *testing.T) {
 func TestAppService_CreateApp_Conflict(t *testing.T) {
 	client := new(MockClient)
 	client.On("CreateProject").Return(GetCreateProjectResponse())
-	dbClient := infrastructure.NewDbClient("")
-	dbClient.Test(t)
+
+	dbClient := infrastructure.NewDbClient(infrastructure.NewSQLiteClient(t))
+	dbClient.Open()
 	defer dbClient.Close()
+
+	dbClient.AppType.Create().SetID(1).SetName("backend").Save(context.Background())
 
 	service := services.NewAppService(client, dbClient)
 	repositoryModel := new(model.CreateAppModel)
@@ -119,9 +126,12 @@ func TestAppService_GetAppByName(t *testing.T) {
 	client := new(MockClient)
 	client.On("GetProject").Return(GetProject())
 
-	dbClient := infrastructure.NewDbClient("")
-	dbClient.Test(t)
+	dbClient := infrastructure.NewDbClient(infrastructure.NewSQLiteClient(t))
+	dbClient.Open()
 	defer dbClient.Close()
+
+	dbClient.AppType.Create().SetID(1).SetName("backend").Save(context.Background())
+	dbClient.App.Create().SetName("customers-api").SetProjectId(1).SetAppTypeID(1).Save(context.Background())
 
 	service := services.NewAppService(client, dbClient)
 	actual, err := service.GetAppByName("customers-api")
@@ -136,9 +146,12 @@ func TestAppService_GetAppById(t *testing.T) {
 	client := new(MockClient)
 	client.On("GetProject").Return(GetProject())
 
-	dbClient := infrastructure.NewDbClient("")
-	dbClient.Test(t)
+	dbClient := infrastructure.NewDbClient(infrastructure.NewSQLiteClient(t))
+	dbClient.Open()
 	defer dbClient.Close()
+
+	dbClient.AppType.Create().SetID(1).SetName("backend").Save(context.Background())
+	dbClient.App.Create().SetName("customers-api").SetProjectId(1).SetAppTypeID(1).Save(context.Background())
 
 	service := services.NewAppService(client, dbClient)
 	actual, err := service.GetAppById(1)
@@ -153,8 +166,8 @@ func TestAppService_GetApp_NotFoundErr(t *testing.T) {
 	client := new(MockClient)
 	client.On("GetProject").Return(GetProjectNotFoundErr())
 
-	dbClient := infrastructure.NewDbClient("")
-	dbClient.Test(t)
+	dbClient := infrastructure.NewDbClient(infrastructure.NewSQLiteClient(t))
+	dbClient.Open()
 	defer dbClient.Close()
 
 	service := services.NewAppService(client, dbClient)
@@ -167,9 +180,12 @@ func TestAppService_GetApp_NotFoundErr(t *testing.T) {
 
 func TestAppService_GetAppTypes(t *testing.T) {
 	client := new(MockClient)
-	dbClient := infrastructure.NewDbClient("")
-	dbClient.Test(t)
+
+	dbClient := infrastructure.NewDbClient(infrastructure.NewSQLiteClient(t))
+	dbClient.Open()
 	defer dbClient.Close()
+
+	dbClient.AppType.Create().SetID(1).SetName("backend").Save(context.Background())
 
 	service := services.NewAppService(client, dbClient)
 	actual, err := service.GetAppTypes()
@@ -179,19 +195,6 @@ func TestAppService_GetAppTypes(t *testing.T) {
 	assert.Len(t, actual, 1)
 	assert.Equal(t, 1, actual[0].ID)
 	assert.Equal(t, "backend", actual[0].Name)
-}
-
-func TestAppService_GetAppTypes_Err(t *testing.T) {
-	client := new(MockClient)
-	dbClient := infrastructure.NewDbClient("")
-	dbClient.Test(t)
-	dbClient.Close()
-
-	service := services.NewAppService(client, dbClient)
-	actual, err := service.GetAppTypes()
-
-	assert.Error(t, err)
-	assert.Nil(t, actual)
 }
 
 func GetProject() (*responses.ProjectResponse, error) {
