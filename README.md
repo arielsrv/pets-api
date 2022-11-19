@@ -67,10 +67,10 @@ SCOPE env variable in remote environment is required
 └── config
     ├── config.yml (shared config)
     └── dev
-        └── config.xml (for local development)
+        └── config.yml (for local development)
     └── prod (for remote environment)
-        └── config.xml (base config)
-        └── {environment}.config.xml (base config)
+        └── config.yml (base config)
+        └── {environment}.config.yml (base config)
 ```
 
 The SDK provides a simple configuration hierarchy
