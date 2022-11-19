@@ -2,10 +2,9 @@ package app
 
 import (
 	"fmt"
-	"log"
-	"os"
-
+	"github.com/src/main/app/config"
 	"github.com/src/main/app/server"
+	"log"
 )
 
 func Run() error {
@@ -13,12 +12,12 @@ func Run() error {
 	app.Handlers(Handlers())
 	app.Routing(Routes())
 
-	host := os.Getenv("HOST")
+	host := config.String("HOST")
 	if host == "" {
 		host = "127.0.0.1"
 	}
 
-	port := os.Getenv("PORT")
+	port := config.String("PORT")
 	if port == "" {
 		port = "8080"
 	}
