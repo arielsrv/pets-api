@@ -61,7 +61,8 @@ func New(appConfig ...AppConfig) *App {
 
 	if app.appConfig.Logger {
 		app.Use(logger.New(logger.Config{
-			Format: "${pid} ${locals:requestid} ${status} - ${method} ${path}\n",
+			Format:     "${time} ${locals:requestid} ${status} - ${method} ${path}\n",
+			TimeFormat: "2006/01/02 15:04:05",
 		}))
 	}
 
@@ -69,10 +70,6 @@ func New(appConfig ...AppConfig) *App {
 		log.Println("Swagger enabled")
 		app.Add(http.MethodGet, "/swagger/*", swagger.HandlerDefault)
 	}
-
-	// app.Use(favicon.New(favicon.Config{
-	//     File: "./favicon.ico",
-	// }))
 
 	return app
 }
