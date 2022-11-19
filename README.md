@@ -78,3 +78,8 @@ The SDK provides a simple configuration hierarchy
 * resources/config/config.properties (shared config)
 * resources/config/{environment}/config.properties (override shared config by environment)
 * resources/config/{environment}/{scope}.config.properties (override env and shared config by scope)
+
+## Environment
+
+SECRETS_STORE_PETS_API-GITLAB_TOKEN_KEY_NAME={gitlab_access_token}
+SECRETS_STORE_PROD_CONNECTION_STRING_KEY_NAME={mysql_connection_string}
