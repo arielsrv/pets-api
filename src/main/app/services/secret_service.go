@@ -25,7 +25,10 @@ type SecretService struct {
 }
 
 func NewSecretService(dbClient *infrastructure.DbClient, appService IAppService) *SecretService {
-	return &SecretService{dbClient: dbClient, appService: appService}
+	return &SecretService{
+		dbClient:   dbClient,
+		appService: appService,
+	}
 }
 
 func (s *SecretService) GetSecret(secretID int64) (string, error) {

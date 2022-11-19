@@ -2,7 +2,7 @@ package infrastructure
 
 import (
 	"fmt"
-	"os"
+	"github.com/src/main/app/config"
 )
 
 type LocalSecretStore struct {
@@ -15,7 +15,7 @@ func NewLocalSecretStore() *LocalSecretStore {
 func (l *LocalSecretStore) GetSecret(key string) *Secret {
 	secret := new(Secret)
 	secret.Key = key
-	secret.Value = os.Getenv(key)
+	secret.Value = config.String(key)
 	if secret.Value == "" {
 		secret.Err = fmt.Errorf("missing secret: %s", key)
 	}

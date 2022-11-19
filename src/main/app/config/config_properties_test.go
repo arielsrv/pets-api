@@ -13,12 +13,6 @@ func TestGetProperty(t *testing.T) {
 	assert.Equal(t, "ikp_", actual)
 }
 
-func TestGetProperty_FromEnv(t *testing.T) {
-	t.Setenv("my.key", "ikp_")
-	actual := config.String("my.key")
-	assert.Equal(t, "ikp_", actual)
-}
-
 func TestGetProperty_Err(t *testing.T) {
 	actual := config.String("missing")
 	assert.Equal(t, "", actual)
@@ -27,12 +21,6 @@ func TestGetProperty_Err(t *testing.T) {
 func TestGetIntProperty(t *testing.T) {
 	actual := config.Int("gitlab.client.pool.size")
 	assert.Equal(t, 20, actual)
-}
-
-func TestGetIntProperty_FromEnv(t *testing.T) {
-	t.Setenv("my.port", "22")
-	actual := config.Int("my.port")
-	assert.Equal(t, 22, actual)
 }
 
 func TestGetIntProperty_Err(t *testing.T) {

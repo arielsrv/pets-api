@@ -1,10 +1,9 @@
 package main
 
 import (
-	"log"
-
 	"github.com/src/main/app"
 	_ "github.com/src/resources/docs"
+	"log"
 )
 
 // @title       Pets API
