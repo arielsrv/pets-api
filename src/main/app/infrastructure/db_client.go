@@ -10,7 +10,7 @@ import (
 )
 
 type IDbClient interface {
-	Open() *ent.Client
+	Context() *ent.Client
 }
 
 type DbClient struct {
@@ -25,15 +25,11 @@ func NewDbClient(client IDbClient) *DbClient {
 	}
 }
 
-func (d *DbClient) Open() *ent.Client {
+func (d *DbClient) Context() *ent.Client {
 	d.dbMtx.Do(func() {
-		d.Client = d.client.Open()
+		d.Client = d.client.Context()
 	})
 
-	return d.Client
-}
-
-func (d *DbClient) GetClient() *ent.Client {
 	return d.Client
 }
 
@@ -46,11 +42,13 @@ type MySQLClient struct {
 	connectionString string
 }
 
-func NewMySQLClient(connectionString string) *MySQLClient {
-	return &MySQLClient{connectionString: connectionString}
+func NewMySQLClient(connectionString string) IDbClient {
+	return &MySQLClient{
+		connectionString: connectionString,
+	}
 }
 
-func (m *MySQLClient) Open() *ent.Client {
+func (m *MySQLClient) Context() *ent.Client {
 	client, err := ent.Open("mysql", m.connectionString)
 	if err != nil {
 		log.Fatalf("failed opening connection to mysql: %v", err)

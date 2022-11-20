@@ -29,8 +29,8 @@ func ProvideSecretStore() infrastructure.ISecretStore {
 
 func Handlers() []server.Handler {
 	connectionString := getConnectionString()
-	dbClient := infrastructure.NewDbClient(infrastructure.NewMySQLClient(connectionString))
-	dbClient.Open()
+	mySqlDbClient := infrastructure.NewMySQLClient(connectionString)
+	dbClient := infrastructure.NewDbClient(mySqlDbClient)
 
 	pingService := services.NewPingService()
 	pingHandler := handlers.NewPingHandler(pingService)

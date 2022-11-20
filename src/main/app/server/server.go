@@ -100,7 +100,7 @@ func (r *Routes) Add(verb string, path string, action func(ctx *fiber.Ctx) error
 	r.routes = append(r.routes, *route)
 }
 
-func (app *App) Routing(f func(*Routes)) {
+func (app *App) SetRoutes(f func(*Routes)) {
 	r := new(Routes)
 	f(r)
 
@@ -109,7 +109,7 @@ func (app *App) Routing(f func(*Routes)) {
 	}
 }
 
-func (app *App) Handlers(handlers []Handler) {
+func (app *App) SetHandlers(handlers []Handler) {
 	for _, handler := range handlers {
 		registerHandler(handler)
 	}

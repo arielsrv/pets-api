@@ -10,8 +10,9 @@ import (
 
 func Run() error {
 	app := server.New()
-	app.Handlers(Handlers())
-	app.Routing(Routes())
+
+	app.SetHandlers(Handlers())
+	app.SetRoutes(Routes())
 
 	host := config.String("HOST")
 	if host == "" {

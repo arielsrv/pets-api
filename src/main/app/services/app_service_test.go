@@ -43,7 +43,7 @@ func TestAppService_GetGroups(t *testing.T) {
 	client.On("GetGroups").Return(GetGroups())
 
 	dbClient := infrastructure.NewDbClient(infrastructure.NewSQLiteClient(t))
-	dbClient.Open()
+	dbClient.Context()
 	defer dbClient.Close()
 
 	service := services.NewAppService(client, dbClient)
@@ -63,7 +63,7 @@ func TestAppService_GetGroups_Err(t *testing.T) {
 	client.On("GetGroups").Return(GetGroupsError())
 
 	dbClient := infrastructure.NewDbClient(infrastructure.NewSQLiteClient(t))
-	dbClient.Open()
+	dbClient.Context()
 	defer dbClient.Close()
 
 	service := services.NewAppService(client, dbClient)
@@ -82,7 +82,7 @@ func TestAppService_CreateRepository(t *testing.T) {
 	client.On("CreateProject").Return(GetCreateProjectResponse())
 
 	dbClient := infrastructure.NewDbClient(infrastructure.NewSQLiteClient(t))
-	dbClient.Open()
+	dbClient.Context()
 	defer dbClient.Close()
 
 	dbClient.AppType.Create().SetID(1).SetName("backend").Save(context.Background())
@@ -102,7 +102,7 @@ func TestAppService_CreateApp_Conflict(t *testing.T) {
 	client.On("CreateProject").Return(GetCreateProjectResponse())
 
 	dbClient := infrastructure.NewDbClient(infrastructure.NewSQLiteClient(t))
-	dbClient.Open()
+	dbClient.Context()
 	defer dbClient.Close()
 
 	dbClient.AppType.Create().SetID(1).SetName("backend").Save(context.Background())
@@ -127,7 +127,7 @@ func TestAppService_GetAppByName(t *testing.T) {
 	client.On("GetProject").Return(GetProject())
 
 	dbClient := infrastructure.NewDbClient(infrastructure.NewSQLiteClient(t))
-	dbClient.Open()
+	dbClient.Context()
 	defer dbClient.Close()
 
 	dbClient.AppType.Create().SetID(1).SetName("backend").Save(context.Background())
@@ -147,7 +147,7 @@ func TestAppService_GetAppById(t *testing.T) {
 	client.On("GetProject").Return(GetProject())
 
 	dbClient := infrastructure.NewDbClient(infrastructure.NewSQLiteClient(t))
-	dbClient.Open()
+	dbClient.Context()
 	defer dbClient.Close()
 
 	dbClient.AppType.Create().SetID(1).SetName("backend").Save(context.Background())
@@ -167,7 +167,7 @@ func TestAppService_GetApp_NotFoundErr(t *testing.T) {
 	client.On("GetProject").Return(GetProjectNotFoundErr())
 
 	dbClient := infrastructure.NewDbClient(infrastructure.NewSQLiteClient(t))
-	dbClient.Open()
+	dbClient.Context()
 	defer dbClient.Close()
 
 	service := services.NewAppService(client, dbClient)
@@ -182,7 +182,7 @@ func TestAppService_GetAppTypes(t *testing.T) {
 	client := new(MockClient)
 
 	dbClient := infrastructure.NewDbClient(infrastructure.NewSQLiteClient(t))
-	dbClient.Open()
+	dbClient.Context()
 	defer dbClient.Close()
 
 	dbClient.AppType.Create().SetID(1).SetName("backend").Save(context.Background())

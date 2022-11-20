@@ -12,11 +12,11 @@ type SQLiteClient struct {
 	t *testing.T
 }
 
-func NewSQLiteClient(t *testing.T) *SQLiteClient {
+func NewSQLiteClient(t *testing.T) IDbClient {
 	return &SQLiteClient{t: t}
 }
 
-func (s *SQLiteClient) Open() *ent.Client {
+func (s *SQLiteClient) Context() *ent.Client {
 	opts := []enttest.Option{
 		enttest.WithOptions(ent.Debug()),
 	}

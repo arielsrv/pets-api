@@ -27,15 +27,18 @@ type IAppService interface {
 
 type AppService struct {
 	gitLabClient gitlab.IGitLabClient
-	dbClient     *infrastructure.DbClient
+	dbClient     infrastructure.IDbClient
 }
 
-func NewAppService(gitLabClient gitlab.IGitLabClient, dbClient *infrastructure.DbClient) *AppService {
-	return &AppService{gitLabClient: gitLabClient, dbClient: dbClient}
+func NewAppService(gitLabClient gitlab.IGitLabClient, dbClient infrastructure.IDbClient) *AppService {
+	return &AppService{
+		gitLabClient: gitLabClient,
+		dbClient:     dbClient,
+	}
 }
 
 func (s *AppService) GetAppByName(appName string) (*model.AppModel, error) {
-	application, err := s.dbClient.GetClient().App.Query().
+	application, err := s.dbClient.Context().App.Query().
 		Where(app.Name(appName)).
 		First(context.Background())
 
@@ -73,7 +76,7 @@ func (s *AppService) GetAppByName(appName string) (*model.AppModel, error) {
 }
 
 func (s *AppService) GetAppById(appId int64) (*model.AppModel, error) {
-	application, err := s.dbClient.GetClient().App.Query().
+	application, err := s.dbClient.Context().App.Query().
 		Where(app.ID(appId)).
 		First(context.Background())
 
@@ -112,7 +115,7 @@ func (s *AppService) GetAppById(appId int64) (*model.AppModel, error) {
 }
 
 func (s *AppService) GetAppTypes() ([]model.AppTypeModel, error) {
-	appTypes, err := s.dbClient.GetClient().AppType.
+	appTypes, err := s.dbClient.Context().AppType.
 		Query().
 		All(context.Background())
 
@@ -149,7 +152,7 @@ func (s *AppService) GetGroups() ([]model.AppGroupModel, error) {
 }
 
 func (s *AppService) CreateApp(createAppModel *model.CreateAppModel) (*model.AppModel, error) {
-	duplicated, err := s.dbClient.GetClient().App.Query().
+	duplicated, err := s.dbClient.Context().App.Query().
 		Where(app.Name(createAppModel.Name)).
 		Exist(context.Background())
 
@@ -171,7 +174,7 @@ func (s *AppService) CreateApp(createAppModel *model.CreateAppModel) (*model.App
 		return nil, err
 	}
 
-	application, err := s.dbClient.GetClient().App.Create().
+	application, err := s.dbClient.Context().App.Create().
 		SetName(createAppModel.Name).
 		SetProjectId(response.ID).
 		SetAppTypeID(int(createAppModel.AppTypeID)).
