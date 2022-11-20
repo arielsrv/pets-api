@@ -27,12 +27,12 @@ tasks:
   test:
     desc: Run test.
     cmds:
-      - go test -race -v ./...
+      - go test -race ./...
       - go test ./...
   coverage:
     desc: Makes report coverage.
     cmds:
-      - go test -v ./... -covermode=count -coverprofile=$COVERAGE_OUT_FILE
+      - go test ./... -covermode=count -coverprofile=$COVERAGE_OUT_FILE
       - go tool cover -html $COVERAGE_OUT_FILE -o $COVERAGE_HTML_FILE
       - go tool cover -func=$COVERAGE_OUT_FILE -o=$COVERAGE_OUT_FILE
   clean:
