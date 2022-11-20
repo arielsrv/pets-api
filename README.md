@@ -5,6 +5,7 @@
 [![Update release version.](https://github.com/tj-actions/coverage-badge-go/workflows/Update%20release%20version./badge.svg)](https://github.com/tj-actions/coverage-badge-go/actions?query=workflow%3A%22Update+release+version.%22)
 
 ## Table of contents
+
 * [Project setup](#project-setup)
     * [Required](#required)
     * [Optional](#optional)
@@ -78,6 +79,25 @@ The SDK provides a simple configuration hierarchy
 * resources/config/config.properties (shared config)
 * resources/config/{environment}/config.properties (override shared config by environment)
 * resources/config/{environment}/{scope}.config.properties (override env and shared config by scope)
+
+Example Test environment {scope}.{app_name}.{your_domain}.com
+  test.pets-api.internal.com
+
+```
+2022/11/20 13:24:26 INFO: Two files have same priority. keeping /Users/ariel.pineiro/go/src/github.com/arielsrv/pets-api/src/resources/config/prod/test.config.yml value
+2022/11/20 13:24:26 INFO: Configuration files:
+    /resources/config/prod/test.config.yml,
+    /resources/config/prod/config.yml,
+    /resources/config/config.yml
+2022/11/20 13:24:26 INFO: invoke dynamic handler:FileSource
+2022/11/20 13:24:26 INFO: enable env source
+2022/11/20 13:24:26 INFO: invoke dynamic handler:EnvironmentSource
+2022/11/20 13:24:26 INFO: archaius init success
+2022/11/20 13:24:26 INFO: ENV: prod, SCOPE: test
+2022/11/20 13:24:26 INFO: create new watcher
+2022/11/20 13:24:26 Listening on port 8080
+2022/11/20 13:24:26 Open http://127.0.0.1:8080/ping in the browser
+```
 
 ## Environment
 
