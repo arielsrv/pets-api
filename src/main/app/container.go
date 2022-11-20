@@ -19,34 +19,26 @@ import (
 
 var secretStore = ProvideSecretStore()
 
-func ProvideSecretStore() infrastructure.ISecretStore {
-	if config.GetEnv() != "dev" {
-		return infrastructure.NewSecretStore()
-	} else {
-		return infrastructure.NewLocalSecretStore()
-	}
-}
-
 func Handlers() []server.Handler {
-	connectionString := getConnectionString()
+	connectionString := getSecretValue("SECRETS_STORE_PROD_CONNECTION_STRING_KEY_NAME")
 	mySqlDbClient := infrastructure.NewMySQLClient(connectionString)
 	dbClient := infrastructure.NewDbClient(mySqlDbClient)
 
 	pingService := services.NewPingService()
 	pingHandler := handlers.NewPingHandler(pingService)
-	gitLabRb := &rest.RequestBuilder{
+
+	gitLabClient := gitlab.NewGitLabClient(&rest.RequestBuilder{
 		BaseURL: config.String("gitlab.client.baseurl"),
 		Headers: http.Header{
-			"Authorization": {fmt.Sprintf("Bearer %s", getGitLabToken())},
+			"Authorization": {fmt.Sprintf("Bearer %s", getSecretValue("SECRETS_STORE_GITLAB_TOKEN_KEY_NAME"))},
 		},
 		Timeout:        time.Millisecond * time.Duration(config.Int("gitlab.client.pool.timeout")),
 		ConnectTimeout: time.Millisecond * time.Duration(config.Int("gitlab.client.socket.connection-timeout")),
 		CustomPool: &rest.CustomPool{
 			MaxIdleConnsPerHost: config.Int("gitlab.client.pool.size"),
 		},
-	}
+	})
 
-	gitLabClient := gitlab.NewGitLabClient(gitLabRb)
 	appService := services.NewAppService(gitLabClient, dbClient)
 	appHandler := handlers.NewAppHandler(appService)
 
@@ -56,30 +48,31 @@ func Handlers() []server.Handler {
 	snippetService := services.NewSnippetService(secretService)
 	snippetHandler := handlers.NewSnippetHandler(snippetService)
 
-	var handlers []server.Handler
-	handlers = append(handlers, pingHandler.Ping)
-	handlers = append(handlers, appHandler.CreateApp)
-	handlers = append(handlers, appHandler.GetGroups)
-	handlers = append(handlers, appHandler.GetAppTypes)
-	handlers = append(handlers, appHandler.GetApp)
-	handlers = append(handlers, secretHandler.CreateSecret)
-	handlers = append(handlers, snippetHandler.GetSnippet)
+	var h []server.Handler
 
-	return handlers
+	h = append(h, pingHandler.Ping)
+	h = append(h, appHandler.CreateApp)
+	h = append(h, appHandler.GetGroups)
+	h = append(h, appHandler.GetAppTypes)
+	h = append(h, appHandler.GetApp)
+	h = append(h, secretHandler.CreateSecret)
+	h = append(h, snippetHandler.GetSnippet)
+
+	return h
 }
 
-func getConnectionString() string {
-	secret := secretStore.GetSecret("SECRETS_STORE_PROD_CONNECTION_STRING_KEY_NAME")
+func getSecretValue(key string) string {
+	secret := secretStore.GetSecret(key)
 	if secret.Err != nil {
 		log.Fatalln(secret.Err)
 	}
 	return secret.Value
 }
 
-func getGitLabToken() string {
-	secret := secretStore.GetSecret("SECRETS_STORE_GITLAB_TOKEN_KEY_NAME")
-	if secret.Err != nil {
-		log.Fatalln(secret.Err)
+func ProvideSecretStore() infrastructure.ISecretStore {
+	if config.GetEnv() != "dev" {
+		return infrastructure.NewSecretStore()
+	} else {
+		return infrastructure.NewLocalSecretStore()
 	}
-	return secret.Value
 }
