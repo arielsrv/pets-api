@@ -2,7 +2,6 @@ package handlers_test
 
 import (
 	"bytes"
-	"github.com/src/main/app/model/inputs"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -20,7 +19,7 @@ type MockSecretService struct {
 	mock.Mock
 }
 
-func (m *MockSecretService) SaveSecret(int64, *inputs.CreateAppSecretModel) (*model.AppSecretModel, error) {
+func (m *MockSecretService) SaveSecret(int64, *model.CreateAppSecretModel) (*model.AppSecretModel, error) {
 	args := m.Called()
 	return args.Get(0).(*model.AppSecretModel), args.Error(1)
 }

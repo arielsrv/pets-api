@@ -1,7 +1,6 @@
 package services_test
 
 import (
-	"github.com/src/main/app/model/inputs"
 	"testing"
 
 	"github.com/src/main/app/model"
@@ -15,7 +14,7 @@ type MockSecretService struct {
 	mock.Mock
 }
 
-func (m *MockSecretService) SaveSecret(int64, *inputs.CreateAppSecretModel) (*model.AppSecretModel, error) {
+func (m *MockSecretService) SaveSecret(int64, *model.CreateAppSecretModel) (*model.AppSecretModel, error) {
 	// TODO implement me
 	panic("implement me")
 }
