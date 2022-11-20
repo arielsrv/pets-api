@@ -1,7 +1,6 @@
 package server
 
 import (
-	"log"
 	"net/http"
 
 	"github.com/src/main/app/config"
@@ -67,7 +66,6 @@ func New(appConfig ...AppConfig) *App {
 	}
 
 	if app.appConfig.Swagger {
-		log.Println("Swagger enabled")
 		app.Add(http.MethodGet, "/swagger/*", swagger.HandlerDefault)
 	}
 

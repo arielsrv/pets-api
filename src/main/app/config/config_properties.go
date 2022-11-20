@@ -18,6 +18,10 @@ const (
 	Prod Env = "prod"
 )
 
+const (
+	File = "config.yml"
+)
+
 func init() {
 	_, caller, _, _ := runtime.Caller(0)
 	root := path.Join(path.Dir(caller), "../../..")
@@ -26,24 +30,21 @@ func init() {
 		log.Fatalln(err)
 	}
 
-	env := GetEnv()
-	scope := GetScope()
-
-	propertiesPath := fmt.Sprintf("%s/resources/config", root)
-
 	var compositeConfig []string
+	propertiesPath := fmt.Sprintf("%s/resources/config", root)
+	env, scope := GetEnv(), GetScope()
 
-	scopeConfig := fmt.Sprintf("%s/%s/%s.config.yml", propertiesPath, env, scope)
+	scopeConfig := fmt.Sprintf("%s/%s/%s.%s", propertiesPath, env, scope, File)
 	if _, err = os.Stat(scopeConfig); err == nil {
 		compositeConfig = append(compositeConfig, scopeConfig)
 	}
 
-	envConfig := fmt.Sprintf("%s/%s/config.yml", propertiesPath, env)
+	envConfig := fmt.Sprintf("%s/%s/%s", propertiesPath, env, File)
 	if _, err = os.Stat(envConfig); err == nil {
 		compositeConfig = append(compositeConfig, envConfig)
 	}
 
-	sharedConfig := fmt.Sprintf("%s/config.yml", propertiesPath)
+	sharedConfig := fmt.Sprintf("%s/%s", propertiesPath, File)
 	if _, err = os.Stat(sharedConfig); err == nil {
 		compositeConfig = append(compositeConfig, sharedConfig)
 	}
@@ -57,7 +58,7 @@ func init() {
 		log.Fatalln(err)
 	}
 
-	log.Printf("INFO: env mode: %s", archaius.GetString("app.env", ""))
+	log.Printf("INFO: ENV: %s, SCOPE: %s", env, scope)
 }
 
 func GetScope() string {
