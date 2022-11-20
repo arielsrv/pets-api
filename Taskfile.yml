@@ -68,7 +68,6 @@ tasks:
     cmds:
       - task: clean
       - task: download
-      - task: upgrade
       - task: lint
       - task: test
       - task: coverage
