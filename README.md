@@ -84,7 +84,7 @@ Example Test environment {scope}.{app_name}.{your_domain}.com
   test.pets-api.internal.com
 
 ```
-2022/11/20 13:24:26 INFO: Two files have same priority. keeping /Users/ariel.pineiro/go/src/github.com/arielsrv/pets-api/src/resources/config/prod/test.config.yml value
+2022/11/20 13:24:26 INFO: Two files have same priority. keeping /resources/config/prod/test.config.yml value
 2022/11/20 13:24:26 INFO: Configuration files:
     /resources/config/prod/test.config.yml,
     /resources/config/prod/config.yml,
