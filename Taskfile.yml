@@ -66,11 +66,11 @@ tasks:
   all:
     desc: Run relevant tasks.
     cmds:
-      - task: clean
       - task: download
       - task: lint
       - task: build-model
       - task: build
+      - task: swagger
       - task: test
   default:
     desc: Run [build] task.
