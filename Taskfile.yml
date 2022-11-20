@@ -69,11 +69,9 @@ tasks:
       - task: clean
       - task: download
       - task: lint
-      - task: test
-      - task: coverage
-      - task: swagger
       - task: build-model
       - task: build
+      - task: test
   default:
     desc: Run [build] task.
     cmds:
