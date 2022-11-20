@@ -61,6 +61,8 @@ func init() {
 	log.Printf("INFO: ENV: %s, SCOPE: %s", env, scope)
 }
 
+// GetScope
+// Get scope variable from System. Example for test.pets-api.internal.com is test.
 func GetScope() string {
 	return strings.ToLower(os.Getenv("SCOPE"))
 }

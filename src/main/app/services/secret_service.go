@@ -6,11 +6,12 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/src/main/app/infrastructure/database"
+
 	"github.com/src/main/app/server"
 
 	"github.com/src/main/app/ent"
 	"github.com/src/main/app/ent/secret"
-	"github.com/src/main/app/infrastructure"
 	"github.com/src/main/app/model"
 )
 
@@ -20,11 +21,11 @@ type ISecretService interface {
 }
 
 type SecretService struct {
-	dbClient   infrastructure.IDbClient
+	dbClient   database.IDbClient
 	appService IAppService
 }
 
-func NewSecretService(dbClient infrastructure.IDbClient, appService IAppService) *SecretService {
+func NewSecretService(dbClient database.IDbClient, appService IAppService) *SecretService {
 	return &SecretService{
 		dbClient:   dbClient,
 		appService: appService,

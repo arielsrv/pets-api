@@ -6,10 +6,12 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/src/main/app/infrastructure/database"
+	"github.com/src/main/app/infrastructure/secrets"
+
 	"github.com/src/main/app/clients/gitlab"
 	"github.com/src/main/app/config"
 	"github.com/src/main/app/handlers"
-	"github.com/src/main/app/infrastructure"
 	"github.com/src/main/app/server"
 	"github.com/src/main/app/services"
 
@@ -21,8 +23,8 @@ var secretStore = ProvideSecretStore()
 
 func Handlers() []server.Handler {
 	connectionString := getSecretValue("SECRETS_STORE_PROD_CONNECTION_STRING_KEY_NAME")
-	mySqlDbClient := infrastructure.NewMySQLClient(connectionString)
-	dbClient := infrastructure.NewDbClient(mySqlDbClient)
+	mySqlDbClient := database.NewMySQLClient(connectionString)
+	dbClient := database.NewDbClient(mySqlDbClient)
 
 	pingService := services.NewPingService()
 	pingHandler := handlers.NewPingHandler(pingService)
@@ -69,10 +71,10 @@ func getSecretValue(key string) string {
 	return secret.Value
 }
 
-func ProvideSecretStore() infrastructure.ISecretStore {
+func ProvideSecretStore() secrets.ISecretStore {
 	if config.GetEnv() != "dev" {
-		return infrastructure.NewSecretStore()
+		return secrets.NewSecretStore()
 	} else {
-		return infrastructure.NewLocalSecretStore()
+		return secrets.NewLocalSecretStore()
 	}
 }

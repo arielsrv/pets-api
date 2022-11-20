@@ -6,6 +6,8 @@ import (
 	"net/http"
 	"net/url"
 
+	"github.com/src/main/app/infrastructure/database"
+
 	"github.com/src/main/app/server"
 
 	"github.com/src/main/app/clients/gitlab"
@@ -13,7 +15,6 @@ import (
 	"github.com/src/main/app/config"
 	"github.com/src/main/app/ent"
 	"github.com/src/main/app/ent/app"
-	"github.com/src/main/app/infrastructure"
 	"github.com/src/main/app/model"
 )
 
@@ -27,10 +28,10 @@ type IAppService interface {
 
 type AppService struct {
 	gitLabClient gitlab.IGitLabClient
-	dbClient     infrastructure.IDbClient
+	dbClient     database.IDbClient
 }
 
-func NewAppService(gitLabClient gitlab.IGitLabClient, dbClient infrastructure.IDbClient) *AppService {
+func NewAppService(gitLabClient gitlab.IGitLabClient, dbClient database.IDbClient) *AppService {
 	return &AppService{
 		gitLabClient: gitLabClient,
 		dbClient:     dbClient,

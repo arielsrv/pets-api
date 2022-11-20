@@ -1,14 +1,4 @@
-package infrastructure
-
-type ISecretStore interface {
-	GetSecret(key string) *Secret
-}
-
-type Secret struct {
-	Key   string
-	Value string
-	Err   error
-}
+package secrets
 
 type SecretStore struct {
 }

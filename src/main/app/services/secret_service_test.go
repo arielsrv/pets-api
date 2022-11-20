@@ -4,7 +4,8 @@ import (
 	"context"
 	"testing"
 
-	"github.com/src/main/app/infrastructure"
+	"github.com/src/main/app/infrastructure/database"
+
 	"github.com/src/main/app/model"
 	"github.com/src/main/app/services"
 
@@ -42,7 +43,7 @@ func (m *MockAppService) GetAppById(int64) (*model.AppModel, error) {
 }
 
 func TestSecretService_GetSecret(t *testing.T) {
-	dbClient := infrastructure.NewDbClient(infrastructure.NewSQLiteClient(t))
+	dbClient := database.NewDbClient(database.NewSQLiteClient(t))
 	dbClient.Context()
 	defer dbClient.Close()
 
@@ -62,7 +63,7 @@ func TestSecretService_GetSecret(t *testing.T) {
 }
 
 func TestSecretService_GetSecret_NotFound(t *testing.T) {
-	dbClient := infrastructure.NewDbClient(infrastructure.NewSQLiteClient(t))
+	dbClient := database.NewDbClient(database.NewSQLiteClient(t))
 	dbClient.Context()
 	defer dbClient.Close()
 
@@ -76,7 +77,7 @@ func TestSecretService_GetSecret_NotFound(t *testing.T) {
 }
 
 func TestSecretService_SaveSecret(t *testing.T) {
-	dbClient := infrastructure.NewDbClient(infrastructure.NewSQLiteClient(t))
+	dbClient := database.NewDbClient(database.NewSQLiteClient(t))
 	dbClient.Context()
 	defer dbClient.Close()
 
@@ -100,7 +101,7 @@ func TestSecretService_SaveSecret(t *testing.T) {
 }
 
 func TestSecretService_SaveSecret_Conflict(t *testing.T) {
-	dbClient := infrastructure.NewDbClient(infrastructure.NewSQLiteClient(t))
+	dbClient := database.NewDbClient(database.NewSQLiteClient(t))
 	dbClient.Context()
 	defer dbClient.Close()
 

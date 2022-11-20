@@ -24,8 +24,8 @@ type Client struct {
 	rb *rest.RequestBuilder
 }
 
-func (g *Client) GetProject(projectID int64) (*responses.ProjectResponse, error) {
-	response := g.rb.Get(fmt.Sprintf("/projects/%d", projectID))
+func (c *Client) GetProject(projectID int64) (*responses.ProjectResponse, error) {
+	response := c.rb.Get(fmt.Sprintf("/projects/%d", projectID))
 	if response.Err != nil {
 		return nil, response.Err
 	}
@@ -34,7 +34,10 @@ func (g *Client) GetProject(projectID int64) (*responses.ProjectResponse, error)
 	}
 
 	var projectResponse responses.ProjectResponse
-	response.FillUp(&projectResponse)
+	err := response.FillUp(&projectResponse)
+	if err != nil {
+		return nil, err
+	}
 
 	return &projectResponse, nil
 }
@@ -43,8 +46,8 @@ func NewGitLabClient(rb *rest.RequestBuilder) *Client {
 	return &Client{rb: rb}
 }
 
-func (g *Client) GetGroups() ([]responses.GroupResponse, error) {
-	response := g.rb.Get("/groups")
+func (c *Client) GetGroups() ([]responses.GroupResponse, error) {
+	response := c.rb.Get("/groups")
 	if response.Err != nil {
 		return nil, response.Err
 	}
@@ -52,7 +55,10 @@ func (g *Client) GetGroups() ([]responses.GroupResponse, error) {
 		return nil, server.NewError(response.StatusCode, response.String())
 	}
 	var groups []responses.GroupResponse
-	response.FillUp(&groups)
+	err := response.FillUp(&groups)
+	if err != nil {
+		return nil, err
+	}
 
 	total, err := strconv.Atoi(response.Response.Header.Get("x-total-pages"))
 	if err != nil {
@@ -60,7 +66,7 @@ func (g *Client) GetGroups() ([]responses.GroupResponse, error) {
 	}
 	if total > 1 {
 		var pages []*rest.FutureResponse
-		g.rb.ForkJoin(func(c *rest.Concurrent) {
+		c.rb.ForkJoin(func(c *rest.Concurrent) {
 			for i := 2; i <= total; i++ {
 				pages = append(pages, c.Get(fmt.Sprintf("/groups?page=%d", i)))
 			}
@@ -70,7 +76,10 @@ func (g *Client) GetGroups() ([]responses.GroupResponse, error) {
 				return nil, server.NewError(response.StatusCode, response.String())
 			}
 			var page []responses.GroupResponse
-			pages[i].Response().FillUp(&page)
+			err = pages[i].Response().FillUp(&page)
+			if err != nil {
+				return nil, err
+			}
 			groups = append(groups, page...)
 		}
 	}
@@ -78,8 +87,8 @@ func (g *Client) GetGroups() ([]responses.GroupResponse, error) {
 	return groups, nil
 }
 
-func (g *Client) CreateProject(request *requests.CreateProjectRequest) (*responses.CreateProjectResponse, error) {
-	response := g.rb.Post("/projects", request)
+func (c *Client) CreateProject(request *requests.CreateProjectRequest) (*responses.CreateProjectResponse, error) {
+	response := c.rb.Post("/projects", request)
 	if response.Err != nil {
 		return nil, response.Err
 	}
@@ -88,7 +97,10 @@ func (g *Client) CreateProject(request *requests.CreateProjectRequest) (*respons
 	}
 
 	var createProjectResponse responses.CreateProjectResponse
-	response.FillUp(&createProjectResponse)
+	err := response.FillUp(&createProjectResponse)
+	if err != nil {
+		return nil, err
+	}
 
 	return &createProjectResponse, nil
 }

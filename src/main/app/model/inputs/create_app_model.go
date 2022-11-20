@@ -1,4 +1,4 @@
-package model
+package inputs
 
 import "github.com/src/main/app/ent/property"
 

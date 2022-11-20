@@ -3,6 +3,7 @@ package handlers_test
 import (
 	"bytes"
 	"errors"
+	"github.com/src/main/app/model/inputs"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -27,7 +28,7 @@ func (m *MockAppService) GetGroups() ([]model.AppGroupModel, error) {
 	return args.Get(0).([]model.AppGroupModel), args.Error(1)
 }
 
-func (m *MockAppService) CreateApp(*model.CreateAppModel) (*model.AppModel, error) {
+func (m *MockAppService) CreateApp(*inputs.CreateAppModel) (*model.AppModel, error) {
 	args := m.Called()
 	return args.Get(0).(*model.AppModel), args.Error(1)
 }

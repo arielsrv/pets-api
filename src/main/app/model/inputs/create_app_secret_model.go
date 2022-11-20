@@ -1,4 +1,4 @@
-package model
+package inputs
 
 type CreateAppSecretModel struct {
 	Key   string `json:"key,omitempty"`
