@@ -80,8 +80,7 @@ The SDK provides a simple configuration hierarchy
 * resources/config/{environment}/config.properties (override shared config by environment)
 * resources/config/{environment}/{scope}.config.properties (override env and shared config by scope)
 
-Example Test environment {scope}.{app_name}.{your_domain}.com
-  test.pets-api.internal.com
+test.pets-api.internal.com
 
 ```
 2022/11/20 13:24:26 INFO: Two files have same priority. keeping
