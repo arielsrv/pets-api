@@ -6,16 +6,9 @@ import (
 	"os"
 	"path"
 	"runtime"
-	"strings"
 
 	"github.com/go-chassis/go-archaius"
-)
-
-type Env string
-
-const (
-	Dev  Env = "dev"
-	Prod Env = "prod"
+	"github.com/src/main/app/config/env"
 )
 
 const (
@@ -32,7 +25,7 @@ func init() {
 
 	var compositeConfig []string
 	propertiesPath := fmt.Sprintf("%s/resources/config", root)
-	env, scope := GetEnv(), GetScope()
+	env, scope := env.GetEnv(), env.GetScope()
 
 	scopeConfig := fmt.Sprintf("%s/%s/%s.%s", propertiesPath, env, scope, File)
 	if _, err = os.Stat(scopeConfig); err == nil {
@@ -59,31 +52,6 @@ func init() {
 	}
 
 	log.Printf("INFO: ENV: %s, SCOPE: %s", env, scope)
-}
-
-// GetScope
-// Get scope variable from System. Example for test.pets-api.internal.com is test.
-func GetScope() string {
-	return strings.ToLower(os.Getenv("SCOPE"))
-}
-
-// GetEnv
-// * Get environment name from System. Priority order is as follows:
-// * 1. It looks in "app.env" system property.
-// * 2. If empty, it looks in SCOPE system env variable
-// *		2.1 If empty, it is a local environment
-// *		2.2 If not empty and starts with "test", it is a test environment
-// *		2.3 Otherwise, it is a "prod" environment.
-func GetEnv() string {
-	env := os.Getenv("app.env")
-	if env != "" {
-		return env
-	}
-	scope := GetScope()
-	if scope == "" {
-		return string(Dev)
-	}
-	return string(Prod)
 }
 
 func String(key string) string {

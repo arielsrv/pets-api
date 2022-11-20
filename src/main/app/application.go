@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/src/main/app/config/env"
+
 	"github.com/src/main/app/config"
 	"github.com/src/main/app/server"
 )
@@ -15,12 +17,12 @@ func Run() error {
 	app.SetRoutes(Routes())
 
 	host := config.String("HOST")
-	if host == "" {
+	if env.IsEmpty(host) {
 		host = "127.0.0.1"
 	}
 
 	port := config.String("PORT")
-	if port == "" {
+	if env.IsEmpty(host) {
 		port = "8080"
 	}
 

@@ -6,6 +6,8 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/src/main/app/config/env"
+
 	"github.com/src/main/app/infrastructure/database"
 	"github.com/src/main/app/infrastructure/secrets"
 
@@ -72,7 +74,7 @@ func getSecretValue(key string) string {
 }
 
 func ProvideSecretStore() secrets.ISecretStore {
-	if config.GetEnv() != "dev" {
+	if !env.IsDev() {
 		return secrets.NewSecretStore()
 	} else {
 		return secrets.NewLocalSecretStore()
