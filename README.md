@@ -10,11 +10,11 @@
     * [Required](#required)
     * [Optional](#optional)
     * [Script](#script)
-* [Tasks](#task)
+* [Tasks](#tasks)
     * [Test](#test)
     * [Build](#build)
 * [Configuration](#configuration)
-* [Environment](#enviroment)
+* [Environment](#environment)
 
 ## Project setup
 
