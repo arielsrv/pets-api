@@ -1,9 +1,10 @@
 package app
 
 import (
+	"net/http"
+
 	"github.com/src/main/app/handlers"
 	"github.com/src/main/app/server"
-	"net/http"
 )
 
 func RegisterRoutes() {

@@ -5,13 +5,14 @@ import (
 
 	"github.com/src/main/app/config"
 
+	"reflect"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/gofiber/fiber/v2/middleware/requestid"
 	"github.com/gofiber/swagger"
 	"github.com/gofiber/template/html"
-	"reflect"
 )
 
 type App struct {
