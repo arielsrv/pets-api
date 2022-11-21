@@ -22,7 +22,7 @@ func Run() error {
 	}
 
 	port := config.String("PORT")
-	if env.IsEmpty(host) {
+	if env.IsEmpty(port) {
 		port = "8080"
 	}
 
