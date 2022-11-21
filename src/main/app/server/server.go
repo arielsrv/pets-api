@@ -23,6 +23,11 @@ type App struct {
 var handlers = make(map[string]any)
 var routes []Route
 
+const (
+	GET  = http.MethodGet
+	POST = http.MethodPost
+)
+
 type Route struct {
 	Verb   string
 	Path   string
@@ -91,7 +96,7 @@ func RegisterHandler(handler any) {
 	handlers[key] = handler
 }
 
-func Action[T any](_ ...T) *T {
+func Use[T any](_ ...T) *T {
 	args := make([]T, 1)
 	key := getType(args[0])
 	return handlers[key].(*T)
@@ -105,7 +110,7 @@ func getType(value any) string {
 	return name.String()
 }
 
-func RegisterRoute(verb string, path string, action func(ctx *fiber.Ctx) error) {
+func Register(verb string, path string, action func(ctx *fiber.Ctx) error) {
 	route := &Route{
 		Verb:   verb,
 		Path:   path,

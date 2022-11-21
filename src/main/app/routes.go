@@ -1,18 +1,16 @@
 package app
 
 import (
-	"net/http"
-
 	"github.com/src/main/app/handlers"
-	"github.com/src/main/app/server"
+	. "github.com/src/main/app/server"
 )
 
 func RegisterRoutes() {
-	server.RegisterRoute(http.MethodGet, "/ping", server.Action[handlers.PingHandler]().Ping)
-	server.RegisterRoute(http.MethodGet, "/apps/groups", server.Action[handlers.AppHandler]().GetGroups)
-	server.RegisterRoute(http.MethodPost, "/apps", server.Action[handlers.AppHandler]().CreateApp)
-	server.RegisterRoute(http.MethodGet, "/apps/types", server.Action[handlers.AppHandler]().GetAppTypes)
-	server.RegisterRoute(http.MethodGet, "/apps/search", server.Action[handlers.AppHandler]().GetApp)
-	server.RegisterRoute(http.MethodPost, "/apps/:appId/secrets", server.Action[handlers.SecretHandler]().CreateSecret)
-	server.RegisterRoute(http.MethodGet, "/apps/:appId/secrets/:secretId/snippets", server.Action[handlers.SnippetHandler]().GetSnippet)
+	Register(GET, "/ping", Use[handlers.PingHandler]().Ping)
+	Register(GET, "/apps/groups", Use[handlers.AppHandler]().GetGroups)
+	Register(POST, "/apps", Use[handlers.AppHandler]().CreateApp)
+	Register(GET, "/apps/types", Use[handlers.AppHandler]().GetAppTypes)
+	Register(GET, "/apps/search", Use[handlers.AppHandler]().GetApp)
+	Register(POST, "/apps/:appId/secrets", Use[handlers.SecretHandler]().CreateSecret)
+	Register(GET, "/apps/:appId/secrets/:secretId/snippets", Use[handlers.SnippetHandler]().GetSnippet)
 }
