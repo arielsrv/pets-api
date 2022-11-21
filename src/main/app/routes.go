@@ -1,21 +1,17 @@
 package app
 
 import (
-	"net/http"
-
 	"github.com/src/main/app/handlers"
 	"github.com/src/main/app/server"
+	"net/http"
 )
 
-func Routes() func(*server.Routes) {
-	routes := func(routes *server.Routes) {
-		routes.Add(http.MethodGet, "/ping", handlers.PingHandler{}.Ping)
-		routes.Add(http.MethodGet, "/apps/groups", handlers.AppHandler{}.GetGroups)
-		routes.Add(http.MethodPost, "/apps", handlers.AppHandler{}.CreateApp)
-		routes.Add(http.MethodGet, "/apps/types", handlers.AppHandler{}.GetAppTypes)
-		routes.Add(http.MethodGet, "/apps/search", handlers.AppHandler{}.GetApp)
-		routes.Add(http.MethodPost, "/apps/:appId/secrets", handlers.SecretHandler{}.CreateSecret)
-		routes.Add(http.MethodGet, "/apps/:appId/secrets/:secretId/snippets", handlers.SnippetHandler{}.GetSnippet)
-	}
-	return routes
+func RegisterRoutes() {
+	server.RegisterRoute(http.MethodGet, "/ping", server.Action[handlers.PingHandler]().Ping)
+	server.RegisterRoute(http.MethodGet, "/apps/groups", server.Action[handlers.AppHandler]().GetGroups)
+	server.RegisterRoute(http.MethodPost, "/apps", server.Action[handlers.AppHandler]().CreateApp)
+	server.RegisterRoute(http.MethodGet, "/apps/types", server.Action[handlers.AppHandler]().GetAppTypes)
+	server.RegisterRoute(http.MethodGet, "/apps/search", server.Action[handlers.AppHandler]().GetApp)
+	server.RegisterRoute(http.MethodPost, "/apps/:appId/secrets", server.Action[handlers.SecretHandler]().CreateSecret)
+	server.RegisterRoute(http.MethodGet, "/apps/:appId/secrets/:secretId/snippets", server.Action[handlers.SnippetHandler]().GetSnippet)
 }

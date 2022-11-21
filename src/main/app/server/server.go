@@ -5,27 +5,33 @@ import (
 
 	"github.com/src/main/app/config"
 
-	"reflect"
-	"runtime"
-
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/gofiber/fiber/v2/middleware/requestid"
 	"github.com/gofiber/swagger"
 	"github.com/gofiber/template/html"
+	"reflect"
 )
-
-var routes = make(map[string]func(ctx *fiber.Ctx) error)
-
-type Handler = func(ctx *fiber.Ctx) error
 
 type App struct {
 	*fiber.App
 	appConfig AppConfig
 }
 
+var handlers = make(map[string]any)
+var routes []Route
+
+type Route struct {
+	Verb   string
+	Path   string
+	Action func(ctx *fiber.Ctx) error
+}
+
 func (app *App) Start(addr string) error {
+	for _, route := range routes {
+		app.Add(route.Verb, route.Path, route.Action)
+	}
 	return app.Listen(addr)
 }
 
@@ -79,52 +85,32 @@ type AppConfig struct {
 	Logger    bool
 }
 
-type Routes struct {
-	routes []Route
+func RegisterHandler(handler any) {
+	key := getType(handler)
+	handlers[key] = handler
 }
 
-type Route struct {
-	Verb   string
-	Path   string
-	Action func(ctx *fiber.Ctx) error
+func Action[T any](_ ...T) *T {
+	args := make([]T, 1)
+	key := getType(args[0])
+	return handlers[key].(*T)
 }
 
-func (r *Routes) Add(verb string, path string, action func(ctx *fiber.Ctx) error) {
+func getType(value any) string {
+	name := reflect.TypeOf(value)
+	if name.Kind() == reflect.Ptr {
+		name = name.Elem()
+	}
+	return name.String()
+}
+
+func RegisterRoute(verb string, path string, action func(ctx *fiber.Ctx) error) {
 	route := &Route{
 		Verb:   verb,
 		Path:   path,
-		Action: Use(action),
+		Action: action,
 	}
-	r.routes = append(r.routes, *route)
-}
-
-func (app *App) SetRoutes(f func(*Routes)) {
-	r := new(Routes)
-	f(r)
-
-	for _, route := range r.routes {
-		app.Add(route.Verb, route.Path, route.Action)
-	}
-}
-
-func (app *App) SetHandlers(handlers []Handler) {
-	for _, handler := range handlers {
-		registerHandler(handler)
-	}
-}
-
-func registerHandler(action func(ctx *fiber.Ctx) error) {
-	name := getFunctionName(action)
-	routes[name] = action
-}
-
-func Use(action func(ctx *fiber.Ctx) error) func(ctx *fiber.Ctx) error {
-	name := getFunctionName(action)
-	return routes[name]
-}
-
-func getFunctionName(action func(ctx *fiber.Ctx) error) string {
-	return runtime.FuncForPC(reflect.ValueOf(action).Pointer()).Name()
+	routes = append(routes, *route)
 }
 
 func SendString(ctx *fiber.Ctx, body string) error {

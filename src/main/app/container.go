@@ -22,14 +22,12 @@ import (
 )
 
 var secretStore = ProvideSecretStore()
+var dbClient = ProvideDbClient()
 
-func Handlers() []server.Handler {
-	connectionString := getSecretValue("SECRETS_STORE_PETS-API_PROD_CONNECTION_STRING_KEY_NAME")
-	mySqlDbClient := database.NewMySQLClient(connectionString)
-	dbClient := database.NewDbClient(mySqlDbClient)
-
+func RegisterHandlers() {
 	pingService := services.NewPingService()
 	pingHandler := handlers.NewPingHandler(pingService)
+	server.RegisterHandler(pingHandler)
 
 	gitLabClient := gitlab.NewGitLabClient(&rest.RequestBuilder{
 		BaseURL: config.String("gitlab.client.baseurl"),
@@ -45,24 +43,15 @@ func Handlers() []server.Handler {
 
 	appService := services.NewAppService(gitLabClient, dbClient)
 	appHandler := handlers.NewAppHandler(appService)
+	server.RegisterHandler(appHandler)
 
 	secretService := services.NewSecretService(dbClient, appService)
 	secretHandler := handlers.NewSecretHandler(appService, secretService)
+	server.RegisterHandler(secretHandler)
 
 	snippetService := services.NewSnippetService(secretService)
 	snippetHandler := handlers.NewSnippetHandler(snippetService)
-
-	var h []server.Handler
-
-	h = append(h, pingHandler.Ping)
-	h = append(h, appHandler.CreateApp)
-	h = append(h, appHandler.GetGroups)
-	h = append(h, appHandler.GetAppTypes)
-	h = append(h, appHandler.GetApp)
-	h = append(h, secretHandler.CreateSecret)
-	h = append(h, snippetHandler.GetSnippet)
-
-	return h
+	server.RegisterHandler(snippetHandler)
 }
 
 func getSecretValue(key string) string {
@@ -79,4 +68,10 @@ func ProvideSecretStore() secrets.ISecretStore {
 	} else {
 		return secrets.NewLocalSecretStore()
 	}
+}
+
+func ProvideDbClient() database.IDbClient {
+	connectionString := getSecretValue("SECRETS_STORE_PETS-API_PROD_CONNECTION_STRING_KEY_NAME")
+	mySqlDbClient := database.NewMySQLClient(connectionString)
+	return database.NewDbClient(mySqlDbClient)
 }

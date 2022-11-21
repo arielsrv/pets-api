@@ -13,8 +13,8 @@ import (
 func Run() error {
 	app := server.New()
 
-	app.SetHandlers(Handlers())
-	app.SetRoutes(Routes())
+	RegisterHandlers()
+	RegisterRoutes()
 
 	host := config.String("HOST")
 	if env.IsEmpty(host) {
