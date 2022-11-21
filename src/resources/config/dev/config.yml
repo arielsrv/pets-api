@@ -7,5 +7,5 @@ gitlab.client.pool.timeout: 1000
 gitlab.client.socket.connection-timeout: 5000
 
 # secrets
-SECRETS_STORE_PROD_CONNECTION_STRING_KEY_NAME: root:a300p011@tcp(localhost:3306)/pets?parseTime=True
-SECRETS_STORE_GITLAB_TOKEN_KEY_NAME: glpat-BWcsGBLXz-1yQxzd3BG3
+SECRETS_STORE_PETS-API_PROD_CONNECTION_STRING_KEY_NAME: root:a300p011@tcp(localhost:3306)/pets?parseTime=True
+SECRETS_STORE_PETS-API_GITLAB_TOKEN_KEY_NAME: glpat-BWcsGBLXz-1yQxzd3BG3

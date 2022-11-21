@@ -24,7 +24,7 @@ import (
 var secretStore = ProvideSecretStore()
 
 func Handlers() []server.Handler {
-	connectionString := getSecretValue("SECRETS_STORE_PROD_CONNECTION_STRING_KEY_NAME")
+	connectionString := getSecretValue("SECRETS_STORE_PETS-API_PROD_CONNECTION_STRING_KEY_NAME")
 	mySqlDbClient := database.NewMySQLClient(connectionString)
 	dbClient := database.NewDbClient(mySqlDbClient)
 
@@ -34,7 +34,7 @@ func Handlers() []server.Handler {
 	gitLabClient := gitlab.NewGitLabClient(&rest.RequestBuilder{
 		BaseURL: config.String("gitlab.client.baseurl"),
 		Headers: http.Header{
-			"Authorization": {fmt.Sprintf("Bearer %s", getSecretValue("SECRETS_STORE_GITLAB_TOKEN_KEY_NAME"))},
+			"Authorization": {fmt.Sprintf("Bearer %s", getSecretValue("SECRETS_STORE_PETS-API_GITLAB_TOKEN_KEY_NAME"))},
 		},
 		Timeout:        time.Millisecond * time.Duration(config.Int("gitlab.client.pool.timeout")),
 		ConnectTimeout: time.Millisecond * time.Duration(config.Int("gitlab.client.socket.connection-timeout")),
