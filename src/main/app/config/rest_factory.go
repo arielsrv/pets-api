@@ -76,6 +76,10 @@ func (r *RESTClientFactory) Get(name string) *rest.RequestBuilder {
 	return r.clients[name]
 }
 
+func (r *RESTClientFactory) GetClients() map[string]*rest.RequestBuilder {
+	return r.clients
+}
+
 func Contains(elements []string, target string) bool {
 	for _, element := range elements {
 		if target == element {
