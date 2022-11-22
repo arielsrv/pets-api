@@ -9,9 +9,11 @@ import (
 	"github.com/go-chassis/go-archaius"
 )
 
-const DefaultPoolSize = 10
-const DefaultPoolTimeout = 200
-const DefaultSocketTimeout = 500
+const (
+	DefaultPoolSize      = 10
+	DefaultPoolTimeout   = 200
+	DefaultSocketTimeout = 500
+)
 
 func ProvideRestClients() *RESTClientFactory {
 	restPoolPattern := regexp.MustCompile(`rest\.pool\.([-_\w]+)\..+`)
