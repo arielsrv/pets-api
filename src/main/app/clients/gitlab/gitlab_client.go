@@ -3,6 +3,8 @@ package gitlab
 import (
 	"fmt"
 
+	"github.com/src/main/app/config"
+	"github.com/src/main/app/infrastructure/secrets"
 	"github.com/src/main/app/server"
 
 	"github.com/src/main/app/clients/gitlab/responses"
@@ -21,11 +23,18 @@ type IGitLabClient interface {
 }
 
 type Client struct {
-	rb *rest.RequestBuilder
+	rb          *rest.RequestBuilder
+	baseUrl     string
+	secretStore secrets.ISecretStore
 }
 
 func (c *Client) GetProject(projectID int64) (*responses.ProjectResponse, error) {
-	response := c.rb.Get(fmt.Sprintf("/projects/%d", projectID))
+	err := addHeaders(c)
+	if err != nil {
+		return nil, err
+	}
+	apiUrl := fmt.Sprintf("%s/projects/%d", c.baseUrl, projectID)
+	response := c.rb.Get(apiUrl)
 	if response.Err != nil {
 		return nil, response.Err
 	}
@@ -34,7 +43,7 @@ func (c *Client) GetProject(projectID int64) (*responses.ProjectResponse, error)
 	}
 
 	var projectResponse responses.ProjectResponse
-	err := response.FillUp(&projectResponse)
+	err = response.FillUp(&projectResponse)
 	if err != nil {
 		return nil, err
 	}
@@ -42,12 +51,21 @@ func (c *Client) GetProject(projectID int64) (*responses.ProjectResponse, error)
 	return &projectResponse, nil
 }
 
-func NewGitLabClient(rb *rest.RequestBuilder) *Client {
-	return &Client{rb: rb}
+func NewGitLabClient(rb *rest.RequestBuilder, secretStore secrets.ISecretStore) *Client {
+	return &Client{
+		baseUrl:     config.String("rest.client.gitlab.baseUrl"),
+		rb:          rb,
+		secretStore: secretStore,
+	}
 }
 
 func (c *Client) GetGroups() ([]responses.GroupResponse, error) {
-	response := c.rb.Get("/groups")
+	apiUrl := fmt.Sprintf("%s/groups", c.baseUrl)
+	err := addHeaders(c)
+	if err != nil {
+		return nil, err
+	}
+	response := c.rb.Get(apiUrl)
 	if response.Err != nil {
 		return nil, response.Err
 	}
@@ -55,7 +73,7 @@ func (c *Client) GetGroups() ([]responses.GroupResponse, error) {
 		return nil, server.NewError(response.StatusCode, response.String())
 	}
 	var groups []responses.GroupResponse
-	err := response.FillUp(&groups)
+	err = response.FillUp(&groups)
 	if err != nil {
 		return nil, err
 	}
@@ -66,14 +84,18 @@ func (c *Client) GetGroups() ([]responses.GroupResponse, error) {
 	}
 	if total > 1 {
 		var pages []*rest.FutureResponse
-		c.rb.ForkJoin(func(c *rest.Concurrent) {
+		c.rb.ForkJoin(func(concurrent *rest.Concurrent) {
 			for i := 2; i <= total; i++ {
-				pages = append(pages, c.Get(fmt.Sprintf("/groups?page=%d", i)))
+				pageUrl := fmt.Sprintf("%s/groups?page=%d", c.baseUrl, i)
+				pages = append(pages, concurrent.Get(pageUrl))
 			}
 		})
 		for i := range pages {
+			if pages[i].Response().Err != nil {
+				return nil, pages[i].Response().Err
+			}
 			if pages[i].Response().StatusCode != http.StatusOK {
-				return nil, server.NewError(response.StatusCode, response.String())
+				return nil, server.NewError(pages[i].Response().StatusCode, pages[i].Response().String())
 			}
 			var page []responses.GroupResponse
 			err = pages[i].Response().FillUp(&page)
@@ -88,7 +110,12 @@ func (c *Client) GetGroups() ([]responses.GroupResponse, error) {
 }
 
 func (c *Client) CreateProject(request *requests.CreateProjectRequest) (*responses.CreateProjectResponse, error) {
-	response := c.rb.Post("/projects", request)
+	err := addHeaders(c)
+	if err != nil {
+		return nil, err
+	}
+	apiUrl := fmt.Sprintf("%s/projects", c.baseUrl)
+	response := c.rb.Post(apiUrl, request)
 	if response.Err != nil {
 		return nil, response.Err
 	}
@@ -97,10 +124,23 @@ func (c *Client) CreateProject(request *requests.CreateProjectRequest) (*respons
 	}
 
 	var createProjectResponse responses.CreateProjectResponse
-	err := response.FillUp(&createProjectResponse)
+	err = response.FillUp(&createProjectResponse)
 	if err != nil {
 		return nil, err
 	}
 
 	return &createProjectResponse, nil
+}
+
+func addHeaders(c *Client) error {
+	secret := c.secretStore.GetSecret("SECRETS_STORE_PETS-API_GITLAB_TOKEN_KEY_NAME")
+	if secret.Err != nil {
+		return secret.Err
+	}
+	headers := http.Header{
+		"Authorization": {fmt.Sprintf("Bearer %s", secret.Value)},
+	}
+	c.rb.Headers = headers
+
+	return nil
 }
