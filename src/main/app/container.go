@@ -1,45 +1,32 @@
 package app
 
 import (
-	"fmt"
 	"log"
-	"net/http"
-	"time"
 
+	"github.com/src/main/app/config"
 	"github.com/src/main/app/config/env"
 
 	"github.com/src/main/app/infrastructure/database"
 	"github.com/src/main/app/infrastructure/secrets"
 
 	"github.com/src/main/app/clients/gitlab"
-	"github.com/src/main/app/config"
 	"github.com/src/main/app/handlers"
 	"github.com/src/main/app/server"
 	"github.com/src/main/app/services"
 
-	"github.com/arielsrv/golang-toolkit/rest"
 	_ "github.com/go-sql-driver/mysql"
 )
 
 var secretStore = ProvideSecretStore()
 var dbClient = ProvideDbClient()
+var restClients = config.ProvideRestClients()
 
 func RegisterHandlers() {
 	pingService := services.NewPingService()
 	pingHandler := handlers.NewPingHandler(pingService)
 	server.RegisterHandler(pingHandler)
 
-	gitLabClient := gitlab.NewGitLabClient(&rest.RequestBuilder{
-		BaseURL: config.String("gitlab.client.baseurl"),
-		Headers: http.Header{
-			"Authorization": {fmt.Sprintf("Bearer %s", getSecretValue("SECRETS_STORE_PETS-API_GITLAB_TOKEN_KEY_NAME"))},
-		},
-		Timeout:        time.Millisecond * time.Duration(config.Int("gitlab.client.pool.timeout")),
-		ConnectTimeout: time.Millisecond * time.Duration(config.Int("gitlab.client.socket.connection-timeout")),
-		CustomPool: &rest.CustomPool{
-			MaxIdleConnsPerHost: config.Int("gitlab.client.pool.size"),
-		},
-	})
+	gitLabClient := gitlab.NewGitLabClient(restClients.Get("gitlab"), secretStore)
 
 	appService := services.NewAppService(gitLabClient, dbClient)
 	appHandler := handlers.NewAppHandler(appService)
