@@ -61,3 +61,7 @@ func String(key string) string {
 func Int(key string) int {
 	return archaius.GetInt(key, 0)
 }
+
+func TryInt(key string, defaultValue int) int {
+	return archaius.GetInt(key, defaultValue)
+}

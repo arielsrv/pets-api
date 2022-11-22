@@ -2,3 +2,4 @@ views.folder: ./main/app/views
 gitlab.prefix: ikp_
 snippets.folder: resources/snippets
 value: shared
+rest.client.gitlab.baseUrl: https://gitlab.tiendanimal.com:8088/api/v4

@@ -1,2 +1,2 @@
-# rest-clients
-gitlab.client.baseurl: https://test.gitlab.tiendanimal.com:8088/api/v4
+# gitlab
+rest.client.gitlab.baseUrl: https://test.gitlab.tiendanimal.com:8088/api/v4

@@ -1,7 +1,13 @@
 app.env: prod
 
-# rest-clients
-gitlab.client.baseurl: https://gitlab.tiendanimal.com:8088/api/v4
-gitlab.client.pool.size: 50
-gitlab.client.pool.timeout: 2000
-gitlab.client.socket.connection-timeout: 5000
+# gitlab
+rest:
+  pool:
+    default:
+      pool:
+        size: 50
+        timeout: 5000
+      connection-timeout: 1000
+  client:
+    gitlab:
+      pool: default
