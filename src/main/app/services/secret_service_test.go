@@ -37,13 +37,13 @@ func (m *MockAppService) GetAppByName(string) (*model.AppModel, error) {
 	panic("implement me")
 }
 
-func (m *MockAppService) GetAppById(int64) (*model.AppModel, error) {
+func (m *MockAppService) GetAppByID(int64) (*model.AppModel, error) {
 	args := m.Called()
 	return args.Get(0).(*model.AppModel), args.Error(1)
 }
 
 func TestSecretService_GetSecret(t *testing.T) {
-	dbClient := database.NewDbClient(database.NewSQLiteClient(t))
+	dbClient := database.NewDBClient(database.NewSQLiteClient(t))
 	dbClient.Context()
 	defer dbClient.Close()
 
@@ -63,7 +63,7 @@ func TestSecretService_GetSecret(t *testing.T) {
 }
 
 func TestSecretService_GetSecret_NotFound(t *testing.T) {
-	dbClient := database.NewDbClient(database.NewSQLiteClient(t))
+	dbClient := database.NewDBClient(database.NewSQLiteClient(t))
 	dbClient.Context()
 	defer dbClient.Close()
 
@@ -77,7 +77,7 @@ func TestSecretService_GetSecret_NotFound(t *testing.T) {
 }
 
 func TestSecretService_SaveSecret(t *testing.T) {
-	dbClient := database.NewDbClient(database.NewSQLiteClient(t))
+	dbClient := database.NewDBClient(database.NewSQLiteClient(t))
 	dbClient.Context()
 	defer dbClient.Close()
 
@@ -85,7 +85,7 @@ func TestSecretService_SaveSecret(t *testing.T) {
 	dbClient.App.Create().SetName("customers-api").SetProjectId(1).SetAppTypeID(1).Save(context.Background())
 
 	appService := new(MockAppService)
-	appService.On("GetAppById").Return(GetApp())
+	appService.On("GetAppByID").Return(GetApp())
 
 	service := services.NewSecretService(dbClient, appService)
 	secretModel := new(model.CreateAppSecretModel)
@@ -97,11 +97,11 @@ func TestSecretService_SaveSecret(t *testing.T) {
 	assert.NotNil(t, actual)
 
 	assert.Equal(t, "PETS_MYAPP_MYSECRETKEY", actual.Key)
-	assert.Equal(t, "/apps/1/secrets/1/snippets", actual.SnippetUrl)
+	assert.Equal(t, "/apps/1/secrets/1/snippets", actual.SnippetURL)
 }
 
 func TestSecretService_SaveSecret_Conflict(t *testing.T) {
-	dbClient := database.NewDbClient(database.NewSQLiteClient(t))
+	dbClient := database.NewDBClient(database.NewSQLiteClient(t))
 	dbClient.Context()
 	defer dbClient.Close()
 
@@ -109,7 +109,7 @@ func TestSecretService_SaveSecret_Conflict(t *testing.T) {
 	dbClient.App.Create().SetName("customers-api").SetProjectId(1).SetAppTypeID(1).Save(context.Background())
 
 	appService := new(MockAppService)
-	appService.On("GetAppById").Return(GetApp())
+	appService.On("GetAppByID").Return(GetApp())
 
 	service := services.NewSecretService(dbClient, appService)
 	secretModel := new(model.CreateAppSecretModel)
@@ -121,7 +121,7 @@ func TestSecretService_SaveSecret_Conflict(t *testing.T) {
 	assert.NotNil(t, actual)
 
 	assert.Equal(t, "PETS_MYAPP_MYSECRETKEY", actual.Key)
-	assert.Equal(t, "/apps/1/secrets/1/snippets", actual.SnippetUrl)
+	assert.Equal(t, "/apps/1/secrets/1/snippets", actual.SnippetURL)
 
 	conflict, err := service.SaveSecret(1, secretModel)
 

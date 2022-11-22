@@ -57,9 +57,9 @@ func TestSecretHandler_CreateSecret(t *testing.T) {
 }
 
 func GetNewSecret() (*model.AppSecretModel, error) {
-	model := new(model.AppSecretModel)
-	model.Key = "my_secret_key"
-	model.SnippetUrl = "/relative_url"
+	appSecretModel := new(model.AppSecretModel)
+	appSecretModel.Key = "my_secret_key"
+	appSecretModel.SnippetURL = "/relative_url"
 
-	return model, nil
+	return appSecretModel, nil
 }

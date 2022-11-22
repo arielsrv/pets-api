@@ -24,7 +24,7 @@ type IGitLabClient interface {
 
 type Client struct {
 	rb          *rest.RequestBuilder
-	baseUrl     string
+	baseURL     string
 	secretStore secrets.ISecretStore
 }
 
@@ -33,8 +33,8 @@ func (c *Client) GetProject(projectID int64) (*responses.ProjectResponse, error)
 	if err != nil {
 		return nil, err
 	}
-	apiUrl := fmt.Sprintf("%s/projects/%d", c.baseUrl, projectID)
-	response := c.rb.Get(apiUrl)
+	apiURL := fmt.Sprintf("%s/projects/%d", c.baseURL, projectID)
+	response := c.rb.Get(apiURL)
 	if response.Err != nil {
 		return nil, response.Err
 	}
@@ -53,19 +53,19 @@ func (c *Client) GetProject(projectID int64) (*responses.ProjectResponse, error)
 
 func NewGitLabClient(rb *rest.RequestBuilder, secretStore secrets.ISecretStore) *Client {
 	return &Client{
-		baseUrl:     config.String("rest.client.gitlab.baseUrl"),
+		baseURL:     config.String("rest.client.gitlab.baseURL"),
 		rb:          rb,
 		secretStore: secretStore,
 	}
 }
 
 func (c *Client) GetGroups() ([]responses.GroupResponse, error) {
-	apiUrl := fmt.Sprintf("%s/groups", c.baseUrl)
+	apiURL := fmt.Sprintf("%s/groups", c.baseURL)
 	err := addHeaders(c)
 	if err != nil {
 		return nil, err
 	}
-	response := c.rb.Get(apiUrl)
+	response := c.rb.Get(apiURL)
 	if response.Err != nil {
 		return nil, response.Err
 	}
@@ -86,8 +86,8 @@ func (c *Client) GetGroups() ([]responses.GroupResponse, error) {
 		var pages []*rest.FutureResponse
 		c.rb.ForkJoin(func(concurrent *rest.Concurrent) {
 			for i := 2; i <= total; i++ {
-				pageUrl := fmt.Sprintf("%s/groups?page=%d", c.baseUrl, i)
-				pages = append(pages, concurrent.Get(pageUrl))
+				pageURL := fmt.Sprintf("%s/groups?page=%d", c.baseURL, i)
+				pages = append(pages, concurrent.Get(pageURL))
 			}
 		})
 		for i := range pages {
@@ -114,8 +114,8 @@ func (c *Client) CreateProject(request *requests.CreateProjectRequest) (*respons
 	if err != nil {
 		return nil, err
 	}
-	apiUrl := fmt.Sprintf("%s/projects", c.baseUrl)
-	response := c.rb.Post(apiUrl, request)
+	apiURL := fmt.Sprintf("%s/projects", c.baseURL)
+	response := c.rb.Post(apiURL, request)
 	if response.Err != nil {
 		return nil, response.Err
 	}

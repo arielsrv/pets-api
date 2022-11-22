@@ -18,7 +18,7 @@ import (
 )
 
 var secretStore = ProvideSecretStore()
-var dbClient = ProvideDbClient()
+var dbClient = ProvideDBClient()
 var restClients = config.ProvideRestClients()
 
 func RegisterHandlers() {
@@ -57,8 +57,8 @@ func ProvideSecretStore() secrets.ISecretStore {
 	}
 }
 
-func ProvideDbClient() database.IDbClient {
+func ProvideDBClient() database.IDbClient {
 	connectionString := getSecretValue("SECRETS_STORE_PETS-API_PROD_CONNECTION_STRING_KEY_NAME")
-	mySqlDbClient := database.NewMySQLClient(connectionString)
-	return database.NewDbClient(mySqlDbClient)
+	mySQLClient := database.NewMySQLClient(connectionString)
+	return database.NewDBClient(mySQLClient)
 }

@@ -23,7 +23,7 @@ func NewSecretHandler(appService services.IAppService, secretService services.IS
 }
 
 func (h SecretHandler) CreateSecret(ctx *fiber.Ctx) error {
-	appId, err := ctx.ParamsInt("appId")
+	appID, err := ctx.ParamsInt("appID")
 	if err != nil {
 		return err
 	}
@@ -43,7 +43,7 @@ func (h SecretHandler) CreateSecret(ctx *fiber.Ctx) error {
 		return err
 	}
 
-	result, err := h.secretService.SaveSecret(int64(appId), request)
+	result, err := h.secretService.SaveSecret(int64(appID), request)
 	if err != nil {
 		return err
 	}
