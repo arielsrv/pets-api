@@ -1,6 +1,7 @@
 package config_test
 
 import (
+	"fmt"
 	"path"
 	"runtime"
 	"testing"
@@ -12,9 +13,7 @@ import (
 )
 
 func TestProvideRestClients(t *testing.T) {
-	_, caller, _, _ := runtime.Caller(0)
-
-	err := archaius.AddFile(path.Dir(caller) + "/rest_factory_test.yml")
+	err := setUp("rest_factory_test.yml")
 	assert.NoError(t, err)
 
 	restClientFactory := config.ProvideRestClients()
@@ -36,9 +35,7 @@ func TestProvideRestClients(t *testing.T) {
 }
 
 func TestProvideRestClients_NotReusedPool(t *testing.T) {
-	_, caller, _, _ := runtime.Caller(0)
-
-	err := archaius.AddFile(path.Dir(caller) + "/rest_factory_test.yml")
+	err := setUp("rest_factory_test.yml")
 	assert.NoError(t, err)
 
 	restClientFactory := config.ProvideRestClients()
@@ -56,4 +53,10 @@ func TestProvideRestClients_NotReusedPool(t *testing.T) {
 	assert.Equal(t, 20, second.CustomPool.MaxIdleConnsPerHost)
 
 	assert.True(t, second != first)
+}
+
+func setUp(file string) error {
+	_, caller, _, _ := runtime.Caller(0)
+	err := archaius.AddFile(fmt.Sprintf("%s/%s", path.Dir(caller), file))
+	return err
 }
