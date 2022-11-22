@@ -32,6 +32,7 @@ func TestProvideRestClients(t *testing.T) {
 	assert.Equal(t, 20, amazonClient.CustomPool.MaxIdleConnsPerHost)
 
 	assert.True(t, amazonClient == googleClient)
+	archaius.Clean()
 }
 
 func TestProvideRestClients_NotReusedPool(t *testing.T) {
