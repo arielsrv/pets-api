@@ -25,14 +25,14 @@ func init() {
 
 	var compositeConfig []string
 	propertiesPath := fmt.Sprintf("%s/resources/config", root)
-	env, scope := env.GetEnv(), env.GetScope()
+	environment, scope := env.GetEnv(), env.GetScope()
 
-	scopeConfig := fmt.Sprintf("%s/%s/%s.%s", propertiesPath, env, scope, File)
+	scopeConfig := fmt.Sprintf("%s/%s/%s.%s", propertiesPath, environment, scope, File)
 	if _, err = os.Stat(scopeConfig); err == nil {
 		compositeConfig = append(compositeConfig, scopeConfig)
 	}
 
-	envConfig := fmt.Sprintf("%s/%s/%s", propertiesPath, env, File)
+	envConfig := fmt.Sprintf("%s/%s/%s", propertiesPath, environment, File)
 	if _, err = os.Stat(envConfig); err == nil {
 		compositeConfig = append(compositeConfig, envConfig)
 	}
@@ -51,7 +51,7 @@ func init() {
 		log.Fatalln(err)
 	}
 
-	log.Printf("INFO: ENV: %s, SCOPE: %s", env, scope)
+	log.Printf("INFO: ENV: %s, SCOPE: %s", environment, scope)
 }
 
 func String(key string) string {
@@ -60,4 +60,8 @@ func String(key string) string {
 
 func Int(key string) int {
 	return archaius.GetInt(key, 0)
+}
+
+func TryInt(key string, defaultValue int) int {
+	return archaius.GetInt(key, defaultValue)
 }

@@ -19,7 +19,7 @@ func TestGetProperty_Err(t *testing.T) {
 }
 
 func TestGetIntProperty(t *testing.T) {
-	actual := config.Int("gitlab.client.pool.size")
+	actual := config.Int("rest.pool.default.pool.size")
 	assert.Equal(t, 20, actual)
 }
 

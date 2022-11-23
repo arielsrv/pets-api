@@ -15,17 +15,17 @@ func NewSnippetHandler(snippetService services.ISnippetService) *SnippetHandler 
 }
 
 func (h SnippetHandler) GetSnippet(ctx *fiber.Ctx) error {
-	secretId, err := ctx.ParamsInt("secretId")
+	secretID, err := ctx.ParamsInt("secretID")
 	if err != nil {
 		return err
 	}
 
-	err = server.EnsureInt64(int64(secretId), "bad request error, invalid secret id")
+	err = server.EnsureInt64(int64(secretID), "bad request error, invalid secret id")
 	if err != nil {
 		return err
 	}
 
-	model, err := h.snippetService.GetSecrets(int64(secretId))
+	model, err := h.snippetService.GetSecrets(int64(secretID))
 	if err != nil {
 		return err
 	}

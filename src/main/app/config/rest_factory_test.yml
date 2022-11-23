@@ -1,0 +1,30 @@
+app.env: dev
+
+# gitlab
+rest:
+  pool:
+    test:
+      pool:
+        size: 20
+        timeout: 2000
+        connection-timeout: 5000
+    first:
+      pool:
+        size: 20
+        timeout: 2000
+        connection-timeout: 5000
+    second:
+      pool:
+        size: 20
+        timeout: 2000
+        connection-timeout: 5000
+
+  client:
+    google:
+      pool: test
+    amazon:
+      pool: test
+    first:
+      pool: first
+    second:
+      pool: second

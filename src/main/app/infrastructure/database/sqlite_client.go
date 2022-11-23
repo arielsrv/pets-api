@@ -8,7 +8,7 @@ import (
 )
 
 type SQLiteClient struct {
-	DbClient
+	DBClient
 	t *testing.T
 }
 

@@ -42,7 +42,7 @@ func (m *MockAppService) GetAppByName(string) (*model.AppModel, error) {
 	return args.Get(0).(*model.AppModel), args.Error(1)
 }
 
-func (m *MockAppService) GetAppById(int64) (*model.AppModel, error) {
+func (m *MockAppService) GetAppByID(int64) (*model.AppModel, error) {
 	args := m.Called()
 	return args.Get(0).(*model.AppModel), args.Error(1)
 }

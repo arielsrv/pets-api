@@ -1,7 +1,7 @@
 # pets-api
 
 [![CI](https://github.com/tj-actions/coverage-badge-go/workflows/CI/badge.svg)](https://github.com/tj-actions/coverage-badge-go/actions?query=workflow%3ACI)
-![Coverage](https://img.shields.io/badge/Coverage-77.7%25-brightgreen)
+![Coverage](https://img.shields.io/badge/Coverage-80.1%25-brightgreen)
 [![Update release version.](https://github.com/tj-actions/coverage-badge-go/workflows/Update%20release%20version./badge.svg)](https://github.com/tj-actions/coverage-badge-go/actions?query=workflow%3A%22Update+release+version.%22)
 
 ## Table of contents
@@ -14,6 +14,7 @@
     * [Test](#test)
     * [Build](#build)
 * [Configuration](#configuration)
+* [RestClient](#restclient)
 * [Environment](#environment)
 
 ## Project setup
@@ -97,6 +98,28 @@ test.pets-api.internal.com
 2022/11/20 13:24:26 INFO: create new watcher
 2022/11/20 13:24:26 Listening on port 8080
 2022/11/20 13:24:26 Open http://127.0.0.1:8080/ping in the browser
+```
+
+## RestClient
+
+```yaml
+# gitlab
+rest:
+  pool:
+    default:
+      pool:
+        size: 20
+        timeout: 2000
+        connection-timeout: 5000
+  client:
+    gitlab:
+      pool: default
+```
+
+```go
+var restClients = config.ProvideRestClients()
+
+gitLabClient := gitlab.NewGitLabClient(restClients.Get("gitlab"))
 ```
 
 ## Environment
