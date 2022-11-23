@@ -53,7 +53,7 @@ func (c *Client) GetProject(projectID int64) (*responses.ProjectResponse, error)
 
 func NewGitLabClient(rb *rest.RequestBuilder, secretStore secrets.ISecretStore) *Client {
 	return &Client{
-		baseURL:     config.String("rest.client.gitlab.baseURL"),
+		baseURL:     config.String("rest.client.gitlab.baseUrl"),
 		rb:          rb,
 		secretStore: secretStore,
 	}

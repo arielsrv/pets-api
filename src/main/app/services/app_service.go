@@ -6,6 +6,8 @@ import (
 	"net/http"
 	"net/url"
 
+	"github.com/src/main/app/infrastructure/secrets"
+
 	"github.com/src/main/app/infrastructure/database"
 
 	"github.com/src/main/app/server"
@@ -29,12 +31,14 @@ type IAppService interface {
 type AppService struct {
 	gitLabClient gitlab.IGitLabClient
 	dbClient     database.IDbClient
+	secretStore  secrets.ISecretStore
 }
 
-func NewAppService(gitLabClient gitlab.IGitLabClient, dbClient database.IDbClient) *AppService {
+func NewAppService(gitLabClient gitlab.IGitLabClient, dbClient database.IDbClient, secretStore secrets.ISecretStore) *AppService {
 	return &AppService{
 		gitLabClient: gitLabClient,
 		dbClient:     dbClient,
+		secretStore:  secretStore,
 	}
 }
 
@@ -61,11 +65,14 @@ func (s *AppService) GetAppByName(appName string) (*model.AppModel, error) {
 		return nil, err
 	}
 
-	gitlabToken := config.String("gitlab.token")
+	gitlabToken := s.secretStore.GetSecret("SECRETS_STORE_PETS-API_GITLAB_TOKEN_KEY_NAME")
+	if gitlabToken.Err != nil {
+		return nil, gitlabToken.Err
+	}
 
 	secureURL := fmt.Sprintf("%s://oauth2:%s@%s%s",
 		repoURL.Scheme,
-		gitlabToken,
+		gitlabToken.Value,
 		repoURL.Host,
 		repoURL.Path)
 
@@ -99,11 +106,14 @@ func (s *AppService) GetAppByID(appID int64) (*model.AppModel, error) {
 		return nil, err
 	}
 
-	gitlabToken := config.String("gitlab.token")
+	gitlabToken := s.secretStore.GetSecret("SECRETS_STORE_PETS-API_GITLAB_TOKEN_KEY_NAME")
+	if gitlabToken.Err != nil {
+		return nil, gitlabToken.Err
+	}
 
 	secureURL := fmt.Sprintf("%s://oauth2:%s@%s%s",
 		repoURL.Scheme,
-		gitlabToken,
+		gitlabToken.Value,
 		repoURL.Host,
 		repoURL.Path)
 
