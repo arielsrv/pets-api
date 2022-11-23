@@ -11,20 +11,20 @@ type IDbClient interface {
 	Context() *ent.Client
 }
 
-type DbClient struct {
+type DBClient struct {
 	dbClient IDbClient
 	mutex    sync.Once
 	*ent.Client
 }
 
-func NewDbClient(client IDbClient) *DbClient {
-	return &DbClient{
+func NewDBClient(client IDbClient) *DBClient {
+	return &DBClient{
 		dbClient: client,
 	}
 }
 
 // Context template method, used by concrete impl.
-func (d *DbClient) Context() *ent.Client {
+func (d *DBClient) Context() *ent.Client {
 	d.mutex.Do(func() {
 		d.Client = d.dbClient.Context()
 	})
@@ -32,6 +32,6 @@ func (d *DbClient) Context() *ent.Client {
 	return d.Client
 }
 
-func (d *DbClient) Close() error {
+func (d *DBClient) Close() error {
 	return d.Client.Close()
 }

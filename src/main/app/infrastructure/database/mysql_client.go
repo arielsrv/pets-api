@@ -8,7 +8,7 @@ import (
 )
 
 type MySQLClient struct {
-	DbClient
+	DBClient
 	connectionString string
 }
 
