@@ -12,7 +12,7 @@ require (
 	github.com/gofiber/template v1.7.2
 	github.com/mattn/go-sqlite3 v1.14.16
 	github.com/stretchr/testify v1.8.1
-	github.com/swaggo/swag v1.8.7
+	github.com/swaggo/swag v1.8.8
 	github.com/valyala/fasthttp v1.41.0
 )
 
