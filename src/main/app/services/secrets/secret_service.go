@@ -1,10 +1,12 @@
-package services
+package secrets
 
 import (
 	"context"
 	"fmt"
 	"net/http"
 	"strings"
+
+	"github.com/src/main/app/services/apps"
 
 	"github.com/src/main/app/infrastructure/database"
 	"github.com/src/main/app/server"
@@ -21,10 +23,10 @@ type ISecretService interface {
 
 type SecretService struct {
 	dbClient   database.IDbClient
-	appService IAppService
+	appService apps.IAppService
 }
 
-func NewSecretService(dbClient database.IDbClient, appService IAppService) *SecretService {
+func NewSecretService(dbClient database.IDbClient, appService apps.IAppService) *SecretService {
 	return &SecretService{
 		dbClient:   dbClient,
 		appService: appService,

@@ -1,4 +1,4 @@
-package handlers_test
+package secrets_test
 
 import (
 	"bytes"
@@ -7,7 +7,8 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/src/main/app/handlers"
+	"github.com/src/main/app/handlers/secrets"
+
 	"github.com/src/main/app/model"
 	"github.com/src/main/app/server"
 
@@ -29,12 +30,41 @@ func (m *MockSecretService) GetSecret(int64) (string, error) {
 	panic("implement me")
 }
 
+type MockAppService struct {
+	mock.Mock
+}
+
+func (m *MockAppService) GetGroups() ([]model.AppGroupModel, error) {
+	args := m.Called()
+	return args.Get(0).([]model.AppGroupModel), args.Error(1)
+}
+
+func (m *MockAppService) CreateApp(*model.CreateAppModel) (*model.AppModel, error) {
+	args := m.Called()
+	return args.Get(0).(*model.AppModel), args.Error(1)
+}
+
+func (m *MockAppService) GetAppTypes() ([]model.AppTypeModel, error) {
+	args := m.Called()
+	return args.Get(0).([]model.AppTypeModel), args.Error(1)
+}
+
+func (m *MockAppService) GetAppByName(string) (*model.AppModel, error) {
+	args := m.Called()
+	return args.Get(0).(*model.AppModel), args.Error(1)
+}
+
+func (m *MockAppService) GetAppByID(int64) (*model.AppModel, error) {
+	args := m.Called()
+	return args.Get(0).(*model.AppModel), args.Error(1)
+}
+
 func TestSecretHandler_CreateSecret(t *testing.T) {
 	appService := new(MockAppService)
 	secretService := new(MockSecretService)
 	secretService.On("CreateSecret").Return(GetNewSecret())
 
-	secretHandler := handlers.NewSecretHandler(appService, secretService)
+	secretHandler := secrets.NewSecretHandler(appService, secretService)
 	app := server.New()
 	app.Add(http.MethodPost, "/apps/:appId/secrets", secretHandler.CreateSecret)
 

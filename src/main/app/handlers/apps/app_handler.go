@@ -1,21 +1,21 @@
-package handlers
+package apps
 
 import (
 	"net/http"
 
+	"github.com/src/main/app/services/apps"
+
+	"github.com/gofiber/fiber/v2"
 	"github.com/src/main/app/ent/property"
 	"github.com/src/main/app/model"
 	"github.com/src/main/app/server"
-	"github.com/src/main/app/services"
-
-	"github.com/gofiber/fiber/v2"
 )
 
 type AppHandler struct {
-	service services.IAppService
+	service apps.IAppService
 }
 
-func NewAppHandler(service services.IAppService) *AppHandler {
+func NewAppHandler(service apps.IAppService) *AppHandler {
 	return &AppHandler{
 		service: service,
 	}

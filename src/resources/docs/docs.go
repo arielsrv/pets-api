@@ -46,7 +46,7 @@ var SwaggerInfo = &swag.Spec{
 	BasePath:         "",
 	Schemes:          []string{},
 	Title:            "Pets API.",
-	Description:      "",
+	Description:      "Pets API.",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 }

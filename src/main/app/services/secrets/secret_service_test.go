@@ -1,14 +1,14 @@
-package services_test
+package secrets_test
 
 import (
 	"context"
 	"testing"
 
+	"github.com/src/main/app/services/secrets"
+
 	"github.com/src/main/app/infrastructure/database"
 
 	"github.com/src/main/app/model"
-	"github.com/src/main/app/services"
-
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )
@@ -53,7 +53,7 @@ func TestSecretService_GetSecret(t *testing.T) {
 
 	appService := new(MockAppService)
 
-	service := services.NewSecretService(dbClient, appService)
+	service := secrets.NewSecretService(dbClient, appService)
 	actual, err := service.GetSecret(1)
 
 	assert.NoError(t, err)
@@ -69,7 +69,7 @@ func TestSecretService_GetSecret_NotFound(t *testing.T) {
 
 	appService := new(MockAppService)
 
-	service := services.NewSecretService(dbClient, appService)
+	service := secrets.NewSecretService(dbClient, appService)
 	actual, err := service.GetSecret(2)
 
 	assert.Error(t, err)
@@ -87,7 +87,7 @@ func TestSecretService_CreateSecret(t *testing.T) {
 	appService := new(MockAppService)
 	appService.On("GetAppByID").Return(GetApp())
 
-	service := services.NewSecretService(dbClient, appService)
+	service := secrets.NewSecretService(dbClient, appService)
 	secretModel := new(model.CreateAppSecretModel)
 	secretModel.Key = "MYSECRETKEY"
 	secretModel.Value = "MYSECRETVALUE"
@@ -111,7 +111,7 @@ func TestSecretService_CreateSecret_Conflict(t *testing.T) {
 	appService := new(MockAppService)
 	appService.On("GetAppByID").Return(GetApp())
 
-	service := services.NewSecretService(dbClient, appService)
+	service := secrets.NewSecretService(dbClient, appService)
 	secretModel := new(model.CreateAppSecretModel)
 	secretModel.Key = "MYSECRETKEY"
 	secretModel.Value = "MYSECRETVALUE"

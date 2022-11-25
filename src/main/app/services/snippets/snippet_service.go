@@ -1,10 +1,12 @@
-package services
+package snippets
 
 import (
 	"fmt"
 	"log"
 	"os"
 	"strings"
+
+	"github.com/src/main/app/services/secrets"
 
 	"github.com/src/main/app/config"
 	"github.com/src/main/app/model"
@@ -49,7 +51,7 @@ type ISnippetService interface {
 }
 
 type SnippetService struct {
-	secretService ISecretService
+	secretService secrets.ISecretService
 	snippets      map[string][]model.SnippetModel
 }
 
@@ -80,7 +82,7 @@ func (s SnippetStartupBuilder) Build() map[string][]model.SnippetModel {
 	return s.snippets
 }
 
-func NewSnippetService(secretService ISecretService) *SnippetService {
+func NewSnippetService(secretService secrets.ISecretService) *SnippetService {
 	snippetBuilder := new(SnippetStartupBuilder)
 	snippets := snippetBuilder.Build()
 

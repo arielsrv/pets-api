@@ -3,6 +3,13 @@ package app
 import (
 	"log"
 
+	"github.com/src/main/app/handlers/apps"
+	secrets2 "github.com/src/main/app/handlers/secrets"
+	"github.com/src/main/app/handlers/snippets"
+	apps2 "github.com/src/main/app/services/apps"
+	secrets3 "github.com/src/main/app/services/secrets"
+	snippets2 "github.com/src/main/app/services/snippets"
+
 	"github.com/src/main/app/config"
 	"github.com/src/main/app/config/env"
 
@@ -28,16 +35,16 @@ func RegisterHandlers() {
 
 	gitLabClient := gitlab.NewGitLabClient(restClients.Get("gitlab"), secretStore)
 
-	appService := services.NewAppService(gitLabClient, dbClient, secretStore)
-	appHandler := handlers.NewAppHandler(appService)
+	appService := apps2.NewAppService(gitLabClient, dbClient, secretStore)
+	appHandler := apps.NewAppHandler(appService)
 	server.RegisterHandler(appHandler)
 
-	secretService := services.NewSecretService(dbClient, appService)
-	secretHandler := handlers.NewSecretHandler(appService, secretService)
+	secretService := secrets3.NewSecretService(dbClient, appService)
+	secretHandler := secrets2.NewSecretHandler(appService, secretService)
 	server.RegisterHandler(secretHandler)
 
-	snippetService := services.NewSnippetService(secretService)
-	snippetHandler := handlers.NewSnippetHandler(snippetService)
+	snippetService := snippets2.NewSnippetService(secretService)
+	snippetHandler := snippets.NewSnippetHandler(snippetService)
 	server.RegisterHandler(snippetHandler)
 }
 

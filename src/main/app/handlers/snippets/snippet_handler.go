@@ -1,16 +1,16 @@
-package handlers
+package snippets
 
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/src/main/app/server"
-	"github.com/src/main/app/services"
+	"github.com/src/main/app/services/snippets"
 )
 
 type SnippetHandler struct {
-	snippetService services.ISnippetService
+	snippetService snippets.ISnippetService
 }
 
-func NewSnippetHandler(snippetService services.ISnippetService) *SnippetHandler {
+func NewSnippetHandler(snippetService snippets.ISnippetService) *SnippetHandler {
 	return &SnippetHandler{snippetService: snippetService}
 }
 

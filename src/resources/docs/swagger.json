@@ -1,6 +1,7 @@
 {
     "swagger": "2.0",
     "info": {
+        "description": "Pets API.",
         "title": "Pets API.",
         "contact": {}
     },

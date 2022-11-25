@@ -1,4 +1,4 @@
-package handlers_test
+package snippets_test
 
 import (
 	"io"
@@ -6,11 +6,11 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/src/main/app/handlers"
+	"github.com/src/main/app/handlers/snippets"
+	snippets2 "github.com/src/main/app/services/snippets"
+
 	"github.com/src/main/app/model"
 	"github.com/src/main/app/server"
-	"github.com/src/main/app/services"
-
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )
@@ -27,7 +27,7 @@ func (m *MockSnippetService) GetSecrets(int64) ([]model.SnippetModel, error) {
 func TestSnippetHandler_GetSnippet(t *testing.T) {
 	snippetService := new(MockSnippetService)
 	snippetService.On("GetSecrets").Return(GetSecrets())
-	snippetHandler := handlers.NewSnippetHandler(snippetService)
+	snippetHandler := snippets.NewSnippetHandler(snippetService)
 
 	app := server.New()
 
@@ -50,15 +50,15 @@ func GetSecrets() ([]model.SnippetModel, error) {
 	var snippets []model.SnippetModel
 
 	var snippet1 model.SnippetModel
-	snippet1.Language = string(services.GoLanguage)
-	snippet1.Class = string(services.GoClass)
+	snippet1.Language = string(snippets2.GoLanguage)
+	snippet1.Class = string(snippets2.GoClass)
 	snippet1.Code = "main()"
 
 	snippets = append(snippets, snippet1)
 
 	var snippet2 model.SnippetModel
-	snippet2.Language = string(services.NodeLanguage)
-	snippet2.Class = string(services.NodeClass)
+	snippet2.Language = string(snippets2.NodeLanguage)
+	snippet2.Class = string(snippets2.NodeClass)
 	snippet2.Code = "console.log()"
 
 	snippets = append(snippets, snippet2)

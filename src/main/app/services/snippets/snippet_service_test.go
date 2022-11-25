@@ -1,11 +1,11 @@
-package services_test
+package snippets_test
 
 import (
 	"testing"
 
-	"github.com/src/main/app/model"
-	"github.com/src/main/app/services"
+	"github.com/src/main/app/services/snippets"
 
+	"github.com/src/main/app/model"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )
@@ -28,7 +28,7 @@ func TestSnippetService_GetSecrets(t *testing.T) {
 	secretService := new(MockSecretService)
 	secretService.On("GetSecret").Return(GetSecret())
 
-	service := services.NewSnippetService(secretService)
+	service := snippets.NewSnippetService(secretService)
 
 	actual, err := service.GetSecrets(1)
 
@@ -36,8 +36,8 @@ func TestSnippetService_GetSecrets(t *testing.T) {
 	assert.NotNil(t, actual)
 
 	assert.Len(t, actual, 2)
-	assert.Equal(t, actual[0].Language, string(services.GoLanguage))
-	assert.Equal(t, actual[1].Language, string(services.NodeLanguage))
+	assert.Equal(t, actual[0].Language, string(snippets.GoLanguage))
+	assert.Equal(t, actual[1].Language, string(snippets.NodeLanguage))
 }
 
 func GetSecret() (string, error) {

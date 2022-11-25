@@ -1,9 +1,10 @@
-package handlers
+package secrets
 
 import (
 	"net/http"
 
-	"github.com/src/main/app/services"
+	"github.com/src/main/app/services/apps"
+	"github.com/src/main/app/services/secrets"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/src/main/app/model"
@@ -11,11 +12,11 @@ import (
 )
 
 type SecretHandler struct {
-	appService    services.IAppService
-	secretService services.ISecretService
+	appService    apps.IAppService
+	secretService secrets.ISecretService
 }
 
-func NewSecretHandler(appService services.IAppService, secretService services.ISecretService) *SecretHandler {
+func NewSecretHandler(appService apps.IAppService, secretService secrets.ISecretService) *SecretHandler {
 	return &SecretHandler{
 		appService:    appService,
 		secretService: secretService,

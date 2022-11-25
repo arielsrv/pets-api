@@ -1,4 +1,4 @@
-package handlers_test
+package apps_test
 
 import (
 	"bytes"
@@ -8,9 +8,10 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	"github.com/src/main/app/handlers/apps"
+
 	"github.com/src/main/app/model"
 
-	"github.com/src/main/app/handlers"
 	"github.com/src/main/app/server"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
@@ -51,7 +52,7 @@ func TestAppHandler_GetGroups(t *testing.T) {
 	appService := new(MockAppService)
 	appService.On("GetGroups").Return(GetGroups())
 
-	appHandler := handlers.NewAppHandler(appService)
+	appHandler := apps.NewAppHandler(appService)
 	app := server.New()
 	app.Add(http.MethodGet, "/apps/groups", appHandler.GetGroups)
 
@@ -72,7 +73,7 @@ func TestAppHandler_GetApp(t *testing.T) {
 	appService := new(MockAppService)
 	appService.On("GetAppByName").Return(GetApp())
 
-	appHandler := handlers.NewAppHandler(appService)
+	appHandler := apps.NewAppHandler(appService)
 	app := server.New()
 	app.Add(http.MethodGet, "/apps", appHandler.GetApp)
 
@@ -93,7 +94,7 @@ func TestAppHandler_GetApp_BadRequestErr(t *testing.T) {
 	appService := new(MockAppService)
 	appService.On("GetAppByName").Return(GetApp())
 
-	appHandler := handlers.NewAppHandler(appService)
+	appHandler := apps.NewAppHandler(appService)
 	app := server.New()
 	app.Add(http.MethodGet, "/apps", appHandler.GetApp)
 
@@ -114,7 +115,7 @@ func TestAppHandler_GetApp_NotFoundErr(t *testing.T) {
 	appService := new(MockAppService)
 	appService.On("GetAppByName").Return(GetAppNotFound())
 
-	appHandler := handlers.NewAppHandler(appService)
+	appHandler := apps.NewAppHandler(appService)
 	app := server.New()
 	app.Add(http.MethodGet, "/apps", appHandler.GetApp)
 
@@ -145,7 +146,7 @@ func GetApp() (*model.AppModel, error) {
 func TestAppHandler_GetGroups_Err(t *testing.T) {
 	appService := new(MockAppService)
 	appService.On("GetGroups").Return(GetGroupsErr())
-	repositoriesHandler := handlers.NewAppHandler(appService)
+	repositoriesHandler := apps.NewAppHandler(appService)
 	app := server.New()
 	app.Add(http.MethodGet, "/repositories/groups", repositoriesHandler.GetGroups)
 
@@ -169,7 +170,7 @@ func GetGroupsErr() ([]model.AppGroupModel, error) {
 func TestRepositoriesHandler_CreateApp(t *testing.T) {
 	appService := new(MockAppService)
 	appService.On("CreateApp").Return(GetCreateApp())
-	appHandler := handlers.NewAppHandler(appService)
+	appHandler := apps.NewAppHandler(appService)
 	app := server.New()
 	app.Add(http.MethodPost, "/apps", appHandler.CreateApp)
 
@@ -200,7 +201,7 @@ func GetCreateApp() (*model.AppModel, error) {
 func TestRepositoriesHandler_CreateApp_Err(t *testing.T) {
 	appService := new(MockAppService)
 	appService.On("CreateApp").Return(GetCreateError())
-	appHandler := handlers.NewAppHandler(appService)
+	appHandler := apps.NewAppHandler(appService)
 	app := server.New()
 	app.Add(http.MethodPost, "/repositories", appHandler.CreateApp)
 
@@ -229,7 +230,7 @@ func GetCreateError() (*model.AppModel, error) {
 func TestRepositoriesHandler_CreateApp_BadRequest_Err(t *testing.T) {
 	appService := new(MockAppService)
 	appService.On("CreateApp").Return(server.NewError(http.StatusBadRequest, "bad request error"))
-	appHandler := handlers.NewAppHandler(appService)
+	appHandler := apps.NewAppHandler(appService)
 	app := server.New()
 	app.Add(http.MethodPost, "/repositories", appHandler.CreateApp)
 
@@ -253,7 +254,7 @@ func TestAppHandler_GetAppTypes(t *testing.T) {
 	appService := new(MockAppService)
 	appService.On("GetAppTypes").Return(GetAppTypes())
 
-	appHandler := handlers.NewAppHandler(appService)
+	appHandler := apps.NewAppHandler(appService)
 	app := server.New()
 	app.Add(http.MethodGet, "/apps/types", appHandler.GetAppTypes)
 
@@ -274,7 +275,7 @@ func TestAppHandler_GetAppTypes_Err(t *testing.T) {
 	appService := new(MockAppService)
 	appService.On("GetAppTypes").Return(GetAppTypesErr())
 
-	appHandler := handlers.NewAppHandler(appService)
+	appHandler := apps.NewAppHandler(appService)
 	app := server.New()
 	app.Add(http.MethodGet, "/apps/types", appHandler.GetAppTypes)
 
