@@ -1,8 +1,6 @@
 info:
   contact: {}
-  description: Create apps, services and infrastructure.
-  title: Pets API
-  version: "1.0"
+  title: Pets API.
 paths:
   /ping:
     get:

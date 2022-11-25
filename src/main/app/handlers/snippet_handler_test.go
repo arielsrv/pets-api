@@ -50,15 +50,15 @@ func GetSecrets() ([]model.SnippetModel, error) {
 	var snippets []model.SnippetModel
 
 	var snippet1 model.SnippetModel
-	snippet1.Language = services.GoLanguage
-	snippet1.Class = services.GoClass
+	snippet1.Language = string(services.GoLanguage)
+	snippet1.Class = string(services.GoClass)
 	snippet1.Code = "main()"
 
 	snippets = append(snippets, snippet1)
 
 	var snippet2 model.SnippetModel
-	snippet2.Language = services.NodeLanguage
-	snippet2.Class = services.NodeClass
+	snippet2.Language = string(services.NodeLanguage)
+	snippet2.Class = string(services.NodeClass)
 	snippet2.Code = "console.log()"
 
 	snippets = append(snippets, snippet2)

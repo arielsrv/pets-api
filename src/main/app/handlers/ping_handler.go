@@ -21,6 +21,7 @@ func NewPingHandler(pingService services.IPingService) *PingHandler {
 }
 
 // Ping godoc
+//
 //	@Summary		Check if the instance is healthy or unhealthy
 //	@Description	Health
 //	@Tags			Check
