@@ -34,16 +34,16 @@ func (au *AppUpdate) SetName(s string) *AppUpdate {
 	return au
 }
 
-// SetProjectId sets the "projectId" field.
-func (au *AppUpdate) SetProjectId(i int64) *AppUpdate {
-	au.mutation.ResetProjectId()
-	au.mutation.SetProjectId(i)
+// SetExternalGitlabProjectID sets the "external_gitlab_project_id" field.
+func (au *AppUpdate) SetExternalGitlabProjectID(i int64) *AppUpdate {
+	au.mutation.ResetExternalGitlabProjectID()
+	au.mutation.SetExternalGitlabProjectID(i)
 	return au
 }
 
-// AddProjectId adds i to the "projectId" field.
-func (au *AppUpdate) AddProjectId(i int64) *AppUpdate {
-	au.mutation.AddProjectId(i)
+// AddExternalGitlabProjectID adds i to the "external_gitlab_project_id" field.
+func (au *AppUpdate) AddExternalGitlabProjectID(i int64) *AppUpdate {
+	au.mutation.AddExternalGitlabProjectID(i)
 	return au
 }
 
@@ -178,11 +178,11 @@ func (au *AppUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if value, ok := au.mutation.Name(); ok {
 		_spec.SetField(app.FieldName, field.TypeString, value)
 	}
-	if value, ok := au.mutation.ProjectId(); ok {
-		_spec.SetField(app.FieldProjectId, field.TypeInt64, value)
+	if value, ok := au.mutation.ExternalGitlabProjectID(); ok {
+		_spec.SetField(app.FieldExternalGitlabProjectID, field.TypeInt64, value)
 	}
-	if value, ok := au.mutation.AddedProjectId(); ok {
-		_spec.AddField(app.FieldProjectId, field.TypeInt64, value)
+	if value, ok := au.mutation.AddedExternalGitlabProjectID(); ok {
+		_spec.AddField(app.FieldExternalGitlabProjectID, field.TypeInt64, value)
 	}
 	if value, ok := au.mutation.Active(); ok {
 		_spec.SetField(app.FieldActive, field.TypeBool, value)
@@ -247,16 +247,16 @@ func (auo *AppUpdateOne) SetName(s string) *AppUpdateOne {
 	return auo
 }
 
-// SetProjectId sets the "projectId" field.
-func (auo *AppUpdateOne) SetProjectId(i int64) *AppUpdateOne {
-	auo.mutation.ResetProjectId()
-	auo.mutation.SetProjectId(i)
+// SetExternalGitlabProjectID sets the "external_gitlab_project_id" field.
+func (auo *AppUpdateOne) SetExternalGitlabProjectID(i int64) *AppUpdateOne {
+	auo.mutation.ResetExternalGitlabProjectID()
+	auo.mutation.SetExternalGitlabProjectID(i)
 	return auo
 }
 
-// AddProjectId adds i to the "projectId" field.
-func (auo *AppUpdateOne) AddProjectId(i int64) *AppUpdateOne {
-	auo.mutation.AddProjectId(i)
+// AddExternalGitlabProjectID adds i to the "external_gitlab_project_id" field.
+func (auo *AppUpdateOne) AddExternalGitlabProjectID(i int64) *AppUpdateOne {
+	auo.mutation.AddExternalGitlabProjectID(i)
 	return auo
 }
 
@@ -421,11 +421,11 @@ func (auo *AppUpdateOne) sqlSave(ctx context.Context) (_node *App, err error) {
 	if value, ok := auo.mutation.Name(); ok {
 		_spec.SetField(app.FieldName, field.TypeString, value)
 	}
-	if value, ok := auo.mutation.ProjectId(); ok {
-		_spec.SetField(app.FieldProjectId, field.TypeInt64, value)
+	if value, ok := auo.mutation.ExternalGitlabProjectID(); ok {
+		_spec.SetField(app.FieldExternalGitlabProjectID, field.TypeInt64, value)
 	}
-	if value, ok := auo.mutation.AddedProjectId(); ok {
-		_spec.AddField(app.FieldProjectId, field.TypeInt64, value)
+	if value, ok := auo.mutation.AddedExternalGitlabProjectID(); ok {
+		_spec.AddField(app.FieldExternalGitlabProjectID, field.TypeInt64, value)
 	}
 	if value, ok := auo.mutation.Active(); ok {
 		_spec.SetField(app.FieldActive, field.TypeBool, value)

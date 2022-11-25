@@ -18,8 +18,8 @@ type App struct {
 	ID int64 `json:"oid,omitempty"`
 	// Name holds the value of the "name" field.
 	Name string `json:"name,omitempty"`
-	// ProjectId holds the value of the "projectId" field.
-	ProjectId int64 `json:"projectId,omitempty"`
+	// ExternalGitlabProjectID holds the value of the "external_gitlab_project_id" field.
+	ExternalGitlabProjectID int64 `json:"external_gitlab_project_id,omitempty"`
 	// AppTypeID holds the value of the "app_type_id" field.
 	AppTypeID int `json:"app_type_id,omitempty"`
 	// Active holds the value of the "active" field.
@@ -58,7 +58,7 @@ func (*App) scanValues(columns []string) ([]any, error) {
 		switch columns[i] {
 		case app.FieldActive:
 			values[i] = new(sql.NullBool)
-		case app.FieldID, app.FieldProjectId, app.FieldAppTypeID:
+		case app.FieldID, app.FieldExternalGitlabProjectID, app.FieldAppTypeID:
 			values[i] = new(sql.NullInt64)
 		case app.FieldName:
 			values[i] = new(sql.NullString)
@@ -89,11 +89,11 @@ func (a *App) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				a.Name = value.String
 			}
-		case app.FieldProjectId:
+		case app.FieldExternalGitlabProjectID:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field projectId", values[i])
+				return fmt.Errorf("unexpected type %T for field external_gitlab_project_id", values[i])
 			} else if value.Valid {
-				a.ProjectId = value.Int64
+				a.ExternalGitlabProjectID = value.Int64
 			}
 		case app.FieldAppTypeID:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
@@ -143,8 +143,8 @@ func (a *App) String() string {
 	builder.WriteString("name=")
 	builder.WriteString(a.Name)
 	builder.WriteString(", ")
-	builder.WriteString("projectId=")
-	builder.WriteString(fmt.Sprintf("%v", a.ProjectId))
+	builder.WriteString("external_gitlab_project_id=")
+	builder.WriteString(fmt.Sprintf("%v", a.ExternalGitlabProjectID))
 	builder.WriteString(", ")
 	builder.WriteString("app_type_id=")
 	builder.WriteString(fmt.Sprintf("%v", a.AppTypeID))

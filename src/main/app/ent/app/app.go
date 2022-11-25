@@ -9,8 +9,8 @@ const (
 	FieldID = "id"
 	// FieldName holds the string denoting the name field in the database.
 	FieldName = "name"
-	// FieldProjectId holds the string denoting the projectid field in the database.
-	FieldProjectId = "project_id"
+	// FieldExternalGitlabProjectID holds the string denoting the external_gitlab_project_id field in the database.
+	FieldExternalGitlabProjectID = "external_gitlab_project_id"
 	// FieldAppTypeID holds the string denoting the app_type_id field in the database.
 	FieldAppTypeID = "app_type_id"
 	// FieldActive holds the string denoting the active field in the database.
@@ -32,7 +32,7 @@ const (
 var Columns = []string{
 	FieldID,
 	FieldName,
-	FieldProjectId,
+	FieldExternalGitlabProjectID,
 	FieldAppTypeID,
 	FieldActive,
 }

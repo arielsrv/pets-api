@@ -13,7 +13,7 @@ var (
 	AppsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt64, Increment: true},
 		{Name: "name", Type: field.TypeString, Unique: true},
-		{Name: "project_id", Type: field.TypeInt64, Unique: true},
+		{Name: "external_gitlab_project_id", Type: field.TypeInt64, Unique: true},
 		{Name: "active", Type: field.TypeBool, Default: true},
 		{Name: "app_type_id", Type: field.TypeInt},
 	}

@@ -54,7 +54,7 @@ func (s *AppService) GetAppByName(appName string) (*model.AppModel, error) {
 		return nil, err
 	}
 
-	projectResponse, err := s.gitLabClient.GetProject(application.ProjectId)
+	projectResponse, err := s.gitLabClient.GetProject(application.ExternalGitlabProjectID)
 
 	if err != nil {
 		return nil, err
@@ -95,7 +95,7 @@ func (s *AppService) GetAppByID(appID int64) (*model.AppModel, error) {
 		return nil, err
 	}
 
-	projectResponse, err := s.gitLabClient.GetProject(application.ProjectId)
+	projectResponse, err := s.gitLabClient.GetProject(application.ExternalGitlabProjectID)
 
 	if err != nil {
 		return nil, err
@@ -187,7 +187,7 @@ func (s *AppService) CreateApp(createAppModel *model.CreateAppModel) (*model.App
 
 	application, err := s.dbClient.Context().App.Create().
 		SetName(createAppModel.Name).
-		SetProjectId(response.ID).
+		SetExternalGitlabProjectID(response.ID).
 		SetAppTypeID(int(createAppModel.AppTypeID)).
 		Save(context.Background())
 

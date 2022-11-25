@@ -18,7 +18,7 @@ func (App) Fields() []ent.Field {
 			StructTag(`json:"oid,omitempty"`),
 		field.String("name").
 			Unique(),
-		field.Int64("projectId").
+		field.Int64("external_gitlab_project_id").
 			Unique(),
 		field.Int("app_type_id"),
 		field.Bool("active").

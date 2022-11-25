@@ -33,19 +33,19 @@ const (
 // AppMutation represents an operation that mutates the App nodes in the graph.
 type AppMutation struct {
 	config
-	op                Op
-	typ               string
-	id                *int64
-	name              *string
-	projectId         *int64
-	addprojectId      *int64
-	active            *bool
-	clearedFields     map[string]struct{}
-	apps_types        *int
-	clearedapps_types bool
-	done              bool
-	oldValue          func(context.Context) (*App, error)
-	predicates        []predicate.App
+	op                            Op
+	typ                           string
+	id                            *int64
+	name                          *string
+	external_gitlab_project_id    *int64
+	addexternal_gitlab_project_id *int64
+	active                        *bool
+	clearedFields                 map[string]struct{}
+	apps_types                    *int
+	clearedapps_types             bool
+	done                          bool
+	oldValue                      func(context.Context) (*App, error)
+	predicates                    []predicate.App
 }
 
 var _ ent.Mutation = (*AppMutation)(nil)
@@ -188,60 +188,60 @@ func (m *AppMutation) ResetName() {
 	m.name = nil
 }
 
-// SetProjectId sets the "projectId" field.
-func (m *AppMutation) SetProjectId(i int64) {
-	m.projectId = &i
-	m.addprojectId = nil
+// SetExternalGitlabProjectID sets the "external_gitlab_project_id" field.
+func (m *AppMutation) SetExternalGitlabProjectID(i int64) {
+	m.external_gitlab_project_id = &i
+	m.addexternal_gitlab_project_id = nil
 }
 
-// ProjectId returns the value of the "projectId" field in the mutation.
-func (m *AppMutation) ProjectId() (r int64, exists bool) {
-	v := m.projectId
+// ExternalGitlabProjectID returns the value of the "external_gitlab_project_id" field in the mutation.
+func (m *AppMutation) ExternalGitlabProjectID() (r int64, exists bool) {
+	v := m.external_gitlab_project_id
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldProjectId returns the old "projectId" field's value of the App entity.
+// OldExternalGitlabProjectID returns the old "external_gitlab_project_id" field's value of the App entity.
 // If the App object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *AppMutation) OldProjectId(ctx context.Context) (v int64, err error) {
+func (m *AppMutation) OldExternalGitlabProjectID(ctx context.Context) (v int64, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldProjectId is only allowed on UpdateOne operations")
+		return v, errors.New("OldExternalGitlabProjectID is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldProjectId requires an ID field in the mutation")
+		return v, errors.New("OldExternalGitlabProjectID requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldProjectId: %w", err)
+		return v, fmt.Errorf("querying old value for OldExternalGitlabProjectID: %w", err)
 	}
-	return oldValue.ProjectId, nil
+	return oldValue.ExternalGitlabProjectID, nil
 }
 
-// AddProjectId adds i to the "projectId" field.
-func (m *AppMutation) AddProjectId(i int64) {
-	if m.addprojectId != nil {
-		*m.addprojectId += i
+// AddExternalGitlabProjectID adds i to the "external_gitlab_project_id" field.
+func (m *AppMutation) AddExternalGitlabProjectID(i int64) {
+	if m.addexternal_gitlab_project_id != nil {
+		*m.addexternal_gitlab_project_id += i
 	} else {
-		m.addprojectId = &i
+		m.addexternal_gitlab_project_id = &i
 	}
 }
 
-// AddedProjectId returns the value that was added to the "projectId" field in this mutation.
-func (m *AppMutation) AddedProjectId() (r int64, exists bool) {
-	v := m.addprojectId
+// AddedExternalGitlabProjectID returns the value that was added to the "external_gitlab_project_id" field in this mutation.
+func (m *AppMutation) AddedExternalGitlabProjectID() (r int64, exists bool) {
+	v := m.addexternal_gitlab_project_id
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// ResetProjectId resets all changes to the "projectId" field.
-func (m *AppMutation) ResetProjectId() {
-	m.projectId = nil
-	m.addprojectId = nil
+// ResetExternalGitlabProjectID resets all changes to the "external_gitlab_project_id" field.
+func (m *AppMutation) ResetExternalGitlabProjectID() {
+	m.external_gitlab_project_id = nil
+	m.addexternal_gitlab_project_id = nil
 }
 
 // SetAppTypeID sets the "app_type_id" field.
@@ -378,8 +378,8 @@ func (m *AppMutation) Fields() []string {
 	if m.name != nil {
 		fields = append(fields, app.FieldName)
 	}
-	if m.projectId != nil {
-		fields = append(fields, app.FieldProjectId)
+	if m.external_gitlab_project_id != nil {
+		fields = append(fields, app.FieldExternalGitlabProjectID)
 	}
 	if m.apps_types != nil {
 		fields = append(fields, app.FieldAppTypeID)
@@ -397,8 +397,8 @@ func (m *AppMutation) Field(name string) (ent.Value, bool) {
 	switch name {
 	case app.FieldName:
 		return m.Name()
-	case app.FieldProjectId:
-		return m.ProjectId()
+	case app.FieldExternalGitlabProjectID:
+		return m.ExternalGitlabProjectID()
 	case app.FieldAppTypeID:
 		return m.AppTypeID()
 	case app.FieldActive:
@@ -414,8 +414,8 @@ func (m *AppMutation) OldField(ctx context.Context, name string) (ent.Value, err
 	switch name {
 	case app.FieldName:
 		return m.OldName(ctx)
-	case app.FieldProjectId:
-		return m.OldProjectId(ctx)
+	case app.FieldExternalGitlabProjectID:
+		return m.OldExternalGitlabProjectID(ctx)
 	case app.FieldAppTypeID:
 		return m.OldAppTypeID(ctx)
 	case app.FieldActive:
@@ -436,12 +436,12 @@ func (m *AppMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetName(v)
 		return nil
-	case app.FieldProjectId:
+	case app.FieldExternalGitlabProjectID:
 		v, ok := value.(int64)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetProjectId(v)
+		m.SetExternalGitlabProjectID(v)
 		return nil
 	case app.FieldAppTypeID:
 		v, ok := value.(int)
@@ -465,8 +465,8 @@ func (m *AppMutation) SetField(name string, value ent.Value) error {
 // this mutation.
 func (m *AppMutation) AddedFields() []string {
 	var fields []string
-	if m.addprojectId != nil {
-		fields = append(fields, app.FieldProjectId)
+	if m.addexternal_gitlab_project_id != nil {
+		fields = append(fields, app.FieldExternalGitlabProjectID)
 	}
 	return fields
 }
@@ -476,8 +476,8 @@ func (m *AppMutation) AddedFields() []string {
 // was not set, or was not defined in the schema.
 func (m *AppMutation) AddedField(name string) (ent.Value, bool) {
 	switch name {
-	case app.FieldProjectId:
-		return m.AddedProjectId()
+	case app.FieldExternalGitlabProjectID:
+		return m.AddedExternalGitlabProjectID()
 	}
 	return nil, false
 }
@@ -487,12 +487,12 @@ func (m *AppMutation) AddedField(name string) (ent.Value, bool) {
 // type.
 func (m *AppMutation) AddField(name string, value ent.Value) error {
 	switch name {
-	case app.FieldProjectId:
+	case app.FieldExternalGitlabProjectID:
 		v, ok := value.(int64)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.AddProjectId(v)
+		m.AddExternalGitlabProjectID(v)
 		return nil
 	}
 	return fmt.Errorf("unknown App numeric field %s", name)
@@ -524,8 +524,8 @@ func (m *AppMutation) ResetField(name string) error {
 	case app.FieldName:
 		m.ResetName()
 		return nil
-	case app.FieldProjectId:
-		m.ResetProjectId()
+	case app.FieldExternalGitlabProjectID:
+		m.ResetExternalGitlabProjectID()
 		return nil
 	case app.FieldAppTypeID:
 		m.ResetAppTypeID()

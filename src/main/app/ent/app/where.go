@@ -86,10 +86,10 @@ func Name(v string) predicate.App {
 	})
 }
 
-// ProjectId applies equality check predicate on the "projectId" field. It's identical to ProjectIdEQ.
-func ProjectId(v int64) predicate.App {
+// ExternalGitlabProjectID applies equality check predicate on the "external_gitlab_project_id" field. It's identical to ExternalGitlabProjectIDEQ.
+func ExternalGitlabProjectID(v int64) predicate.App {
 	return predicate.App(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldProjectId), v))
+		s.Where(sql.EQ(s.C(FieldExternalGitlabProjectID), v))
 	})
 }
 
@@ -206,67 +206,67 @@ func NameContainsFold(v string) predicate.App {
 	})
 }
 
-// ProjectIdEQ applies the EQ predicate on the "projectId" field.
-func ProjectIdEQ(v int64) predicate.App {
+// ExternalGitlabProjectIDEQ applies the EQ predicate on the "external_gitlab_project_id" field.
+func ExternalGitlabProjectIDEQ(v int64) predicate.App {
 	return predicate.App(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldProjectId), v))
+		s.Where(sql.EQ(s.C(FieldExternalGitlabProjectID), v))
 	})
 }
 
-// ProjectIdNEQ applies the NEQ predicate on the "projectId" field.
-func ProjectIdNEQ(v int64) predicate.App {
+// ExternalGitlabProjectIDNEQ applies the NEQ predicate on the "external_gitlab_project_id" field.
+func ExternalGitlabProjectIDNEQ(v int64) predicate.App {
 	return predicate.App(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldProjectId), v))
+		s.Where(sql.NEQ(s.C(FieldExternalGitlabProjectID), v))
 	})
 }
 
-// ProjectIdIn applies the In predicate on the "projectId" field.
-func ProjectIdIn(vs ...int64) predicate.App {
+// ExternalGitlabProjectIDIn applies the In predicate on the "external_gitlab_project_id" field.
+func ExternalGitlabProjectIDIn(vs ...int64) predicate.App {
 	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
 	return predicate.App(func(s *sql.Selector) {
-		s.Where(sql.In(s.C(FieldProjectId), v...))
+		s.Where(sql.In(s.C(FieldExternalGitlabProjectID), v...))
 	})
 }
 
-// ProjectIdNotIn applies the NotIn predicate on the "projectId" field.
-func ProjectIdNotIn(vs ...int64) predicate.App {
+// ExternalGitlabProjectIDNotIn applies the NotIn predicate on the "external_gitlab_project_id" field.
+func ExternalGitlabProjectIDNotIn(vs ...int64) predicate.App {
 	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
 	return predicate.App(func(s *sql.Selector) {
-		s.Where(sql.NotIn(s.C(FieldProjectId), v...))
+		s.Where(sql.NotIn(s.C(FieldExternalGitlabProjectID), v...))
 	})
 }
 
-// ProjectIdGT applies the GT predicate on the "projectId" field.
-func ProjectIdGT(v int64) predicate.App {
+// ExternalGitlabProjectIDGT applies the GT predicate on the "external_gitlab_project_id" field.
+func ExternalGitlabProjectIDGT(v int64) predicate.App {
 	return predicate.App(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldProjectId), v))
+		s.Where(sql.GT(s.C(FieldExternalGitlabProjectID), v))
 	})
 }
 
-// ProjectIdGTE applies the GTE predicate on the "projectId" field.
-func ProjectIdGTE(v int64) predicate.App {
+// ExternalGitlabProjectIDGTE applies the GTE predicate on the "external_gitlab_project_id" field.
+func ExternalGitlabProjectIDGTE(v int64) predicate.App {
 	return predicate.App(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldProjectId), v))
+		s.Where(sql.GTE(s.C(FieldExternalGitlabProjectID), v))
 	})
 }
 
-// ProjectIdLT applies the LT predicate on the "projectId" field.
-func ProjectIdLT(v int64) predicate.App {
+// ExternalGitlabProjectIDLT applies the LT predicate on the "external_gitlab_project_id" field.
+func ExternalGitlabProjectIDLT(v int64) predicate.App {
 	return predicate.App(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldProjectId), v))
+		s.Where(sql.LT(s.C(FieldExternalGitlabProjectID), v))
 	})
 }
 
-// ProjectIdLTE applies the LTE predicate on the "projectId" field.
-func ProjectIdLTE(v int64) predicate.App {
+// ExternalGitlabProjectIDLTE applies the LTE predicate on the "external_gitlab_project_id" field.
+func ExternalGitlabProjectIDLTE(v int64) predicate.App {
 	return predicate.App(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldProjectId), v))
+		s.Where(sql.LTE(s.C(FieldExternalGitlabProjectID), v))
 	})
 }
 

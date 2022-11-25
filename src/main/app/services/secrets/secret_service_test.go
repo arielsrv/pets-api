@@ -48,7 +48,7 @@ func TestSecretService_GetSecret(t *testing.T) {
 	defer dbClient.Close()
 
 	dbClient.AppType.Create().SetID(1).SetName("backend").Save(context.Background())
-	dbClient.App.Create().SetName("customers-api").SetProjectId(1).SetAppTypeID(1).Save(context.Background())
+	dbClient.App.Create().SetName("customers-api").SetExternalGitlabProjectID(1).SetAppTypeID(1).Save(context.Background())
 	dbClient.Secret.Create().SetKey("PETS_CUSTOMERS-API_MYSECRETKEY").SetValue("MYSECRETVALUE").SetAppID(1).Save(context.Background())
 
 	appService := new(MockAppService)
@@ -82,7 +82,7 @@ func TestSecretService_CreateSecret(t *testing.T) {
 	defer dbClient.Close()
 
 	dbClient.AppType.Create().SetID(1).SetName("backend").Save(context.Background())
-	dbClient.App.Create().SetName("customers-api").SetProjectId(1).SetAppTypeID(1).Save(context.Background())
+	dbClient.App.Create().SetName("customers-api").SetExternalGitlabProjectID(1).SetAppTypeID(1).Save(context.Background())
 
 	appService := new(MockAppService)
 	appService.On("GetAppByID").Return(GetApp())
@@ -106,7 +106,7 @@ func TestSecretService_CreateSecret_Conflict(t *testing.T) {
 	defer dbClient.Close()
 
 	dbClient.AppType.Create().SetID(1).SetName("backend").Save(context.Background())
-	dbClient.App.Create().SetName("customers-api").SetProjectId(1).SetAppTypeID(1).Save(context.Background())
+	dbClient.App.Create().SetName("customers-api").SetExternalGitlabProjectID(1).SetAppTypeID(1).Save(context.Background())
 
 	appService := new(MockAppService)
 	appService.On("GetAppByID").Return(GetApp())

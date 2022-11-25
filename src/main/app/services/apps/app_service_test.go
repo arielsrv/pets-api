@@ -141,7 +141,7 @@ func TestAppService_GetAppByName(t *testing.T) {
 	defer dbClient.Close()
 
 	dbClient.AppType.Create().SetID(1).SetName("backend").Save(context.Background())
-	dbClient.App.Create().SetName("customers-api").SetProjectId(1).SetAppTypeID(1).Save(context.Background())
+	dbClient.App.Create().SetName("customers-api").SetExternalGitlabProjectID(1).SetAppTypeID(1).Save(context.Background())
 
 	secretStore := secrets.NewLocalSecretStore()
 
@@ -166,7 +166,7 @@ func TestAppService_GetAppById(t *testing.T) {
 	defer dbClient.Close()
 
 	dbClient.AppType.Create().SetID(1).SetName("backend").Save(context.Background())
-	dbClient.App.Create().SetName("customers-api").SetProjectId(1).SetAppTypeID(1).Save(context.Background())
+	dbClient.App.Create().SetName("customers-api").SetExternalGitlabProjectID(1).SetAppTypeID(1).Save(context.Background())
 
 	secretStore := secrets.NewLocalSecretStore()
 

@@ -26,9 +26,9 @@ func (ac *AppCreate) SetName(s string) *AppCreate {
 	return ac
 }
 
-// SetProjectId sets the "projectId" field.
-func (ac *AppCreate) SetProjectId(i int64) *AppCreate {
-	ac.mutation.SetProjectId(i)
+// SetExternalGitlabProjectID sets the "external_gitlab_project_id" field.
+func (ac *AppCreate) SetExternalGitlabProjectID(i int64) *AppCreate {
+	ac.mutation.SetExternalGitlabProjectID(i)
 	return ac
 }
 
@@ -157,8 +157,8 @@ func (ac *AppCreate) check() error {
 	if _, ok := ac.mutation.Name(); !ok {
 		return &ValidationError{Name: "name", err: errors.New(`ent: missing required field "App.name"`)}
 	}
-	if _, ok := ac.mutation.ProjectId(); !ok {
-		return &ValidationError{Name: "projectId", err: errors.New(`ent: missing required field "App.projectId"`)}
+	if _, ok := ac.mutation.ExternalGitlabProjectID(); !ok {
+		return &ValidationError{Name: "external_gitlab_project_id", err: errors.New(`ent: missing required field "App.external_gitlab_project_id"`)}
 	}
 	if _, ok := ac.mutation.AppTypeID(); !ok {
 		return &ValidationError{Name: "app_type_id", err: errors.New(`ent: missing required field "App.app_type_id"`)}
@@ -206,9 +206,9 @@ func (ac *AppCreate) createSpec() (*App, *sqlgraph.CreateSpec) {
 		_spec.SetField(app.FieldName, field.TypeString, value)
 		_node.Name = value
 	}
-	if value, ok := ac.mutation.ProjectId(); ok {
-		_spec.SetField(app.FieldProjectId, field.TypeInt64, value)
-		_node.ProjectId = value
+	if value, ok := ac.mutation.ExternalGitlabProjectID(); ok {
+		_spec.SetField(app.FieldExternalGitlabProjectID, field.TypeInt64, value)
+		_node.ExternalGitlabProjectID = value
 	}
 	if value, ok := ac.mutation.Active(); ok {
 		_spec.SetField(app.FieldActive, field.TypeBool, value)
