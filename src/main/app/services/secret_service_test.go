@@ -76,7 +76,7 @@ func TestSecretService_GetSecret_NotFound(t *testing.T) {
 	assert.NotNil(t, actual)
 }
 
-func TestSecretService_SaveSecret(t *testing.T) {
+func TestSecretService_CreateSecret(t *testing.T) {
 	dbClient := database.NewDBClient(database.NewSQLiteClient(t))
 	dbClient.Context()
 	defer dbClient.Close()
@@ -91,16 +91,16 @@ func TestSecretService_SaveSecret(t *testing.T) {
 	secretModel := new(model.CreateAppSecretModel)
 	secretModel.Key = "MYSECRETKEY"
 	secretModel.Value = "MYSECRETVALUE"
-	actual, err := service.SaveSecret(1, secretModel)
+	actual, err := service.CreateSecret(1, secretModel)
 
 	assert.NoError(t, err)
 	assert.NotNil(t, actual)
 
-	assert.Equal(t, "PETS_MYAPP_MYSECRETKEY", actual.Key)
+	assert.Equal(t, "MYSECRETKEY", actual.Key)
 	assert.Equal(t, "/apps/1/secrets/1/snippets", actual.SnippetURL)
 }
 
-func TestSecretService_SaveSecret_Conflict(t *testing.T) {
+func TestSecretService_CreateSecret_Conflict(t *testing.T) {
 	dbClient := database.NewDBClient(database.NewSQLiteClient(t))
 	dbClient.Context()
 	defer dbClient.Close()
@@ -115,15 +115,15 @@ func TestSecretService_SaveSecret_Conflict(t *testing.T) {
 	secretModel := new(model.CreateAppSecretModel)
 	secretModel.Key = "MYSECRETKEY"
 	secretModel.Value = "MYSECRETVALUE"
-	actual, err := service.SaveSecret(1, secretModel)
+	actual, err := service.CreateSecret(1, secretModel)
 
 	assert.NoError(t, err)
 	assert.NotNil(t, actual)
 
-	assert.Equal(t, "PETS_MYAPP_MYSECRETKEY", actual.Key)
+	assert.Equal(t, "MYSECRETKEY", actual.Key)
 	assert.Equal(t, "/apps/1/secrets/1/snippets", actual.SnippetURL)
 
-	conflict, err := service.SaveSecret(1, secretModel)
+	conflict, err := service.CreateSecret(1, secretModel)
 
 	assert.Error(t, err)
 	assert.Nil(t, conflict)

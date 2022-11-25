@@ -7,7 +7,6 @@ import (
 	"strings"
 
 	"github.com/src/main/app/infrastructure/database"
-
 	"github.com/src/main/app/server"
 
 	"github.com/src/main/app/ent"
@@ -16,7 +15,7 @@ import (
 )
 
 type ISecretService interface {
-	SaveSecret(appID int64, secretModel *model.CreateAppSecretModel) (*model.AppSecretModel, error)
+	CreateSecret(appID int64, secretModel *model.CreateAppSecretModel) (*model.AppSecretModel, error)
 	GetSecret(secretID int64) (string, error)
 }
 
@@ -47,17 +46,15 @@ func (s *SecretService) GetSecret(secretID int64) (string, error) {
 	return result.Key, nil
 }
 
-func (s *SecretService) SaveSecret(appID int64, secretModel *model.CreateAppSecretModel) (*model.AppSecretModel, error) {
+func (s *SecretService) CreateSecret(appID int64, secretModel *model.CreateAppSecretModel) (*model.AppSecretModel, error) {
 	appModel, err := s.appService.GetAppByID(appID)
 	if err != nil {
 		return nil, err
 	}
 
-	secretName := fmt.Sprintf("PETS_%s_%s", strings.ToUpper(appModel.Name), strings.ToUpper(secretModel.Key))
-
 	alreadyExist, err := s.dbClient.Context().Secret.
 		Query().
-		Where(secret.Key(secretName)).
+		Where(secret.Key(strings.ToUpper(secretModel.Key))).
 		Exist(context.Background())
 
 	if err != nil {
@@ -69,7 +66,7 @@ func (s *SecretService) SaveSecret(appID int64, secretModel *model.CreateAppSecr
 	}
 
 	result, err := s.dbClient.Context().Secret.Create().
-		SetKey(secretName).
+		SetKey(secretModel.Key).
 		SetValue(secretModel.Value).
 		SetAppID(appModel.ID).
 		Save(context.Background())

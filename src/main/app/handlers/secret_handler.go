@@ -43,7 +43,7 @@ func (h SecretHandler) CreateSecret(ctx *fiber.Ctx) error {
 		return err
 	}
 
-	result, err := h.secretService.SaveSecret(int64(appID), request)
+	result, err := h.secretService.CreateSecret(int64(appID), request)
 	if err != nil {
 		return err
 	}

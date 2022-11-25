@@ -19,7 +19,7 @@ type MockSecretService struct {
 	mock.Mock
 }
 
-func (m *MockSecretService) SaveSecret(int64, *model.CreateAppSecretModel) (*model.AppSecretModel, error) {
+func (m *MockSecretService) CreateSecret(int64, *model.CreateAppSecretModel) (*model.AppSecretModel, error) {
 	args := m.Called()
 	return args.Get(0).(*model.AppSecretModel), args.Error(1)
 }
@@ -32,7 +32,7 @@ func (m *MockSecretService) GetSecret(int64) (string, error) {
 func TestSecretHandler_CreateSecret(t *testing.T) {
 	appService := new(MockAppService)
 	secretService := new(MockSecretService)
-	secretService.On("SaveSecret").Return(GetNewSecret())
+	secretService.On("CreateSecret").Return(GetNewSecret())
 
 	secretHandler := handlers.NewSecretHandler(appService, secretService)
 	app := server.New()
