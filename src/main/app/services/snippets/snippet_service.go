@@ -42,7 +42,7 @@ const (
 type Install string
 
 const (
-	GoInstall   Install = "go get -u gitlab.com/iskaypet/ikp_go_secrets" //
+	GoInstall   Install = "go get -u gitlab.com/iskaypet/ikp_go-secrets" //
 	NodeInstall Install = "npm install ikp_node-secrets --save-dev"
 )
 
