@@ -68,7 +68,7 @@ func (s *SecretService) CreateSecret(appID int64, secretModel *model.CreateAppSe
 	}
 
 	result, err := s.dbClient.Context().Secret.Create().
-		SetKey(secretModel.Key).
+		SetKey(strings.ToUpper(secretModel.Key)).
 		SetValue(secretModel.Value).
 		SetAppID(appModel.ID).
 		Save(context.Background())

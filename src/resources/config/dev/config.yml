@@ -13,5 +13,5 @@ rest:
       pool: default
 
 # secrets
-SECRETS_STORE_PETS-API_PROD_CONNECTION_STRING_KEY_NAME: root:a300p011@tcp(localhost:3306)/pets?parseTime=True
-SECRETS_STORE_PETS-API_GITLAB_TOKEN_KEY_NAME: glpat-BWcsGBLXz-1yQxzd3BG3
+PROD_CONNECTION_STRING: root:a300p011@tcp(localhost:3306)/pets?parseTime=True
+GITLAB_TOKEN: glpat-BWcsGBLXz-1yQxzd3BG3

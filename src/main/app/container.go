@@ -59,13 +59,14 @@ func getSecretValue(key string) string {
 func ProvideSecretStore() secrets.ISecretStore {
 	if !env.IsDev() {
 		return secrets.NewSecretStore()
-	} else {
-		return secrets.NewLocalSecretStore()
 	}
+
+	return secrets.NewLocalSecretStore()
 }
 
 func ProvideDBClient() database.IDbClient {
-	connectionString := getSecretValue("SECRETS_STORE_PETS-API_PROD_CONNECTION_STRING_KEY_NAME")
+	connectionString := getSecretValue("PROD_CONNECTION_STRING")
 	mySQLClient := database.NewMySQLClient(connectionString)
+
 	return database.NewDBClient(mySQLClient)
 }

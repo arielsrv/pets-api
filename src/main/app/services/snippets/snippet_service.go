@@ -42,8 +42,8 @@ const (
 type Install string
 
 const (
-	GoInstall   Install = "go get -u gitlab.com/ikp_go-secrets" //
-	NodeInstall Install = "npm install ikp_node-secrets@latest"
+	GoInstall   Install = "go get -u gitlab.com/iskaypet/ikp_go_secrets" //
+	NodeInstall Install = "npm install ikp_node-secrets --save-dev"
 )
 
 type ISnippetService interface {

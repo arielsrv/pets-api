@@ -65,7 +65,7 @@ func (s *AppService) GetAppByName(appName string) (*model.AppModel, error) {
 		return nil, err
 	}
 
-	gitlabToken := s.secretStore.GetSecret("SECRETS_STORE_PETS-API_GITLAB_TOKEN_KEY_NAME")
+	gitlabToken := s.secretStore.GetSecret("GITLAB_TOKEN")
 	if gitlabToken.Err != nil {
 		return nil, gitlabToken.Err
 	}
@@ -106,7 +106,7 @@ func (s *AppService) GetAppByID(appID int64) (*model.AppModel, error) {
 		return nil, err
 	}
 
-	gitlabToken := s.secretStore.GetSecret("SECRETS_STORE_PETS-API_GITLAB_TOKEN_KEY_NAME")
+	gitlabToken := s.secretStore.GetSecret("GITLAB_TOKEN")
 	if gitlabToken.Err != nil {
 		return nil, gitlabToken.Err
 	}

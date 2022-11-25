@@ -73,6 +73,7 @@ func (h AppHandler) GetApp(ctx *fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
+
 	result, err := h.service.GetAppByName(appName)
 	if err != nil {
 		return err

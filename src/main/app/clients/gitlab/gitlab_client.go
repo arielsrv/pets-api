@@ -133,7 +133,7 @@ func (c *Client) CreateProject(request *requests.CreateProjectRequest) (*respons
 }
 
 func addHeaders(c *Client) error {
-	secret := c.secretStore.GetSecret("SECRETS_STORE_PETS-API_GITLAB_TOKEN_KEY_NAME")
+	secret := c.secretStore.GetSecret("GITLAB_TOKEN")
 	if secret.Err != nil {
 		return secret.Err
 	}

@@ -148,7 +148,7 @@ func TestAppService_GetAppByName(t *testing.T) {
 	service := apps.NewAppService(client, dbClient, secretStore)
 	actual, err := service.GetAppByName("customers-api")
 
-	accessToken := secretStore.GetSecret("SECRETS_STORE_PETS-API_GITLAB_TOKEN_KEY_NAME")
+	accessToken := secretStore.GetSecret("GITLAB_TOKEN")
 	assert.NoError(t, accessToken.Err)
 
 	assert.NoError(t, err)
@@ -173,7 +173,7 @@ func TestAppService_GetAppById(t *testing.T) {
 	service := apps.NewAppService(client, dbClient, secretStore)
 	actual, err := service.GetAppByID(1)
 
-	accessToken := secretStore.GetSecret("SECRETS_STORE_PETS-API_GITLAB_TOKEN_KEY_NAME")
+	accessToken := secretStore.GetSecret("GITLAB_TOKEN")
 	assert.NoError(t, accessToken.Err)
 
 	assert.NoError(t, err)
