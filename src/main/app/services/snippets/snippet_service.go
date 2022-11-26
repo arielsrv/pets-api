@@ -1,14 +1,10 @@
 package snippets
 
 import (
-	"fmt"
-	"log"
-	"os"
 	"strings"
 
 	"github.com/src/main/app/services/secrets"
 
-	"github.com/src/main/app/config"
 	"github.com/src/main/app/model"
 )
 
@@ -16,34 +12,6 @@ type SnippetType string
 
 const (
 	Secret SnippetType = "secrets"
-)
-
-type Language string
-
-const (
-	GoLanguage   Language = "Golang"
-	NodeLanguage Language = "Node.js"
-)
-
-type File string
-
-const (
-	GoFile   File = "go.snippet"
-	NodeFile File = "node.snippet"
-)
-
-type Class string
-
-const (
-	GoClass   Class = "language-golang"
-	NodeClass Class = "language-typescript"
-)
-
-type Install string
-
-const (
-	GoInstall   Install = "go get -u gitlab.com/iskaypet/ikp_go-secrets" //
-	NodeInstall Install = "npm install ikp_node-secrets --save-dev"
 )
 
 type ISnippetService interface {
@@ -69,10 +37,8 @@ type SnippetStartupBuilder struct {
 }
 
 func (s SnippetStartupBuilder) BuildSecrets() {
-	var secrets []model.SnippetModel
-	secrets = append(secrets, buildSnippet(GoLanguage, Secret, GoFile, GoClass, GoInstall))
-	secrets = append(secrets, buildSnippet(NodeLanguage, Secret, NodeFile, NodeClass, NodeInstall))
-	s.snippets[string(Secret)] = secrets
+	s.snippets[string(Secret)] = append(s.snippets[string(Secret)], New().IsSecret().ForGo().Build())
+	s.snippets[string(Secret)] = append(s.snippets[string(Secret)], New().IsSecret().ForNode().Build())
 }
 
 func (s SnippetStartupBuilder) Build() map[string][]model.SnippetModel {
@@ -104,24 +70,4 @@ func (s SnippetService) GetSecrets(secretID int64) ([]model.SnippetModel, error)
 	}
 
 	return s.snippets[string(Secret)], nil
-}
-
-func buildSnippet(language Language, snippetType SnippetType, file File, class Class, install Install) model.SnippetModel {
-	snippet := new(model.SnippetModel)
-	snippet.Class = string(class)
-	snippet.Language = string(language)
-	snippet.Install = string(install)
-	path := fmt.Sprintf("%s/%s/%s", config.String("snippets.folder"), snippetType, file)
-	snippet.Code = getFileContent(path)
-
-	return *snippet
-}
-
-func getFileContent(path string) string {
-	content, err := os.ReadFile(path)
-	if err != nil {
-		log.Fatalln(err)
-	}
-
-	return string(content)
 }

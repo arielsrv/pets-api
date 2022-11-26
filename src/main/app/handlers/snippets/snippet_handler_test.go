@@ -7,8 +7,6 @@ import (
 	"testing"
 
 	"github.com/src/main/app/handlers/snippets"
-	snippets2 "github.com/src/main/app/services/snippets"
-
 	"github.com/src/main/app/model"
 	"github.com/src/main/app/server"
 	"github.com/stretchr/testify/assert"
@@ -50,15 +48,15 @@ func GetSecrets() ([]model.SnippetModel, error) {
 	var snippets []model.SnippetModel
 
 	var snippet1 model.SnippetModel
-	snippet1.Language = string(snippets2.GoLanguage)
-	snippet1.Class = string(snippets2.GoClass)
+	snippet1.Language = "Golang"
+	snippet1.Class = "language-golang"
 	snippet1.Code = "main()"
 
 	snippets = append(snippets, snippet1)
 
 	var snippet2 model.SnippetModel
-	snippet2.Language = string(snippets2.NodeLanguage)
-	snippet2.Class = string(snippets2.NodeClass)
+	snippet2.Language = "Node.js"
+	snippet2.Class = "language-typescript"
 	snippet2.Code = "console.log()"
 
 	snippets = append(snippets, snippet2)

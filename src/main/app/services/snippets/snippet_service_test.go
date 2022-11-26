@@ -36,8 +36,8 @@ func TestSnippetService_GetSecrets(t *testing.T) {
 	assert.NotNil(t, actual)
 
 	assert.Len(t, actual, 2)
-	assert.Equal(t, actual[0].Language, string(snippets.GoLanguage))
-	assert.Equal(t, actual[1].Language, string(snippets.NodeLanguage))
+	assert.Equal(t, actual[0].Language, "Golang")
+	assert.Equal(t, actual[1].Language, "Node")
 }
 
 func GetSecret() (string, error) {
