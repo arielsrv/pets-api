@@ -9,11 +9,11 @@ import (
 )
 
 func RegisterRoutes() {
-	server.Register(server.GET, "/ping", server.Use[handlers.PingHandler]().Ping)
-	server.Register(server.GET, "/apps/groups", server.Use[apps.AppHandler]().GetGroups)
-	server.Register(server.POST, "/apps", server.Use[apps.AppHandler]().CreateApp)
-	server.Register(server.GET, "/apps/types", server.Use[apps.AppHandler]().GetAppTypes)
-	server.Register(server.GET, "/apps/search", server.Use[apps.AppHandler]().GetApp)
-	server.Register(server.POST, "/apps/:appId/secrets", server.Use[secrets.SecretHandler]().CreateSecret)
-	server.Register(server.GET, "/apps/:appId/secrets/:secretId/snippets", server.Use[snippets.SnippetHandler]().GetSnippet)
+	server.Register(server.GET, "/ping", server.Resolve[handlers.PingHandler]().Ping)
+	server.Register(server.GET, "/apps/groups", server.Resolve[apps.AppHandler]().GetGroups)
+	server.Register(server.POST, "/apps", server.Resolve[apps.AppHandler]().CreateApp)
+	server.Register(server.GET, "/apps/types", server.Resolve[apps.AppHandler]().GetAppTypes)
+	server.Register(server.GET, "/apps/search", server.Resolve[apps.AppHandler]().GetApp)
+	server.Register(server.POST, "/apps/:appId/secrets", server.Resolve[secrets.SecretHandler]().CreateSecret)
+	server.Register(server.GET, "/apps/:appId/secrets/:secretId/snippets", server.Resolve[snippets.SnippetHandler]().GetSnippet)
 }

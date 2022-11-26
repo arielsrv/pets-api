@@ -96,7 +96,7 @@ func RegisterHandler(handler any) {
 	handlers[key] = handler
 }
 
-func Use[T any](_ ...T) *T {
+func Resolve[T any](_ ...T) *T {
 	args := make([]T, 1)
 	key := getType(args[0])
 	return handlers[key].(*T)
