@@ -3,6 +3,8 @@ package gitlab
 import (
 	"fmt"
 
+	"github.com/arielsrv/ikp_go-restclient/rest"
+
 	"github.com/src/main/app/config"
 	"github.com/src/main/app/infrastructure/secrets"
 	"github.com/src/main/app/server"
@@ -12,7 +14,6 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/arielsrv/golang-toolkit/rest"
 	"github.com/src/main/app/clients/gitlab/requests"
 )
 

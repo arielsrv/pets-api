@@ -1,9 +1,10 @@
 package files_test
 
 import (
+	"testing"
+
 	"github.com/src/main/app/helpers/files"
 	"github.com/stretchr/testify/assert"
-	"testing"
 )
 
 func TestExist(t *testing.T) {

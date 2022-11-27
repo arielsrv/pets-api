@@ -5,9 +5,10 @@ import (
 	"regexp"
 	"time"
 
+	"github.com/arielsrv/ikp_go-restclient/rest"
+
 	"github.com/src/main/app/helpers/arrays"
 
-	"github.com/arielsrv/golang-toolkit/rest"
 	"github.com/go-chassis/go-archaius"
 )
 

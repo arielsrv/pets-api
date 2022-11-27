@@ -2,11 +2,12 @@ package config
 
 import (
 	"fmt"
-	"github.com/src/main/app/helpers/files"
 	"log"
 	"os"
 	"path"
 	"runtime"
+
+	"github.com/src/main/app/helpers/files"
 
 	"github.com/go-chassis/go-archaius"
 	"github.com/src/main/app/config/env"
