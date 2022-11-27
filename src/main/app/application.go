@@ -27,7 +27,7 @@ func Run() error {
 	}
 
 	address := fmt.Sprintf("%s:%s", host, port)
-	log.Printf("Listening on host, port: %s", address)
+	log.Printf("Listening on address: %s", address)
 
 	return app.Start(address)
 }

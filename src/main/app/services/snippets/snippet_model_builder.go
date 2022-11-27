@@ -26,36 +26,36 @@ func New() *SnippetModelBuilder {
 	return &SnippetModelBuilder{model: model.SnippetModel{}}
 }
 
-func (builder *SnippetModelBuilder) IsSecret() *SnippetModelBuilder {
-	builder.model.SnippetType = string(Secret)
-	return builder
+func (smb *SnippetModelBuilder) IsSecret() *SnippetModelBuilder {
+	smb.model.SnippetType = string(Secret)
+	return smb
 }
 
-func (builder *SnippetModelBuilder) ForGo() *SnippetModelBuilder {
-	builder.model.Language = "Golang"
-	builder.model.Install = "go get -u gitlab.com/iskaypet/ikp_go-secrets"
-	builder.model.File = "go.snippet"
-	builder.model.Class = "language-golang"
+func (smb *SnippetModelBuilder) ForGo() *SnippetModelBuilder {
+	smb.model.Language = "Golang"
+	smb.model.Install = "go get -u gitlab.com/iskaypet/ikp_go-secrets"
+	smb.model.File = "go.snippet"
+	smb.model.Class = "language-golang"
 
-	return builder
+	return smb
 }
 
-func (builder *SnippetModelBuilder) ForNode() *SnippetModelBuilder {
-	builder.model.Language = "Node"
-	builder.model.Install = "npm install ikp_node-secrets --save-dev"
-	builder.model.File = "node.snippet"
-	builder.model.Class = "language-typescript"
+func (smb *SnippetModelBuilder) ForNode() *SnippetModelBuilder {
+	smb.model.Language = "Node"
+	smb.model.Install = "npm install ikp_node-secrets --save-dev"
+	smb.model.File = "node.snippet"
+	smb.model.Class = "language-typescript"
 
-	return builder
+	return smb
 }
 
-func (builder *SnippetModelBuilder) Build() model.SnippetModel {
+func (smb *SnippetModelBuilder) Build() model.SnippetModel {
 	path := fmt.Sprintf("%s/%s/%s",
 		config.String("snippets.folder"),
-		builder.model.SnippetType,
-		builder.model.File)
+		smb.model.SnippetType,
+		smb.model.File)
 
-	builder.model.Code = files.GetFileContent(path)
+	smb.model.Code = files.GetFileContent(path)
 
-	return builder.model
+	return smb.model
 }
