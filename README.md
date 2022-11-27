@@ -7,6 +7,7 @@
 ## Table of contents
 
 * [Layers](#layers)
+* [Command](#command)
 * [Project setup](#project-setup)
     * [Required](#required)
     * [Optional](#optional)
@@ -21,6 +22,10 @@
 ## Layers
 
 ![layers.png](src/resources/images/layers.png)
+
+## Command
+
+[![asciicast](https://asciinema.org/a/jI7h9PfaAnZBO31Pj9ysD0Ovk.svg)](https://asciinema.org/a/jI7h9PfaAnZBO31Pj9ysD0Ovk)
 
 ## Project setup
 
