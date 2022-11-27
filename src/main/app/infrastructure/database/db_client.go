@@ -9,6 +9,7 @@ import (
 
 type IDbClient interface {
 	Context() *ent.Client
+	Close() error
 }
 
 type DBClient struct {

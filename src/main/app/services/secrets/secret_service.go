@@ -34,7 +34,7 @@ func NewSecretService(dbClient database.IDbClient, appService apps.IAppService) 
 }
 
 func (s *SecretService) GetSecret(secretID int64) (string, error) {
-	result, err := s.dbClient.Context().Secret.Query().
+	secret, err := s.dbClient.Context().Secret.Query().
 		Where(secret.ID(secretID)).
 		First(context.Background())
 
@@ -45,7 +45,7 @@ func (s *SecretService) GetSecret(secretID int64) (string, error) {
 		return "", err
 	}
 
-	return result.Key, nil
+	return secret.Key, nil
 }
 
 func (s *SecretService) CreateSecret(appID int64, secretModel *model.CreateAppSecretModel) (*model.AppSecretModel, error) {
@@ -64,7 +64,7 @@ func (s *SecretService) CreateSecret(appID int64, secretModel *model.CreateAppSe
 	}
 
 	if alreadyExist {
-		return nil, server.NewError(http.StatusConflict, fmt.Sprintf("Secret %s for app already exist. ", secretModel.Key))
+		return nil, server.NewError(http.StatusConflict, fmt.Sprintf("secret %s for app already exist.", secretModel.Key))
 	}
 
 	result, err := s.dbClient.Context().Secret.Create().

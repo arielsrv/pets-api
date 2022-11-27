@@ -23,10 +23,6 @@ type SnippetService struct {
 	snippets      map[string][]model.SnippetModel
 }
 
-type SnippetSecretModel struct {
-	model.SnippetModel
-}
-
 type ISnippetStartupBuilder interface {
 	BuildSecrets()
 	Build() map[string][]model.SnippetModel
@@ -37,8 +33,12 @@ type SnippetStartupBuilder struct {
 }
 
 func (s SnippetStartupBuilder) BuildSecrets() {
-	s.snippets[string(Secret)] = append(s.snippets[string(Secret)], New().IsSecret().ForGo().Build())
-	s.snippets[string(Secret)] = append(s.snippets[string(Secret)], New().IsSecret().ForNode().Build())
+	s.addOrUpdate(Secret, New().IsSecret().ForGo().Build())
+	s.addOrUpdate(Secret, New().IsSecret().ForNode().Build())
+}
+
+func (s SnippetStartupBuilder) addOrUpdate(snippetType SnippetType, snippetModel model.SnippetModel) {
+	s.snippets[string(snippetType)] = append(s.snippets[string(snippetType)], snippetModel)
 }
 
 func (s SnippetStartupBuilder) Build() map[string][]model.SnippetModel {

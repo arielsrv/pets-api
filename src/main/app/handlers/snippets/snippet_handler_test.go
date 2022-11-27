@@ -45,21 +45,21 @@ func TestSnippetHandler_GetSnippet(t *testing.T) {
 }
 
 func GetSecrets() ([]model.SnippetModel, error) {
-	var snippets []model.SnippetModel
+	var snippetModel []model.SnippetModel
 
 	var snippet1 model.SnippetModel
 	snippet1.Language = "Golang"
 	snippet1.Class = "language-golang"
 	snippet1.Code = "main()"
 
-	snippets = append(snippets, snippet1)
+	snippetModel = append(snippetModel, snippet1)
 
 	var snippet2 model.SnippetModel
 	snippet2.Language = "Node.js"
 	snippet2.Class = "language-typescript"
 	snippet2.Code = "console.log()"
 
-	snippets = append(snippets, snippet2)
+	snippetModel = append(snippetModel, snippet2)
 
-	return snippets, nil
+	return snippetModel, nil
 }

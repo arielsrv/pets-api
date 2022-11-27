@@ -1,6 +1,7 @@
 package snippets_test
 
 import (
+	"errors"
 	"testing"
 
 	"github.com/src/main/app/services/snippets"
@@ -40,6 +41,23 @@ func TestSnippetService_GetSecrets(t *testing.T) {
 	assert.Equal(t, actual[1].Language, "Node")
 }
 
+func TestSnippetService_GetSecrets_NotFound(t *testing.T) {
+	secretService := new(MockSecretService)
+	secretService.On("GetSecret").Return(NotFound())
+
+	service := snippets.NewSnippetService(secretService)
+
+	actual, err := service.GetSecrets(1)
+
+	assert.Error(t, err)
+	assert.Nil(t, actual)
+	assert.Equal(t, "secret with id 1 not found", err.Error())
+}
+
 func GetSecret() (string, error) {
 	return "MYSECRETKEY", nil
+}
+
+func NotFound() (string, error) {
+	return "MYSECRETKEY", errors.New("secret with id 1 not found")
 }
