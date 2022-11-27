@@ -9,14 +9,17 @@ import (
 )
 
 type ISnippetModelBuilder interface {
-	IsSecret() *SnippetModelBuilder
-	ForGo() *SnippetModelBuilder
-	ForNode() *SnippetModelBuilder
+	IsSecret() *ISnippetSecretModelBuilder
 	Build() model.SnippetModel
 }
 
 type SnippetModelBuilder struct {
 	model model.SnippetModel
+}
+
+type ISnippetSecretModelBuilder interface {
+	ForGo() *SnippetModelBuilder
+	ForNode() *SnippetModelBuilder
 }
 
 func New() *SnippetModelBuilder {
