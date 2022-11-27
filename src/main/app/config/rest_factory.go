@@ -5,6 +5,8 @@ import (
 	"regexp"
 	"time"
 
+	"github.com/src/main/app/helpers/arrays"
+
 	"github.com/arielsrv/golang-toolkit/rest"
 	"github.com/go-chassis/go-archaius"
 )
@@ -15,12 +17,18 @@ const (
 	DefaultSocketTimeout = 500
 )
 
-func ProvideRestClients() *RESTClientFactory {
-	restPoolPattern := regexp.MustCompile(`rest\.pool\.([-_\w]+)\..+`)
+const (
+	RestPoolPattern   = `rest\.pool\.([-_\w]+)\..+`
+	RestClientPattern = `rest\.client\.([-_\w]+)\..+`
+)
 
+var restPoolPattern = regexp.MustCompile(RestPoolPattern)
+var restClientPattern = regexp.MustCompile(RestClientPattern)
+
+func ProvideRestClients() *RESTClientFactory {
 	restPoolFactory := &RESTPoolFactory{builders: map[string]*rest.RequestBuilder{}}
-	poolsNames := getNamesInKeys(restPoolPattern)
-	for _, name := range poolsNames {
+	poolNames := getNamesInKeys(restPoolPattern)
+	for _, name := range poolNames {
 		restPool := &rest.RequestBuilder{
 			Timeout:        time.Millisecond * time.Duration(TryInt(fmt.Sprintf("rest.pool.%s.pool.timeout", name), DefaultPoolTimeout)),
 			ConnectTimeout: time.Millisecond * time.Duration(TryInt(fmt.Sprintf("rest.pool.%s.pool.connection-timeout", name), DefaultSocketTimeout)),
@@ -32,11 +40,9 @@ func ProvideRestClients() *RESTClientFactory {
 		restPoolFactory.Register(name, restPool)
 	}
 
-	restClientPattern := regexp.MustCompile(`rest\.client\.([-_\w]+)\..+`)
-
 	restClientFactory := RESTClientFactory{clients: map[string]*rest.RequestBuilder{}}
-	clientsNames := getNamesInKeys(restClientPattern)
-	for _, name := range clientsNames {
+	clientNames := getNamesInKeys(restClientPattern)
+	for _, name := range clientNames {
 		poolName := String(fmt.Sprintf("rest.client.%s.pool", name))
 		pool := restPoolFactory.GetPool(poolName)
 		restClientFactory.Register(name, pool)
@@ -82,27 +88,19 @@ func (r *RESTClientFactory) GetClients() map[string]*rest.RequestBuilder {
 	return r.clients
 }
 
-func Contains(elements []string, target string) bool {
-	for _, element := range elements {
-		if target == element {
-			return true
-		}
-	}
-	return false
-}
-
 func getNamesInKeys(regex *regexp.Regexp) []string {
-	var result []string
+	var names []string
 	configs := archaius.GetConfigs()
 	for key := range configs {
 		match := regex.FindStringSubmatch(key)
 		for i := range regex.SubexpNames() {
 			if i > 0 && i <= len(match) {
-				if !Contains(result, match[1]) {
-					result = append(result, match[1])
+				group := match[1]
+				if !arrays.Contains(names, group) {
+					names = append(names, group)
 				}
 			}
 		}
 	}
-	return result
+	return names
 }
