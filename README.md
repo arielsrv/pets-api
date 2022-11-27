@@ -20,7 +20,7 @@
 
 ## Layers
 
-![layers.png](/Users/ariel.pineiro/go/src/github.com/arielsrv/pets-api/src/resources/images/layers.png)
+![layers.png](src/resources/images/layers.png)
 
 ## Project setup
 
