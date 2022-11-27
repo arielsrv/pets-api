@@ -2,6 +2,7 @@ package config
 
 import (
 	"fmt"
+	"github.com/src/main/app/helpers/files"
 	"log"
 	"os"
 	"path"
@@ -28,17 +29,17 @@ func init() {
 	environment, scope := env.GetEnv(), env.GetScope()
 
 	scopeConfig := fmt.Sprintf("%s/%s/%s.%s", propertiesPath, environment, scope, File)
-	if _, err = os.Stat(scopeConfig); err == nil {
+	if files.Exist(scopeConfig) {
 		compositeConfig = append(compositeConfig, scopeConfig)
 	}
 
 	envConfig := fmt.Sprintf("%s/%s/%s", propertiesPath, environment, File)
-	if _, err = os.Stat(envConfig); err == nil {
+	if files.Exist(envConfig) {
 		compositeConfig = append(compositeConfig, envConfig)
 	}
 
 	sharedConfig := fmt.Sprintf("%s/%s", propertiesPath, File)
-	if _, err = os.Stat(sharedConfig); err == nil {
+	if files.Exist(sharedConfig) {
 		compositeConfig = append(compositeConfig, sharedConfig)
 	}
 
