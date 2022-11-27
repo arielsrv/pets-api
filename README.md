@@ -91,7 +91,17 @@ The SDK provides a simple configuration hierarchy
 * resources/config/{environment}/config.properties (override shared config by environment)
 * resources/config/{environment}/{scope}.config.properties (override env and shared config by scope)
 
-test.pets-api.internal.com
+example test.pets-api.internal.com
+
+```
+└── config
+    ├── config.yml                              third
+    └── dev
+        └── config.yml                          ignored
+    └── prod
+        └── config.yml (base config)            second
+        └── test.config.yml (base config)       first
+```
 
 ```
 2022/11/20 13:24:26 INFO: Two files have same priority. keeping
@@ -111,6 +121,8 @@ test.pets-api.internal.com
 ```
 
 ## RestClient
+
+RestPool and RestClient are dynamically created by config files.
 
 ```yaml
 # gitlab
