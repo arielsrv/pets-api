@@ -6,6 +6,7 @@
 
 ## Table of contents
 
+* [Layers](#layers)
 * [Project setup](#project-setup)
     * [Required](#required)
     * [Optional](#optional)
@@ -16,6 +17,10 @@
 * [Configuration](#configuration)
 * [RestClient](#restclient)
 * [Environment](#environment)
+
+## Layers
+
+![layers.png](/Users/ariel.pineiro/go/src/github.com/arielsrv/pets-api/src/resources/images/layers.png)
 
 ## Project setup
 
