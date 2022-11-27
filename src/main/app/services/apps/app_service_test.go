@@ -129,7 +129,7 @@ func TestAppService_CreateApp_Conflict(t *testing.T) {
 	actual, err = service.CreateApp(repositoryModel)
 	assert.Error(t, err)
 	assert.Nil(t, actual)
-	assert.Equal(t, "duplicated project name users-api", err.Error())
+	assert.Equal(t, "project name users-api already exist", err.Error())
 }
 
 func TestAppService_GetAppByName(t *testing.T) {

@@ -163,7 +163,7 @@ func (s *AppService) GetGroups() ([]model.AppGroupModel, error) {
 }
 
 func (s *AppService) CreateApp(createAppModel *model.CreateAppModel) (*model.AppModel, error) {
-	duplicated, err := s.dbClient.Context().App.Query().
+	alreadyExist, err := s.dbClient.Context().App.Query().
 		Where(app.Name(createAppModel.Name)).
 		Exist(context.Background())
 
@@ -171,8 +171,8 @@ func (s *AppService) CreateApp(createAppModel *model.CreateAppModel) (*model.App
 		return nil, err
 	}
 
-	if duplicated {
-		return nil, server.NewError(http.StatusConflict, fmt.Sprintf("duplicated project name %s", createAppModel.Name))
+	if alreadyExist {
+		return nil, server.NewError(http.StatusConflict, fmt.Sprintf("project name %s already exist", createAppModel.Name))
 	}
 
 	createProjectRequest := new(requests.CreateProjectRequest)
