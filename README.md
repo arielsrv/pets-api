@@ -72,8 +72,8 @@ task build
 
 ## Configuration
 
-Environment configuration is based on Archaius Config, you should use a similar folder structure.
-SCOPE env variable in remote environment is required
+Environment configuration is based on **Archaius Config**, you should use a similar folder structure.
+*SCOPE* env variable in remote environment is required
 
 ```
 └── config
@@ -91,7 +91,7 @@ The SDK provides a simple configuration hierarchy
 * resources/config/{environment}/config.properties (override shared config by environment)
 * resources/config/{environment}/{scope}.config.properties (override env and shared config by scope)
 
-example test.pets-api.internal.com
+example *test.pets-api.internal.com*
 
 ```
 └── config
