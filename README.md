@@ -161,4 +161,4 @@ Set up your local environment. For now, you must set some env values as environm
 * PROD_CONNECTION_STRING: {mysql_connection_string}
 * GITLAB_TOKEN: {your_access_token}
 
-Also you can set values inside **resources/config/dev/config.yml**
+Also you can set the same values inside **resources/config/dev/config.yml**
