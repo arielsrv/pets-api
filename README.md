@@ -109,9 +109,9 @@ example *test.pets-api.internal.com*
         └── test.config.yml (base config)       1st (first)
 ```
 
-**1st** (first)   prod/test.config.yml
-**2nd** (second)  prod/config.yml
-**3th** (third)   config.yml
+* 1st (first)   prod/test.config.yml
+* 2nd (second)  prod/config.yml
+* 3th (third)   config.yml
 
 ```
 2022/11/20 13:24:26 INFO: Two files have same priority. keeping
