@@ -37,6 +37,7 @@ Install the following dependencies
 - [Golang Task](https://taskfile.dev/)
 - [Golang Dependencies Update](https://github.com/oligot/go-mod-upgrade)
 - [ent - An Entity Framework For Go](https://github.com/ent/ent)
+- [MySQL](https://www.mysql.com/)
 
 ### Optional
 
@@ -47,13 +48,18 @@ If you want to browse api with SSL self-signed certificate
 
 ### Script
 
+Some tools are required, go-task is a task runner similar to Gradle, Gulp, NPM, etc.
+
 ```shell
-brew install go-task/tap/go-task
-brew install golangci-lint
+brew install go-task/tap/go-task golangci-lint mysql
 go install github.com/oligot/go-mod-upgrade@latest
 go install entgo.io/ent/cmd/ent@latest
-brew install mkcert
-brew install nginx
+```
+
+Optional if you want to have a local self-signed certificate.
+
+```shell
+brew install mkcert nginx
 ```
 
 ## Tasks
@@ -95,13 +101,17 @@ example *test.pets-api.internal.com*
 
 ```
 └── config
-    ├── config.yml                              third
+    ├── config.yml                              3th (third)
     └── dev
-        └── config.yml                          ignored
+        └── config.yml                          <ignored>
     └── prod
-        └── config.yml (base config)            second
-        └── test.config.yml (base config)       first
+        └── config.yml (base config)            2nd (second)
+        └── test.config.yml (base config)       1st (first)
 ```
+
+**1st** (first)   prod/test.config.yml
+**2nd** (second)  prod/config.yml
+**3th** (third)   config.yml
 
 ```
 2022/11/20 13:24:26 INFO: Two files have same priority. keeping

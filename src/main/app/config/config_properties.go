@@ -50,7 +50,7 @@ func init() {
 	)
 
 	if err != nil {
-		log.Fatalln(err)
+		log.Fatal(err)
 	}
 
 	log.Printf("INFO: ENV: %s, SCOPE: %s", environment, scope)

@@ -34,11 +34,14 @@ func (c *Client) GetProject(projectID int64) (*responses.ProjectResponse, error)
 	if err != nil {
 		return nil, err
 	}
+
 	apiURL := fmt.Sprintf("%s/projects/%d", c.baseURL, projectID)
 	response := c.rb.Get(apiURL)
+
 	if response.Err != nil {
 		return nil, response.Err
 	}
+
 	if response.StatusCode != http.StatusOK {
 		return nil, server.NewError(response.StatusCode, response.String())
 	}
