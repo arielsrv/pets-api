@@ -156,5 +156,9 @@ gitLabClient := gitlab.NewGitLabClient(restClients.Get("gitlab"))
 
 ## Environment
 
-SECRETS_STORE_GITLAB_TOKEN_KEY_NAME={gitlab_access_token}
-SECRETS_STORE_PROD_CONNECTION_STRING_KEY_NAME={mysql_connection_string}
+Set up your local environment. For now, you must set some env values as environment variable (export command).
+
+PROD_CONNECTION_STRING: {mysql_connection_string}
+GITLAB_TOKEN: {your_access_token}
+
+* Also you can set values inside **resources/config/dev/config.yml**
