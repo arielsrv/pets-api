@@ -122,6 +122,7 @@ func TestAppService_CreateApp_Conflict(t *testing.T) {
 	repositoryModel.Name = "users-api"
 	repositoryModel.GroupID = 1
 	repositoryModel.AppTypeID = 1
+
 	actual, err := service.CreateApp(repositoryModel)
 	assert.NoError(t, err)
 	assert.NotNil(t, actual)
