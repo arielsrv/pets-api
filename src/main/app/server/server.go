@@ -72,7 +72,7 @@ func New(appConfig ...AppConfig) *App {
 
 	if app.appConfig.Logger {
 		app.Use(logger.New(logger.Config{
-			Format:     "${time} ${locals:requestid} ${status} - ${method} ${path}\n",
+			Format:     "${cyan}${time} ${locals:requestid} ${yellow}${status} - ${green}${method} ${path}\n",
 			TimeFormat: "2006/01/02 15:04:05",
 		}))
 	}

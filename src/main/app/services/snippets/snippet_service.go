@@ -64,10 +64,18 @@ func (s SnippetService) GetSecrets(secretID int64) ([]model.SnippetModel, error)
 		return nil, err
 	}
 
-	for i, secret := range s.snippets[string(Secret)] {
-		replaced := strings.ReplaceAll(secret.Code, "$PETS_APPNAME_SECRETKEY", secretName)
-		s.snippets[string(Secret)][i].Code = replaced
+	var snippets []model.SnippetModel
+	for _, secret := range s.snippets[string(Secret)] {
+		snippet := new(model.SnippetModel)
+
+		snippet.SnippetType = secret.SnippetType
+		snippet.Language = secret.Language
+		snippet.Install = secret.Install
+		snippet.Class = secret.Class
+		snippet.Code = strings.ReplaceAll(secret.Code, "$PETS_APPNAME_SECRETKEY", secretName)
+
+		snippets = append(snippets, *snippet)
 	}
 
-	return s.snippets[string(Secret)], nil
+	return snippets, nil
 }
