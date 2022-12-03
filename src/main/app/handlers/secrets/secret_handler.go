@@ -35,7 +35,7 @@ func NewSecretHandler(appService apps.IAppService, secretService secrets.ISecret
 // @Failure      404  {object}  server.Error "App not found"
 // @Failure      409  {object}  server.Error "Key already exist"
 // @Failure      500  {object}  server.Error "Internal server error"
-// @Router       /apps/{appID}/secrets [post]
+// @Router       /apps/{appID}/secrets [post].
 func (h SecretHandler) CreateSecret(ctx *fiber.Ctx) error {
 	appID, err := ctx.ParamsInt("appID")
 	if err != nil {
