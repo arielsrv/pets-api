@@ -6,7 +6,7 @@ require (
 	entgo.io/ent v0.11.4
 	github.com/arielsrv/ikp_go-restclient v0.0.1
 	github.com/go-chassis/go-archaius v1.5.6
-	github.com/go-sql-driver/mysql v1.6.0
+	github.com/go-sql-driver/mysql v1.7.0
 	github.com/gofiber/fiber/v2 v2.40.1
 	github.com/gofiber/swagger v0.1.8
 	github.com/gofiber/template v1.7.3
