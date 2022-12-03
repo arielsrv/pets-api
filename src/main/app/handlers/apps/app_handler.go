@@ -3,6 +3,8 @@ package apps
 import (
 	"net/http"
 
+	"github.com/src/main/app/helpers/ensure"
+
 	"github.com/src/main/app/services/apps"
 
 	"github.com/gofiber/fiber/v2"
@@ -35,17 +37,17 @@ func (h AppHandler) CreateApp(ctx *fiber.Ctx) error {
 		return server.NewError(http.StatusBadRequest, "bad request error")
 	}
 
-	err := server.EnsureNotEmpty(request.Name, "bad request error, missing name")
+	err := ensure.NotEmpty(request.Name, "bad request error, missing name")
 	if err != nil {
 		return err
 	}
 
-	err = server.EnsureInt64(request.GroupID, "bad request error, invalid group id")
+	err = ensure.Int64(request.GroupID, "bad request error, invalid group id")
 	if err != nil {
 		return err
 	}
 
-	err = server.EnsureEnum(request.AppTypeID, property.AppTypeValues, "bad request error, invalid app type")
+	err = ensure.Enum(request.AppTypeID, property.AppTypeValues, "bad request error, invalid app type")
 	if err != nil {
 		return err
 	}
@@ -69,7 +71,7 @@ func (h AppHandler) GetAppTypes(ctx *fiber.Ctx) error {
 
 func (h AppHandler) GetApp(ctx *fiber.Ctx) error {
 	appName := ctx.Query("app_name")
-	err := server.EnsureNotEmpty(appName, "bad request error, missing app_name")
+	err := ensure.NotEmpty(appName, "bad request error, missing app_name")
 	if err != nil {
 		return err
 	}

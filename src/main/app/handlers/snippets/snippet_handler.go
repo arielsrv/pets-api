@@ -2,7 +2,7 @@ package snippets
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"github.com/src/main/app/server"
+	"github.com/src/main/app/helpers/ensure"
 	"github.com/src/main/app/services/snippets"
 )
 
@@ -20,7 +20,7 @@ func (h SnippetHandler) GetSnippet(ctx *fiber.Ctx) error {
 		return err
 	}
 
-	err = server.EnsureInt64(int64(secretID), "bad request error, invalid secret id")
+	err = ensure.Int64(int64(secretID), "bad request error, invalid secret id")
 	if err != nil {
 		return err
 	}

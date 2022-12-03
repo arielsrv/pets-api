@@ -3,6 +3,8 @@ package secrets
 import (
 	"net/http"
 
+	"github.com/src/main/app/helpers/ensure"
+
 	"github.com/src/main/app/services/apps"
 	"github.com/src/main/app/services/secrets"
 
@@ -47,12 +49,12 @@ func (h SecretHandler) CreateSecret(ctx *fiber.Ctx) error {
 		return server.NewError(http.StatusBadRequest, "bad request error, missing key and value properties")
 	}
 
-	err = server.EnsureNotEmpty(request.Key, "bad request error, missing key")
+	err = ensure.NotEmpty(request.Key, "bad request error, missing key")
 	if err != nil {
 		return err
 	}
 
-	err = server.EnsureNotEmpty(request.Value, "bad request error, missing value")
+	err = ensure.NotEmpty(request.Value, "bad request error, missing value")
 	if err != nil {
 		return err
 	}
