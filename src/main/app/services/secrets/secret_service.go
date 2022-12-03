@@ -34,18 +34,18 @@ func NewSecretService(dbClient database.IDbClient, appService apps.IAppService) 
 }
 
 func (s *SecretService) GetSecret(secretID int64) (string, error) {
-	secret, err := s.dbClient.Context().Secret.Query().
+	result, err := s.dbClient.Context().Secret.Query().
 		Where(secret.ID(secretID)).
 		First(context.Background())
 
 	if err != nil {
 		if ent.IsNotFound(err) {
-			return "", server.NewError(http.StatusNotFound, fmt.Sprintf("secret with id %d not found", secretID))
+			return "", server.NewError(http.StatusNotFound, fmt.Sprintf("result with id %d not found", secretID))
 		}
 		return "", err
 	}
 
-	return secret.Key, nil
+	return result.Key, nil
 }
 
 func (s *SecretService) CreateSecret(appID int64, secretModel *model.CreateAppSecretModel) (*model.AppSecretModel, error) {
