@@ -1,33 +1,54 @@
 <!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <title>Snippet</title>
+</head>
 <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/github-dark.min.css">
 <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
 <script>
     hljs.highlightAll();
 </script>
 <style>
+    :root {
+        --font-family: -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Helvetica,
+        Arial,
+        sans-serif,
+        "Apple Color Emoji",
+        "Segoe UI Emoji";
+    }
+
     pre {
         tab-size: 4;
+        font-family: var(--font-family);
+    }
+
+    h2 {
+        font-family: var(--font-family);
     }
 
     body {
         color: white;
         background: black;
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+        font-family: var(--font-family);
     }
 </style>
 <body>
 {{range $i, $snippet := .Model}}
-    <h2>{{ $snippet.Language }}</h2>
-    <p>Installation</p>
-    <div>
+<h2>{{ $snippet.Language }}</h2>
+<p>Installation</p>
+<div>
         <pre>
             <code class="language-bash">{{ $snippet.Install }}</code>
         </pre>
-    </div>
-    <div>
+</div>
+<div>
         <pre>
             <code class="{{ $snippet.Class }}">{{ $snippet.Code }}</code>
         </pre>
-    </div>
+</div>
 {{end}}
 </body>
+</html>
