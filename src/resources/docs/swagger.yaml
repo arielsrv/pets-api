@@ -1,8 +1,73 @@
+definitions:
+  model.AppSecretModel:
+    properties:
+      key:
+        type: string
+      original_key:
+        type: string
+      snippet_url:
+        type: string
+    type: object
+  model.CreateAppSecretModel:
+    properties:
+      key:
+        type: string
+      value:
+        type: string
+    type: object
+  server.Error:
+    properties:
+      message:
+        type: string
+      status_code:
+        type: integer
+    type: object
 info:
   contact: {}
   description: Pets API.
   title: Pets API.
 paths:
+  /apps/{appID}/secrets:
+    post:
+      consumes:
+      - application/json
+      description: Get snippet key, conflict if secret already exist.
+      parameters:
+      - description: Body params
+        in: body
+        name: createAppSecretModel
+        required: true
+        schema:
+          $ref: '#/definitions/model.CreateAppSecretModel'
+      - description: Pet ID
+        in: path
+        name: appID
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.AppSecretModel'
+            type: array
+        "404":
+          description: App not found
+          schema:
+            $ref: '#/definitions/server.Error'
+        "409":
+          description: Key already exist
+          schema:
+            $ref: '#/definitions/server.Error'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/server.Error'
+      summary: Creates the secret
+      tags:
+      - secrets
   /ping:
     get:
       description: Health
@@ -15,5 +80,5 @@ paths:
             type: string
       summary: Check if the instance is healthy or unhealthy
       tags:
-      - Check
+      - health
 swagger: "2.0"

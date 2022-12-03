@@ -24,7 +24,7 @@ func NewPingHandler(pingService services.IPingService) *PingHandler {
 //
 //	@Summary		Check if the instance is healthy or unhealthy
 //	@Description	Health
-//	@Tags			Check
+//	@Tags			health
 //	@Success		200
 //	@Produce		plain
 //	@Success		200	{string}	string	"pong"

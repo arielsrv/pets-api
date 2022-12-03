@@ -23,6 +23,19 @@ func NewSecretHandler(appService apps.IAppService, secretService secrets.ISecret
 	}
 }
 
+// CreateSecret godoc
+// @Summary      Creates the secret
+// @Description  Get snippet key, conflict if secret already exist.
+// @Tags         secrets
+// @Accept       json
+// @Produce      json
+// @Param 		 createAppSecretModel    body model.CreateAppSecretModel true "Body params"
+// @Param appID  path int true "Pet ID"
+// @Success      200  {array}   model.AppSecretModel
+// @Failure      404  {object}  server.Error "App not found"
+// @Failure      409  {object}  server.Error "Key already exist"
+// @Failure      500  {object}  server.Error "Internal server error"
+// @Router       /apps/{appID}/secrets [post]
 func (h SecretHandler) CreateSecret(ctx *fiber.Ctx) error {
 	appID, err := ctx.ParamsInt("appID")
 	if err != nil {

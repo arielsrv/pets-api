@@ -18,7 +18,7 @@ func Run() error {
 
 	host := config.String("HOST")
 	if env.IsEmpty(host) {
-		host = "127.0.0.1"
+		host = "0.0.0.0"
 	}
 
 	port := config.String("PORT")

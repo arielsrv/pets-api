@@ -16,6 +16,68 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/apps/{appID}/secrets": {
+            "post": {
+                "description": "Get snippet key, conflict if secret already exist.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "secrets"
+                ],
+                "summary": "Creates the secret",
+                "parameters": [
+                    {
+                        "description": "Body params",
+                        "name": "createAppSecretModel",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.CreateAppSecretModel"
+                        }
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Pet ID",
+                        "name": "appID",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/model.AppSecretModel"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "App not found",
+                        "schema": {
+                            "$ref": "#/definitions/server.Error"
+                        }
+                    },
+                    "409": {
+                        "description": "Key already exist",
+                        "schema": {
+                            "$ref": "#/definitions/server.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/server.Error"
+                        }
+                    }
+                }
+            }
+        },
         "/ping": {
             "get": {
                 "description": "Health",
@@ -23,7 +85,7 @@ const docTemplate = `{
                     "text/plain"
                 ],
                 "tags": [
-                    "Check"
+                    "health"
                 ],
                 "summary": "Check if the instance is healthy or unhealthy",
                 "responses": {
@@ -33,6 +95,44 @@ const docTemplate = `{
                             "type": "string"
                         }
                     }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "model.AppSecretModel": {
+            "type": "object",
+            "properties": {
+                "key": {
+                    "type": "string"
+                },
+                "original_key": {
+                    "type": "string"
+                },
+                "snippet_url": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.CreateAppSecretModel": {
+            "type": "object",
+            "properties": {
+                "key": {
+                    "type": "string"
+                },
+                "value": {
+                    "type": "string"
+                }
+            }
+        },
+        "server.Error": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "status_code": {
+                    "type": "integer"
                 }
             }
         }
