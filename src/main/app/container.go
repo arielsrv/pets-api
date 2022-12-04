@@ -3,12 +3,14 @@ package app
 import (
 	"log"
 
-	"github.com/src/main/app/handlers/apps"
-	secrets2 "github.com/src/main/app/handlers/secrets"
-	"github.com/src/main/app/handlers/snippets"
-	apps2 "github.com/src/main/app/services/apps"
-	secrets3 "github.com/src/main/app/services/secrets"
-	snippets2 "github.com/src/main/app/services/snippets"
+	pingHandler "github.com/src/main/app/handlers"
+	appHandler "github.com/src/main/app/handlers/apps"
+	secretHandler "github.com/src/main/app/handlers/secrets"
+	snippetHandler "github.com/src/main/app/handlers/snippets"
+	pingService "github.com/src/main/app/services"
+	appService "github.com/src/main/app/services/apps"
+	secretService "github.com/src/main/app/services/secrets"
+	snippetService "github.com/src/main/app/services/snippets"
 
 	"github.com/src/main/app/config"
 	"github.com/src/main/app/config/env"
@@ -17,9 +19,7 @@ import (
 	"github.com/src/main/app/infrastructure/secrets"
 
 	"github.com/src/main/app/clients/gitlab"
-	"github.com/src/main/app/handlers"
 	"github.com/src/main/app/server"
-	"github.com/src/main/app/services"
 
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -29,23 +29,23 @@ var dbClient = ProvideDBClient()
 var restClients = config.ProvideRestClients()
 
 func RegisterHandlers() {
-	pingService := services.NewPingService()
-	pingHandler := handlers.NewPingHandler(pingService)
-	server.RegisterHandler(pingHandler)
+	newPingService := pingService.NewPingService()
+	newPingHandler := pingHandler.NewPingHandler(newPingService)
+	server.RegisterHandler(newPingHandler)
 
 	gitLabClient := gitlab.NewGitLabClient(restClients.Get("gitlab"), secretStore)
 
-	appService := apps2.NewAppService(gitLabClient, dbClient, secretStore)
-	appHandler := apps.NewAppHandler(appService)
-	server.RegisterHandler(appHandler)
+	newAppService := appService.NewAppService(gitLabClient, dbClient, secretStore)
+	newAppHandler := appHandler.NewAppHandler(newAppService)
+	server.RegisterHandler(newAppHandler)
 
-	secretService := secrets3.NewSecretService(dbClient, appService)
-	secretHandler := secrets2.NewSecretHandler(appService, secretService)
-	server.RegisterHandler(secretHandler)
+	newSecretService := secretService.NewSecretService(dbClient, newAppService)
+	newSecretHandler := secretHandler.NewSecretHandler(newAppService, newSecretService)
+	server.RegisterHandler(newSecretHandler)
 
-	snippetService := snippets2.NewSnippetService(secretService)
-	snippetHandler := snippets.NewSnippetHandler(snippetService)
-	server.RegisterHandler(snippetHandler)
+	newSnippetService := snippetService.NewSnippetService(newSecretService)
+	newSnippetHandler := snippetHandler.NewSnippetHandler(newSnippetService)
+	server.RegisterHandler(newSnippetHandler)
 }
 
 func getSecretValue(key string) string {
