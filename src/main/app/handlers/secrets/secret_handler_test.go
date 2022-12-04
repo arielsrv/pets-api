@@ -39,7 +39,7 @@ func (m *MockAppService) GetGroups() ([]model.AppGroupResponse, error) {
 	return args.Get(0).([]model.AppGroupResponse), args.Error(1)
 }
 
-func (m *MockAppService) CreateApp(request *model.CreateAppRequest) (*model.CreateAppResponse, error) {
+func (m *MockAppService) CreateApp(*model.CreateAppRequest) (*model.CreateAppResponse, error) {
 	args := m.Called()
 	return args.Get(0).(*model.CreateAppResponse), args.Error(1)
 }

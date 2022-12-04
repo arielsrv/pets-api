@@ -22,7 +22,7 @@ func (m *MockAppService) GetGroups() ([]model.AppGroupResponse, error) {
 	panic("implement me")
 }
 
-func (m *MockAppService) CreateApp(request *model.CreateAppRequest) (*model.CreateAppResponse, error) {
+func (m *MockAppService) CreateApp(*model.CreateAppRequest) (*model.CreateAppResponse, error) {
 	// TODO implement me
 	panic("implement me")
 }
