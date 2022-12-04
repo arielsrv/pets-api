@@ -18,10 +18,10 @@ create table pets.apps
 (
     id          bigint auto_increment
         primary key,
-    name        varchar(255)         not null,
-    project_id  bigint               not null,
+    name        varchar(255) not null,
+    project_id  bigint       not null,
     active      tinyint(1) default 1 not null,
-    app_type_id bigint               null,
+    app_type_id bigint null,
     constraint name
         unique (name),
     constraint external_gitlab_project_id
