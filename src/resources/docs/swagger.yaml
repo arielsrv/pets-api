@@ -1,5 +1,5 @@
 definitions:
-  model.AppSecretModel:
+  model.Secret:
     properties:
       key:
         type: string
@@ -51,7 +51,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/model.AppSecretModel'
+              $ref: '#/definitions/model.Secret'
             type: array
         "404":
           description: App not found

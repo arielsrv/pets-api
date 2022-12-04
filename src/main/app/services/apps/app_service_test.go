@@ -96,7 +96,7 @@ func TestAppService_CreateRepository(t *testing.T) {
 	secretStore := secrets.NewLocalSecretStore()
 
 	service := apps.NewAppService(client, dbClient, secretStore)
-	appModel := new(model.CreateAppModel)
+	appModel := new(model.App)
 	appModel.Name = "my project name"
 	appModel.AppTypeID = 1
 	actual, err := service.CreateApp(appModel)
@@ -118,7 +118,7 @@ func TestAppService_CreateApp_Conflict(t *testing.T) {
 	secretStore := secrets.NewLocalSecretStore()
 
 	service := apps.NewAppService(client, dbClient, secretStore)
-	repositoryModel := new(model.CreateAppModel)
+	repositoryModel := new(model.App)
 	repositoryModel.Name = "users-api"
 	repositoryModel.GroupID = 1
 	repositoryModel.AppTypeID = 1

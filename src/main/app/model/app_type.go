@@ -1,6 +1,6 @@
 package model
 
-type AppTypeModel struct {
+type AppType struct {
 	ID   int    `json:"id,omitempty"`
 	Name string `json:"name,omitempty"`
 }

@@ -32,9 +32,9 @@ func NewSecretHandler(appService apps.IAppService, secretService secrets.ISecret
 // @Tags		secrets
 // @Accept		json
 // @Produce		json
-// @Param		createAppSecretModel	body model.CreateAppSecretModel  true "Body params"
+// @Param		createAppSecretModel	body model.Secret  true "Body params"
 // @Param		appID  path int true "Pet ID"
-// @Success		200  {array}   model.AppSecretModel
+// @Success		200  {array}   model.Secret
 // @Failure		404  {object}  server.Error "App not found"
 // @Failure		409  {object}  server.Error "Key already exist"
 // @Failure		500  {object}  server.Error "Internal server error"
@@ -45,7 +45,7 @@ func (h SecretHandler) CreateSecret(ctx *fiber.Ctx) error {
 		return err
 	}
 
-	request := new(model.CreateAppSecretModel)
+	request := new(model.Secret)
 	if err = ctx.BodyParser(request); err != nil {
 		return server.NewError(http.StatusBadRequest, "bad request error, missing key and value properties")
 	}

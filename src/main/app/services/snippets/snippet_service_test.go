@@ -15,7 +15,7 @@ type MockSecretService struct {
 	mock.Mock
 }
 
-func (m *MockSecretService) CreateSecret(int64, *model.CreateAppSecretModel) (*model.AppSecretModel, error) {
+func (m *MockSecretService) CreateSecret(int64, *model.Secret) (*model.Secret, error) {
 	// TODO implement me
 	panic("implement me")
 }

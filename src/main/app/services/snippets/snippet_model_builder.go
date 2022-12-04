@@ -10,11 +10,11 @@ import (
 
 type ISnippetModelBuilder interface {
 	IsSecret() *ISnippetSecretModelBuilder
-	Build() model.SnippetModel
+	Build() model.Snippet
 }
 
 type SnippetModelBuilder struct {
-	model model.SnippetModel
+	model model.Snippet
 }
 
 type ISnippetSecretModelBuilder interface {
@@ -23,7 +23,7 @@ type ISnippetSecretModelBuilder interface {
 }
 
 func New() *SnippetModelBuilder {
-	return &SnippetModelBuilder{model: model.SnippetModel{}}
+	return &SnippetModelBuilder{model: model.Snippet{}}
 }
 
 func (smb *SnippetModelBuilder) IsSecret() *SnippetModelBuilder {
@@ -49,7 +49,7 @@ func (smb *SnippetModelBuilder) ForNode() *SnippetModelBuilder {
 	return smb
 }
 
-func (smb *SnippetModelBuilder) Build() model.SnippetModel {
+func (smb *SnippetModelBuilder) Build() model.Snippet {
 	path := fmt.Sprintf("%s/%s/%s",
 		config.String("snippets.folder"),
 		smb.model.SnippetType,

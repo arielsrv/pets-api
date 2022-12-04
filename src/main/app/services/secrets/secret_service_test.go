@@ -17,29 +17,29 @@ type MockAppService struct {
 	mock.Mock
 }
 
-func (m *MockAppService) GetGroups() ([]model.AppGroupModel, error) {
+func (m *MockAppService) GetGroups() ([]model.AppGroup, error) {
 	// TODO implement me
 	panic("implement me")
 }
 
-func (m *MockAppService) CreateApp(*model.CreateAppModel) (*model.AppModel, error) {
+func (m *MockAppService) CreateApp(*model.App) (*model.App, error) {
 	// TODO implement me
 	panic("implement me")
 }
 
-func (m *MockAppService) GetAppTypes() ([]model.AppTypeModel, error) {
+func (m *MockAppService) GetAppTypes() ([]model.AppType, error) {
 	// TODO implement me
 	panic("implement me")
 }
 
-func (m *MockAppService) GetAppByName(string) (*model.AppModel, error) {
+func (m *MockAppService) GetAppByName(string) (*model.App, error) {
 	// TODO implement me
 	panic("implement me")
 }
 
-func (m *MockAppService) GetAppByID(int64) (*model.AppModel, error) {
+func (m *MockAppService) GetAppByID(int64) (*model.App, error) {
 	args := m.Called()
-	return args.Get(0).(*model.AppModel), args.Error(1)
+	return args.Get(0).(*model.App), args.Error(1)
 }
 
 func TestSecretService_GetSecret(t *testing.T) {
@@ -88,7 +88,7 @@ func TestSecretService_CreateSecret(t *testing.T) {
 	appService.On("GetAppByID").Return(GetApp())
 
 	service := secrets.NewSecretService(dbClient, appService)
-	secretModel := new(model.CreateAppSecretModel)
+	secretModel := new(model.Secret)
 	secretModel.Key = "MYSECRETKEY"
 	secretModel.Value = "MYSECRETVALUE"
 	actual, err := service.CreateSecret(1, secretModel)
@@ -112,7 +112,7 @@ func TestSecretService_CreateSecret_Conflict(t *testing.T) {
 	appService.On("GetAppByID").Return(GetApp())
 
 	service := secrets.NewSecretService(dbClient, appService)
-	secretModel := new(model.CreateAppSecretModel)
+	secretModel := new(model.Secret)
 	secretModel.Key = "MYSECRETKEY"
 	secretModel.Value = "MYSECRETVALUE"
 	actual, err := service.CreateSecret(1, secretModel)
@@ -129,8 +129,8 @@ func TestSecretService_CreateSecret_Conflict(t *testing.T) {
 	assert.Nil(t, conflict)
 }
 
-func GetApp() (*model.AppModel, error) {
-	appModel := new(model.AppModel)
+func GetApp() (*model.App, error) {
+	appModel := new(model.App)
 	appModel.ID = 1
 	appModel.Name = "MyApp"
 	appModel.URL = "/apps/1/secrets/2/snippets"

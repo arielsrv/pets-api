@@ -20,9 +20,9 @@ type MockSecretService struct {
 	mock.Mock
 }
 
-func (m *MockSecretService) CreateSecret(int64, *model.CreateAppSecretModel) (*model.AppSecretModel, error) {
+func (m *MockSecretService) CreateSecret(int64, *model.Secret) (*model.Secret, error) {
 	args := m.Called()
-	return args.Get(0).(*model.AppSecretModel), args.Error(1)
+	return args.Get(0).(*model.Secret), args.Error(1)
 }
 
 func (m *MockSecretService) GetSecret(int64) (string, error) {
@@ -34,29 +34,29 @@ type MockAppService struct {
 	mock.Mock
 }
 
-func (m *MockAppService) GetGroups() ([]model.AppGroupModel, error) {
+func (m *MockAppService) GetGroups() ([]model.AppGroup, error) {
 	args := m.Called()
-	return args.Get(0).([]model.AppGroupModel), args.Error(1)
+	return args.Get(0).([]model.AppGroup), args.Error(1)
 }
 
-func (m *MockAppService) CreateApp(*model.CreateAppModel) (*model.AppModel, error) {
+func (m *MockAppService) CreateApp(*model.App) (*model.App, error) {
 	args := m.Called()
-	return args.Get(0).(*model.AppModel), args.Error(1)
+	return args.Get(0).(*model.App), args.Error(1)
 }
 
-func (m *MockAppService) GetAppTypes() ([]model.AppTypeModel, error) {
+func (m *MockAppService) GetAppTypes() ([]model.AppType, error) {
 	args := m.Called()
-	return args.Get(0).([]model.AppTypeModel), args.Error(1)
+	return args.Get(0).([]model.AppType), args.Error(1)
 }
 
-func (m *MockAppService) GetAppByName(string) (*model.AppModel, error) {
+func (m *MockAppService) GetAppByName(string) (*model.App, error) {
 	args := m.Called()
-	return args.Get(0).(*model.AppModel), args.Error(1)
+	return args.Get(0).(*model.App), args.Error(1)
 }
 
-func (m *MockAppService) GetAppByID(int64) (*model.AppModel, error) {
+func (m *MockAppService) GetAppByID(int64) (*model.App, error) {
 	args := m.Called()
-	return args.Get(0).(*model.AppModel), args.Error(1)
+	return args.Get(0).(*model.App), args.Error(1)
 }
 
 func TestSecretHandler_CreateSecret(t *testing.T) {
@@ -86,8 +86,8 @@ func TestSecretHandler_CreateSecret(t *testing.T) {
 	assert.Equal(t, "{\"key\":\"my_secret_key\",\"snippet_url\":\"/relative_url\"}", string(body))
 }
 
-func GetNewSecret() (*model.AppSecretModel, error) {
-	appSecretModel := new(model.AppSecretModel)
+func GetNewSecret() (*model.Secret, error) {
+	appSecretModel := new(model.Secret)
 	appSecretModel.Key = "my_secret_key"
 	appSecretModel.SnippetURL = "/relative_url"
 

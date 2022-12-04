@@ -53,7 +53,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/model.AppSecretModel"
+                                "$ref": "#/definitions/model.Secret"
                             }
                         }
                     },
@@ -100,7 +100,7 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "model.AppSecretModel": {
+        "model.Secret": {
             "type": "object",
             "properties": {
                 "key": {
