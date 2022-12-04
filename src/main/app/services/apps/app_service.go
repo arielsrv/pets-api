@@ -13,7 +13,6 @@ import (
 	"github.com/src/main/app/server"
 
 	"github.com/src/main/app/clients/gitlab"
-	"github.com/src/main/app/clients/gitlab/requests"
 	"github.com/src/main/app/config"
 	"github.com/src/main/app/ent"
 	"github.com/src/main/app/ent/app"
@@ -175,7 +174,7 @@ func (s *AppService) CreateApp(appModel *model.CreateAppRequest) (*model.CreateA
 		return nil, server.NewError(http.StatusConflict, fmt.Sprintf("project name %s already exist", appModel.Name))
 	}
 
-	createProjectRequest := new(requests.CreateProjectRequest)
+	createProjectRequest := new(gitlab.CreateProjectRequest)
 	createProjectRequest.Name = fmt.Sprintf("%s%s", config.String("gitlab.prefix"), appModel.Name)
 	createProjectRequest.GroupID = appModel.GroupID
 

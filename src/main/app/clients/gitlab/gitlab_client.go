@@ -9,18 +9,14 @@ import (
 	"github.com/src/main/app/infrastructure/secrets"
 	"github.com/src/main/app/server"
 
-	"github.com/src/main/app/clients/gitlab/responses"
-
 	"net/http"
 	"strconv"
-
-	"github.com/src/main/app/clients/gitlab/requests"
 )
 
 type IGitLabClient interface {
-	GetGroups() ([]responses.GroupResponse, error)
-	CreateProject(request *requests.CreateProjectRequest) (*responses.CreateProjectResponse, error)
-	GetProject(projectID int64) (*responses.ProjectResponse, error)
+	GetGroups() ([]GroupResponse, error)
+	CreateProject(request *CreateProjectRequest) (*CreateProjectResponse, error)
+	GetProject(projectID int64) (*ProjectResponse, error)
 }
 
 type Client struct {
@@ -29,7 +25,7 @@ type Client struct {
 	secretStore secrets.ISecretStore
 }
 
-func (c *Client) GetProject(projectID int64) (*responses.ProjectResponse, error) {
+func (c *Client) GetProject(projectID int64) (*ProjectResponse, error) {
 	err := addHeaders(c)
 	if err != nil {
 		return nil, err
@@ -46,7 +42,7 @@ func (c *Client) GetProject(projectID int64) (*responses.ProjectResponse, error)
 		return nil, server.NewError(response.StatusCode, response.String())
 	}
 
-	var projectResponse responses.ProjectResponse
+	var projectResponse ProjectResponse
 	err = response.FillUp(&projectResponse)
 	if err != nil {
 		return nil, err
@@ -63,7 +59,7 @@ func NewGitLabClient(rb *rest.RequestBuilder, secretStore secrets.ISecretStore) 
 	}
 }
 
-func (c *Client) GetGroups() ([]responses.GroupResponse, error) {
+func (c *Client) GetGroups() ([]GroupResponse, error) {
 	apiURL := fmt.Sprintf("%s/groups", c.baseURL)
 	err := addHeaders(c)
 	if err != nil {
@@ -76,7 +72,7 @@ func (c *Client) GetGroups() ([]responses.GroupResponse, error) {
 	if response.StatusCode != http.StatusOK {
 		return nil, server.NewError(response.StatusCode, response.String())
 	}
-	var groups []responses.GroupResponse
+	var groups []GroupResponse
 	err = response.FillUp(&groups)
 	if err != nil {
 		return nil, err
@@ -101,7 +97,7 @@ func (c *Client) GetGroups() ([]responses.GroupResponse, error) {
 			if pages[i].Response().StatusCode != http.StatusOK {
 				return nil, server.NewError(pages[i].Response().StatusCode, pages[i].Response().String())
 			}
-			var page []responses.GroupResponse
+			var page []GroupResponse
 			err = pages[i].Response().FillUp(&page)
 			if err != nil {
 				return nil, err
@@ -113,7 +109,7 @@ func (c *Client) GetGroups() ([]responses.GroupResponse, error) {
 	return groups, nil
 }
 
-func (c *Client) CreateProject(request *requests.CreateProjectRequest) (*responses.CreateProjectResponse, error) {
+func (c *Client) CreateProject(request *CreateProjectRequest) (*CreateProjectResponse, error) {
 	err := addHeaders(c)
 	if err != nil {
 		return nil, err
@@ -127,7 +123,7 @@ func (c *Client) CreateProject(request *requests.CreateProjectRequest) (*respons
 		return nil, server.NewError(response.StatusCode, response.String())
 	}
 
-	var createProjectResponse responses.CreateProjectResponse
+	var createProjectResponse CreateProjectResponse
 	err = response.FillUp(&createProjectResponse)
 	if err != nil {
 		return nil, err

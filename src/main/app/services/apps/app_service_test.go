@@ -6,14 +6,14 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/src/main/app/clients/gitlab"
+
 	"github.com/src/main/app/services/apps"
 
 	"github.com/src/main/app/infrastructure/secrets"
 
 	"github.com/src/main/app/infrastructure/database"
 
-	"github.com/src/main/app/clients/gitlab/requests"
-	"github.com/src/main/app/clients/gitlab/responses"
 	"github.com/src/main/app/ent"
 	"github.com/src/main/app/model"
 
@@ -25,19 +25,19 @@ type MockClient struct {
 	mock.Mock
 }
 
-func (m *MockClient) GetGroups() ([]responses.GroupResponse, error) {
+func (m *MockClient) GetGroups() ([]gitlab.GroupResponse, error) {
 	args := m.Called()
-	return args.Get(0).([]responses.GroupResponse), args.Error(1)
+	return args.Get(0).([]gitlab.GroupResponse), args.Error(1)
 }
 
-func (m *MockClient) CreateProject(*requests.CreateProjectRequest) (*responses.CreateProjectResponse, error) {
+func (m *MockClient) CreateProject(*gitlab.CreateProjectRequest) (*gitlab.CreateProjectResponse, error) {
 	args := m.Called()
-	return args.Get(0).(*responses.CreateProjectResponse), args.Error(1)
+	return args.Get(0).(*gitlab.CreateProjectResponse), args.Error(1)
 }
 
-func (m *MockClient) GetProject(int64) (*responses.ProjectResponse, error) {
+func (m *MockClient) GetProject(int64) (*gitlab.ProjectResponse, error) {
 	args := m.Called()
-	return args.Get(0).(*responses.ProjectResponse), args.Error(1)
+	return args.Get(0).(*gitlab.ProjectResponse), args.Error(1)
 }
 
 func TestAppService_GetGroups(t *testing.T) {
@@ -79,7 +79,7 @@ func TestAppService_GetGroups_Err(t *testing.T) {
 	assert.Nil(t, actual)
 }
 
-func GetGroupsError() ([]responses.GroupResponse, error) {
+func GetGroupsError() ([]gitlab.GroupResponse, error) {
 	return nil, errors.New("src server error")
 }
 
@@ -222,36 +222,36 @@ func TestAppService_GetAppTypes(t *testing.T) {
 	assert.Equal(t, "backend", actual[0].Name)
 }
 
-func GetProject() (*responses.ProjectResponse, error) {
-	projectResponse := new(responses.ProjectResponse)
+func GetProject() (*gitlab.ProjectResponse, error) {
+	projectResponse := new(gitlab.ProjectResponse)
 	projectResponse.ID = 1
 	projectResponse.URL = "https://domain.com/repo_url"
 
 	return projectResponse, nil
 }
 
-func GetProjectNotFoundErr() (*responses.ProjectResponse, error) {
+func GetProjectNotFoundErr() (*gitlab.ProjectResponse, error) {
 	var notFoundErr *ent.NotFoundError
 	return nil, notFoundErr
 }
 
-func GetCreateProjectResponse() (*responses.CreateProjectResponse, error) {
-	var createProjectResponse responses.CreateProjectResponse
+func GetCreateProjectResponse() (*gitlab.CreateProjectResponse, error) {
+	var createProjectResponse gitlab.CreateProjectResponse
 	createProjectResponse.ID = 1
 	createProjectResponse.URL = "https://gitlab.com/repoURL"
 
 	return &createProjectResponse, nil
 }
 
-func GetGroups() ([]responses.GroupResponse, error) {
-	var group1 responses.GroupResponse
+func GetGroups() ([]gitlab.GroupResponse, error) {
+	var group1 gitlab.GroupResponse
 	group1.ID = 1
 	group1.Path = "root/group1"
-	var group2 responses.GroupResponse
+	var group2 gitlab.GroupResponse
 	group2.ID = 2
 	group2.Path = "root/group2"
 
-	var groups []responses.GroupResponse
+	var groups []gitlab.GroupResponse
 	groups = append(groups, group1)
 	groups = append(groups, group2)
 

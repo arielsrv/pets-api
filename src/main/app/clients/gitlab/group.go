@@ -1,4 +1,4 @@
-package responses
+package gitlab
 
 type GroupResponse struct {
 	ID   int64  `json:"id"`
