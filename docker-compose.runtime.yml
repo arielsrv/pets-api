@@ -1,0 +1,34 @@
+version: '3'
+services:
+  go:
+    build:
+      context: .
+      dockerfile: Dockerfile.runtime
+    command: /bin/sh -c "go run src/main/program.go"
+    environment:
+      - app_env=dev
+      - SCOPE=docker
+    stdin_open: true
+    tty: true
+    volumes:
+      - .:/app
+    ports:
+      - "8080:8080"
+    depends_on:
+      - "db"
+
+  db:
+    image: mysql:8.0.31
+    environment:
+      MYSQL_DATABASE: 'pets'
+      MYSQL_ROOT_PASSWORD: 'a300p011'
+    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    volumes:
+      - db-data:/var/lib/mysql
+      - ./db/my.cnf:/etc/mysql/conf.d/my.cnf
+    ports:
+      - "3306:3306"
+
+volumes:
+  db-data:
+    driver: local

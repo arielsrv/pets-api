@@ -37,6 +37,10 @@ func GetEnv() string {
 	if !IsEmpty(env) {
 		return env
 	}
+	env = os.Getenv("app_env")
+	if !IsEmpty(env) {
+		return env
+	}
 	scope := GetScope()
 	if IsEmpty(scope) {
 		return DEV.String()

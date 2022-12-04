@@ -30,3 +30,18 @@ create table pets.apps
         foreign key (app_type_id) references pets.apps_types (id)
             on delete set null
 );
+
+create table pets.secrets
+(
+    id     bigint auto_increment
+        primary key,
+    `key`  varchar(255) not null,
+    value  varchar(255) not null,
+    active tinyint(1) default 1 not null,
+    app_id bigint       not null,
+    constraint `key`
+        unique (`key`),
+    constraint secrets_apps_app
+        foreign key (app_id) references pets.apps (id)
+) collate = utf8mb4_bin;
+
