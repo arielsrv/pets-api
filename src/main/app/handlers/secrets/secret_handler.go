@@ -3,13 +3,14 @@ package secrets
 import (
 	"net/http"
 
+	"github.com/src/main/app/model"
+
 	"github.com/src/main/app/helpers/ensure"
 
 	"github.com/src/main/app/services/apps"
 	"github.com/src/main/app/services/secrets"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/src/main/app/model"
 	"github.com/src/main/app/server"
 )
 

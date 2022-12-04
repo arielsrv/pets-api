@@ -3,13 +3,13 @@ package apps
 import (
 	"net/http"
 
+	"github.com/src/main/app/model"
+
 	"github.com/src/main/app/helpers/ensure"
 
 	"github.com/src/main/app/services/apps"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/src/main/app/ent/property"
-	"github.com/src/main/app/model"
 	"github.com/src/main/app/server"
 )
 
@@ -47,7 +47,7 @@ func (h AppHandler) CreateApp(ctx *fiber.Ctx) error {
 		return err
 	}
 
-	err = ensure.Enum(request.AppTypeID, property.AppTypeValues, "bad request error, invalid app type")
+	err = ensure.Enum(request.AppTypeID, "bad request error, invalid app type")
 	if err != nil {
 		return err
 	}

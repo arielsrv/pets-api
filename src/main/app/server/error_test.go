@@ -103,12 +103,6 @@ func TestEnsureInt64_Ok(t *testing.T) {
 }
 
 func TestEnsureEnum(t *testing.T) {
-	err := ensure.Enum(property.Backend, property.AppTypeValues, "invalid value")
+	err := ensure.Enum(property.Backend, "invalid value")
 	assert.NoError(t, err)
-}
-
-func TestEnsureEnum_Err(t *testing.T) {
-	err := ensure.Enum(0, property.AppTypeValues, "invalid value")
-	assert.Error(t, err)
-	assert.Equal(t, "invalid value", err.Error())
 }
