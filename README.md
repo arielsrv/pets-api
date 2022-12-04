@@ -149,9 +149,24 @@ rest:
 ```
 
 ```go
-var restClients = config.ProvideRestClients()
+package main
 
-gitLabClient := gitlab.NewGitLabClient(restClients.Get("gitlab"))
+import (
+	"github.com/src/main/app/clients/gitlab"
+	"github.com/src/main/app/config"
+	"log"
+)
+
+func main() {
+    factory := config.ProvideRestClients()
+	gitLabClient := gitlab.NewGitLabClient(factory.Get("gitlab"), nil)
+	result, err := gitLabClient.GetGroups()
+	if err != nil {
+	    log.Fatal(err)
+    }
+	log.Println(result)
+}
+
 ```
 
 ## Environment
@@ -161,4 +176,4 @@ Set up your local environment. For now, you must set some env values as environm
 * PROD_CONNECTION_STRING: {mysql_connection_string}
 * GITLAB_TOKEN: {your_access_token}
 
-Also you can set the same values inside **resources/config/dev/config.yml**
+Also,  you can set the same values inside **resources/config/dev/config.yml**
