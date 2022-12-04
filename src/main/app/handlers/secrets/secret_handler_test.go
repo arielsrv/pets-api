@@ -20,9 +20,9 @@ type MockSecretService struct {
 	mock.Mock
 }
 
-func (m *MockSecretService) CreateSecret(int64, *model.Secret) (*model.Secret, error) {
+func (m *MockSecretService) CreateSecret(int64, *model.CreateSecretRequest) (*model.CreateSecretResponse, error) {
 	args := m.Called()
-	return args.Get(0).(*model.Secret), args.Error(1)
+	return args.Get(0).(*model.CreateSecretResponse), args.Error(1)
 }
 
 func (m *MockSecretService) GetSecret(int64) (string, error) {
@@ -34,29 +34,29 @@ type MockAppService struct {
 	mock.Mock
 }
 
-func (m *MockAppService) GetGroups() ([]model.AppGroup, error) {
+func (m *MockAppService) GetGroups() ([]model.AppGroupResponse, error) {
 	args := m.Called()
-	return args.Get(0).([]model.AppGroup), args.Error(1)
+	return args.Get(0).([]model.AppGroupResponse), args.Error(1)
 }
 
-func (m *MockAppService) CreateApp(*model.App) (*model.App, error) {
+func (m *MockAppService) CreateApp(request *model.CreateAppRequest) (*model.CreateAppResponse, error) {
 	args := m.Called()
-	return args.Get(0).(*model.App), args.Error(1)
+	return args.Get(0).(*model.CreateAppResponse), args.Error(1)
 }
 
-func (m *MockAppService) GetAppTypes() ([]model.AppType, error) {
+func (m *MockAppService) GetAppTypes() ([]model.AppTypeResponse, error) {
 	args := m.Called()
-	return args.Get(0).([]model.AppType), args.Error(1)
+	return args.Get(0).([]model.AppTypeResponse), args.Error(1)
 }
 
-func (m *MockAppService) GetAppByName(string) (*model.App, error) {
+func (m *MockAppService) GetAppByName(string) (*model.AppResponse, error) {
 	args := m.Called()
-	return args.Get(0).(*model.App), args.Error(1)
+	return args.Get(0).(*model.AppResponse), args.Error(1)
 }
 
-func (m *MockAppService) GetAppByID(int64) (*model.App, error) {
+func (m *MockAppService) GetAppByID(int64) (*model.AppResponse, error) {
 	args := m.Called()
-	return args.Get(0).(*model.App), args.Error(1)
+	return args.Get(0).(*model.AppResponse), args.Error(1)
 }
 
 func TestSecretHandler_CreateSecret(t *testing.T) {
@@ -86,8 +86,8 @@ func TestSecretHandler_CreateSecret(t *testing.T) {
 	assert.Equal(t, "{\"key\":\"my_secret_key\",\"snippet_url\":\"/relative_url\"}", string(body))
 }
 
-func GetNewSecret() (*model.Secret, error) {
-	appSecretModel := new(model.Secret)
+func GetNewSecret() (*model.CreateSecretResponse, error) {
+	appSecretModel := new(model.CreateSecretResponse)
 	appSecretModel.Key = "my_secret_key"
 	appSecretModel.SnippetURL = "/relative_url"
 

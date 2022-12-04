@@ -1,6 +1,6 @@
 package model
 
-type Snippet struct {
+type SnippetViewModel struct {
 	SnippetType string
 	Language    string
 	Class       string

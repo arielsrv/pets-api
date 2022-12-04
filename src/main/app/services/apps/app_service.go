@@ -21,11 +21,11 @@ import (
 )
 
 type IAppService interface {
-	GetGroups() ([]model.AppGroup, error)
-	CreateApp(createAppModel *model.App) (*model.App, error)
-	GetAppTypes() ([]model.AppType, error)
-	GetAppByName(appName string) (*model.App, error)
-	GetAppByID(appID int64) (*model.App, error)
+	GetGroups() ([]model.AppGroupResponse, error)
+	CreateApp(createAppModel *model.CreateAppRequest) (*model.CreateAppResponse, error)
+	GetAppTypes() ([]model.AppTypeResponse, error)
+	GetAppByName(appName string) (*model.AppResponse, error)
+	GetAppByID(appID int64) (*model.AppResponse, error)
 }
 
 type AppService struct {
@@ -42,7 +42,7 @@ func NewAppService(gitLabClient gitlab.IGitLabClient, dbClient database.IDbClien
 	}
 }
 
-func (s *AppService) GetAppByName(appName string) (*model.App, error) {
+func (s *AppService) GetAppByName(appName string) (*model.AppResponse, error) {
 	application, err := s.dbClient.Context().App.Query().
 		Where(app.Name(appName)).
 		First(context.Background())
@@ -76,14 +76,14 @@ func (s *AppService) GetAppByName(appName string) (*model.App, error) {
 		repoURL.Host,
 		repoURL.Path)
 
-	appModel := new(model.App)
-	appModel.ID = application.ID
-	appModel.URL = secureURL
+	appResponse := new(model.AppResponse)
+	appResponse.ID = application.ID
+	appResponse.URL = secureURL
 
-	return appModel, nil
+	return appResponse, nil
 }
 
-func (s *AppService) GetAppByID(appID int64) (*model.App, error) {
+func (s *AppService) GetAppByID(appID int64) (*model.AppResponse, error) {
 	application, err := s.dbClient.Context().App.Query().
 		Where(app.ID(appID)).
 		First(context.Background())
@@ -117,7 +117,7 @@ func (s *AppService) GetAppByID(appID int64) (*model.App, error) {
 		repoURL.Host,
 		repoURL.Path)
 
-	appModel := new(model.App)
+	appModel := new(model.AppResponse)
 	appModel.ID = application.ID
 	appModel.Name = application.Name
 	appModel.URL = secureURL
@@ -125,7 +125,7 @@ func (s *AppService) GetAppByID(appID int64) (*model.App, error) {
 	return appModel, nil
 }
 
-func (s *AppService) GetAppTypes() ([]model.AppType, error) {
+func (s *AppService) GetAppTypes() ([]model.AppTypeResponse, error) {
 	appTypes, err := s.dbClient.Context().AppType.
 		Query().
 		All(context.Background())
@@ -134,9 +134,9 @@ func (s *AppService) GetAppTypes() ([]model.AppType, error) {
 		return nil, err
 	}
 
-	var appTypesModel []model.AppType
+	var appTypesModel []model.AppTypeResponse
 	for _, appType := range appTypes {
-		var appTypeModel model.AppType
+		var appTypeModel model.AppTypeResponse
 		appTypeModel.ID = appType.ID
 		appTypeModel.Name = appType.Name
 		appTypesModel = append(appTypesModel, appTypeModel)
@@ -145,15 +145,15 @@ func (s *AppService) GetAppTypes() ([]model.AppType, error) {
 	return appTypesModel, nil
 }
 
-func (s *AppService) GetGroups() ([]model.AppGroup, error) {
+func (s *AppService) GetGroups() ([]model.AppGroupResponse, error) {
 	groupsResponse, err := s.gitLabClient.GetGroups()
 	if err != nil {
 		return nil, err
 	}
 
-	var groupsDto []model.AppGroup
+	var groupsDto []model.AppGroupResponse
 	for _, groupResponse := range groupsResponse {
-		var groupDto model.AppGroup
+		var groupDto model.AppGroupResponse
 		groupDto.ID = groupResponse.ID
 		groupDto.Name = groupResponse.Path
 		groupsDto = append(groupsDto, groupDto)
@@ -162,7 +162,7 @@ func (s *AppService) GetGroups() ([]model.AppGroup, error) {
 	return groupsDto, nil
 }
 
-func (s *AppService) CreateApp(appModel *model.App) (*model.App, error) {
+func (s *AppService) CreateApp(appModel *model.CreateAppRequest) (*model.CreateAppResponse, error) {
 	alreadyExist, err := s.dbClient.Context().App.Query().
 		Where(app.Name(appModel.Name)).
 		Exist(context.Background())
@@ -195,8 +195,9 @@ func (s *AppService) CreateApp(appModel *model.App) (*model.App, error) {
 		return nil, err
 	}
 
-	appModel.ID = application.ID
-	appModel.URL = response.URL
+	createAppResponse := new(model.CreateAppResponse)
+	createAppResponse.ID = application.ID
+	createAppResponse.URL = response.URL
 
-	return appModel, err
+	return createAppResponse, err
 }

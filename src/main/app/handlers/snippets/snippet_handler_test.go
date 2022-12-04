@@ -17,9 +17,9 @@ type MockSnippetService struct {
 	mock.Mock
 }
 
-func (m *MockSnippetService) GetSecrets(int64) ([]model.Snippet, error) {
+func (m *MockSnippetService) GetSecrets(int64) ([]model.SnippetViewModel, error) {
 	args := m.Called()
-	return args.Get(0).([]model.Snippet), args.Error(1)
+	return args.Get(0).([]model.SnippetViewModel), args.Error(1)
 }
 
 func TestSnippetHandler_GetSnippet(t *testing.T) {
@@ -44,17 +44,17 @@ func TestSnippetHandler_GetSnippet(t *testing.T) {
 	assert.NotEmpty(t, string(body))
 }
 
-func GetSecrets() ([]model.Snippet, error) {
-	var snippetModel []model.Snippet
+func GetSecrets() ([]model.SnippetViewModel, error) {
+	var snippetModel []model.SnippetViewModel
 
-	var snippet1 model.Snippet
+	var snippet1 model.SnippetViewModel
 	snippet1.Language = "Golang"
 	snippet1.Class = "language-golang"
 	snippet1.Code = "main()"
 
 	snippetModel = append(snippetModel, snippet1)
 
-	var snippet2 model.Snippet
+	var snippet2 model.SnippetViewModel
 	snippet2.Language = "Node.js"
 	snippet2.Class = "language-typescript"
 	snippet2.Code = "console.log()"

@@ -17,7 +17,7 @@ import (
 )
 
 type ISecretService interface {
-	CreateSecret(appID int64, secretModel *model.Secret) (*model.Secret, error)
+	CreateSecret(appID int64, secretModel *model.CreateSecretRequest) (*model.CreateSecretResponse, error)
 	GetSecret(secretID int64) (string, error)
 }
 
@@ -48,14 +48,15 @@ func (s *SecretService) GetSecret(secretID int64) (string, error) {
 	return result.Key, nil
 }
 
-func (s *SecretService) CreateSecret(appID int64, secretModel *model.Secret) (*model.Secret, error) {
+func (s *SecretService) CreateSecret(appID int64, secretModel *model.CreateSecretRequest) (*model.CreateSecretResponse, error) {
 	appModel, err := s.appService.GetAppByID(appID)
 	if err != nil {
 		return nil, err
 	}
 
-	secretModel.OriginalKey = secretModel.Key
-	secretModel.Key = strings.ToUpper(secretModel.Key)
+	createAppResponse := new(model.CreateSecretResponse)
+	createAppResponse.OriginalKey = secretModel.Key
+	createAppResponse.Key = strings.ToUpper(secretModel.Key)
 
 	alreadyExist, err := s.dbClient.Context().Secret.
 		Query().
@@ -80,7 +81,7 @@ func (s *SecretService) CreateSecret(appID int64, secretModel *model.Secret) (*m
 		return nil, err
 	}
 
-	secretModel.SnippetURL = fmt.Sprintf("/apps/%d/secrets/%d/snippets", appID, result.ID)
+	createAppResponse.SnippetURL = fmt.Sprintf("/apps/%d/secrets/%d/snippets", appID, result.ID)
 
-	return secretModel, nil
+	return createAppResponse, nil
 }

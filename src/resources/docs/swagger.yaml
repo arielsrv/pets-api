@@ -1,18 +1,18 @@
 definitions:
-  model.Secret:
+  model.CreateSecretRequest:
+    properties:
+      key:
+        type: string
+      value:
+        type: string
+    type: object
+  model.CreateSecretResponse:
     properties:
       key:
         type: string
       original_key:
         type: string
       snippet_url:
-        type: string
-    type: object
-  model.CreateAppSecretModel:
-    properties:
-      key:
-        type: string
-      value:
         type: string
     type: object
   server.Error:
@@ -38,7 +38,7 @@ paths:
         name: createAppSecretModel
         required: true
         schema:
-          $ref: '#/definitions/model.CreateAppSecretModel'
+          $ref: '#/definitions/model.CreateSecretRequest'
       - description: Pet ID
         in: path
         name: appID
@@ -51,7 +51,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/model.Secret'
+              $ref: '#/definitions/model.CreateSecretResponse'
             type: array
         "404":
           description: App not found

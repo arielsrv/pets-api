@@ -15,21 +15,21 @@ const (
 )
 
 type ISnippetService interface {
-	GetSecrets(secretID int64) ([]model.Snippet, error)
+	GetSecrets(secretID int64) ([]model.SnippetViewModel, error)
 }
 
 type SnippetService struct {
 	secretService secrets.ISecretService
-	snippets      map[string][]model.Snippet
+	snippets      map[string][]model.SnippetViewModel
 }
 
 type ISnippetStartupBuilder interface {
 	BuildSecrets()
-	Build() map[string][]model.Snippet
+	Build() map[string][]model.SnippetViewModel
 }
 
 type SnippetStartupBuilder struct {
-	snippets map[string][]model.Snippet
+	snippets map[string][]model.SnippetViewModel
 }
 
 func (s SnippetStartupBuilder) BuildSecrets() {
@@ -37,12 +37,12 @@ func (s SnippetStartupBuilder) BuildSecrets() {
 	s.addOrUpdate(Secret, New().IsSecret().ForNode().Build())
 }
 
-func (s SnippetStartupBuilder) addOrUpdate(snippetType SnippetType, snippetModel model.Snippet) {
+func (s SnippetStartupBuilder) addOrUpdate(snippetType SnippetType, snippetModel model.SnippetViewModel) {
 	s.snippets[string(snippetType)] = append(s.snippets[string(snippetType)], snippetModel)
 }
 
-func (s SnippetStartupBuilder) Build() map[string][]model.Snippet {
-	s.snippets = make(map[string][]model.Snippet)
+func (s SnippetStartupBuilder) Build() map[string][]model.SnippetViewModel {
+	s.snippets = make(map[string][]model.SnippetViewModel)
 	s.BuildSecrets()
 
 	return s.snippets
@@ -58,15 +58,15 @@ func NewSnippetService(secretService secrets.ISecretService) *SnippetService {
 	}
 }
 
-func (s SnippetService) GetSecrets(secretID int64) ([]model.Snippet, error) {
+func (s SnippetService) GetSecrets(secretID int64) ([]model.SnippetViewModel, error) {
 	secretName, err := s.secretService.GetSecret(secretID)
 	if err != nil {
 		return nil, err
 	}
 
-	var snippets []model.Snippet
+	var snippets []model.SnippetViewModel
 	for _, secret := range s.snippets[string(Secret)] {
-		snippet := new(model.Snippet)
+		snippet := new(model.SnippetViewModel)
 
 		snippet.SnippetType = secret.SnippetType
 		snippet.Language = secret.Language

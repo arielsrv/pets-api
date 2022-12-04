@@ -36,7 +36,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/model.CreateAppSecretModel"
+                            "$ref": "#/definitions/model.CreateSecretRequest"
                         }
                     },
                     {
@@ -53,7 +53,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/model.Secret"
+                                "$ref": "#/definitions/model.CreateSecretResponse"
                             }
                         }
                     },
@@ -100,7 +100,18 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "model.Secret": {
+        "model.CreateSecretRequest": {
+            "type": "object",
+            "properties": {
+                "key": {
+                    "type": "string"
+                },
+                "value": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.CreateSecretResponse": {
             "type": "object",
             "properties": {
                 "key": {
@@ -110,17 +121,6 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "snippet_url": {
-                    "type": "string"
-                }
-            }
-        },
-        "model.CreateAppSecretModel": {
-            "type": "object",
-            "properties": {
-                "key": {
-                    "type": "string"
-                },
-                "value": {
                     "type": "string"
                 }
             }

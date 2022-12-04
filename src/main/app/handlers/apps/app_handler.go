@@ -32,7 +32,7 @@ func (h AppHandler) GetGroups(ctx *fiber.Ctx) error {
 }
 
 func (h AppHandler) CreateApp(ctx *fiber.Ctx) error {
-	request := new(model.App)
+	request := new(model.CreateAppRequest)
 	if err := ctx.BodyParser(request); err != nil {
 		return server.NewError(http.StatusBadRequest, "bad request error")
 	}

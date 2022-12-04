@@ -26,7 +26,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/model.CreateAppSecretModel"
+                            "$ref": "#/definitions/model.CreateSecretRequest"
                         }
                     },
                     {
@@ -43,7 +43,7 @@
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/model.Secret"
+                                "$ref": "#/definitions/model.CreateSecretResponse"
                             }
                         }
                     },
@@ -90,7 +90,18 @@
         }
     },
     "definitions": {
-        "model.Secret": {
+        "model.CreateSecretRequest": {
+            "type": "object",
+            "properties": {
+                "key": {
+                    "type": "string"
+                },
+                "value": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.CreateSecretResponse": {
             "type": "object",
             "properties": {
                 "key": {
@@ -100,17 +111,6 @@
                     "type": "string"
                 },
                 "snippet_url": {
-                    "type": "string"
-                }
-            }
-        },
-        "model.CreateAppSecretModel": {
-            "type": "object",
-            "properties": {
-                "key": {
-                    "type": "string"
-                },
-                "value": {
                     "type": "string"
                 }
             }
