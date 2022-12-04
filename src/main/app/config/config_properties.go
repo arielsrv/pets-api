@@ -14,7 +14,7 @@ import (
 )
 
 const (
-	File = "config.yml"
+	ConfigFile = "config.yml"
 )
 
 func init() {
@@ -25,21 +25,24 @@ func init() {
 		log.Fatalln(err)
 	}
 
-	var compositeConfig []string
-	propertiesPath := fmt.Sprintf("%s/resources/config", root)
-	environment, scope := env.GetEnv(), env.GetScope()
+	propertiesPath, environment, scope :=
+		fmt.Sprintf("%s/resources/config", root),
+		env.GetEnv(),
+		env.GetScope()
 
-	scopeConfig := fmt.Sprintf("%s/%s/%s.%s", propertiesPath, environment, scope, File)
+	var compositeConfig []string
+
+	scopeConfig := fmt.Sprintf("%s/%s/%s.%s", propertiesPath, environment, scope, ConfigFile)
 	if files.Exist(scopeConfig) {
 		compositeConfig = append(compositeConfig, scopeConfig)
 	}
 
-	envConfig := fmt.Sprintf("%s/%s/%s", propertiesPath, environment, File)
+	envConfig := fmt.Sprintf("%s/%s/%s", propertiesPath, environment, ConfigFile)
 	if files.Exist(envConfig) {
 		compositeConfig = append(compositeConfig, envConfig)
 	}
 
-	sharedConfig := fmt.Sprintf("%s/%s", propertiesPath, File)
+	sharedConfig := fmt.Sprintf("%s/%s", propertiesPath, ConfigFile)
 	if files.Exist(sharedConfig) {
 		compositeConfig = append(compositeConfig, sharedConfig)
 	}
