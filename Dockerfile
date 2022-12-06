@@ -17,7 +17,7 @@ RUN go mod download
 RUN go build -gcflags "all=-N -l" -o server src/main/program.go
 
 # Final stage
-FROM debian:buster
+FROM debian:bullseye
 #
 EXPOSE 8080 40000
 #
