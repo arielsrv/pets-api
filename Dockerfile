@@ -7,6 +7,11 @@ RUN go install github.com/go-delve/delve/cmd/dlv@latest
 ADD . /app
 WORKDIR /app
 
+# Cache
+COPY go.mod .
+COPY go.sum .
+RUN go mod download
+
 # Compile the application with the optimizations turned off
 # This is important for the debugger to correctly work with the binary
 RUN go build -gcflags "all=-N -l" -o server src/main/program.go
