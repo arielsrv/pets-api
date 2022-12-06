@@ -18,7 +18,7 @@
 * [Configuration](#configuration)
 * [RestClient](#restclient)
 * [Environment](#environment)
-    * [Local services](#local)
+    * [Local services](#local-services)
     * [Docker compose](#docker-compose)
 
 ## Layers
