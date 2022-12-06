@@ -24,7 +24,7 @@ definitions:
     type: object
 info:
   contact: {}
-  description: Pets API.
+  description: Backend for Pets Clients.
   title: Pets API.
 paths:
   /apps/{appID}/secrets:

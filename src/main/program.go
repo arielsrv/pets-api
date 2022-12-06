@@ -8,7 +8,7 @@ import (
 )
 
 // @title Pets API.
-// @description Pets API.
+// @description Backend for Pets Clients.
 func main() {
 	if err := app.Run(); err != nil {
 		log.Fatal(err)

@@ -1,7 +1,7 @@
 {
     "swagger": "2.0",
     "info": {
-        "description": "Pets API.",
+        "description": "Backend for Pets Clients.",
         "title": "Pets API.",
         "contact": {}
     },
