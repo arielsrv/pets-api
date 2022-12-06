@@ -18,6 +18,8 @@
 * [Configuration](#configuration)
 * [RestClient](#restclient)
 * [Environment](#environment)
+    * [Local services](#local)
+    * [Docker compose](#docker-compose)
 
 ## Layers
 
@@ -173,7 +175,15 @@ func main() {
 
 Set up your local environment. For now, you must set some env values as environment variable (export command).
 
-* PROD_CONNECTION_STRING: {mysql_connection_string}
-* GITLAB_TOKEN: {your_access_token}
+    * PROD_CONNECTION_STRING: {mysql_connection_string}
+    * GITLAB_TOKEN: {your_access_token}
 
-Also, you can set the same values inside **resources/config/dev/config.yml**
+Also, you can set the same values inside resources/config/dev/config.yml
+
+### Local services
+
+If you want to run program.go you must install mysql in your environment.
+
+### Docker compose
+
+If you want to run isolated local environment you must install docker and run docker-compose.
