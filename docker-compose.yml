@@ -22,13 +22,11 @@ services:
     environment:
       MYSQL_DATABASE: 'pets'
       MYSQL_ROOT_PASSWORD: 'a300p011'
-    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
     volumes:
-      - db-data:/var/lib/mysql
-      - ./db/my.cnf:/etc/mysql/conf.d/my.cnf
+      - mysql-volume:/var/lib/mysql
     ports:
       - "3306:3306"
 
 volumes:
-  db-data:
+  mysql-volume:
     driver: local
