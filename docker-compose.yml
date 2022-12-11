@@ -1,7 +1,7 @@
 version: "3.8"
 services:
   api:
-    container_name: app
+    container_name: pets-api
     build: ./
     ports:
       - "8080:8080"
@@ -17,7 +17,7 @@ services:
     depends_on:
       - db
   db:
-    container_name: model
+    container_name: pets-db
     image: mysql:8.0.31
     environment:
       MYSQL_DATABASE: 'pets'
