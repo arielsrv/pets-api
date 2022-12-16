@@ -91,7 +91,9 @@ func TestAppService_CreateRepository(t *testing.T) {
 	dbClient.Context()
 	defer dbClient.Close()
 
-	dbClient.AppType.Create().SetID(1).SetName("backend").Save(context.Background())
+	appType, err := dbClient.AppType.Create().SetID(1).SetName("backend").Save(context.Background())
+	assert.NoError(t, err)
+	assert.NotNil(t, appType)
 
 	secretStore := secrets.NewLocalSecretStore()
 
@@ -113,7 +115,9 @@ func TestAppService_CreateApp_Conflict(t *testing.T) {
 	dbClient.Context()
 	defer dbClient.Close()
 
-	dbClient.AppType.Create().SetID(1).SetName("backend").Save(context.Background())
+	appType, err := dbClient.AppType.Create().SetID(1).SetName("backend").Save(context.Background())
+	assert.NoError(t, err)
+	assert.NotNil(t, appType)
 
 	secretStore := secrets.NewLocalSecretStore()
 
@@ -141,8 +145,13 @@ func TestAppService_GetAppByName(t *testing.T) {
 	dbClient.Context()
 	defer dbClient.Close()
 
-	dbClient.AppType.Create().SetID(1).SetName("backend").Save(context.Background())
-	dbClient.App.Create().SetName("customers-api").SetExternalGitlabProjectID(1).SetAppTypeID(1).Save(context.Background())
+	appType, err := dbClient.AppType.Create().SetID(1).SetName("backend").Save(context.Background())
+	assert.NoError(t, err)
+	assert.NotNil(t, appType)
+
+	app, err := dbClient.App.Create().SetName("customers-api").SetExternalGitlabProjectID(1).SetAppTypeID(1).Save(context.Background())
+	assert.NoError(t, err)
+	assert.NotNil(t, app)
 
 	secretStore := secrets.NewLocalSecretStore()
 
@@ -166,8 +175,13 @@ func TestAppService_GetAppById(t *testing.T) {
 	dbClient.Context()
 	defer dbClient.Close()
 
-	dbClient.AppType.Create().SetID(1).SetName("backend").Save(context.Background())
-	dbClient.App.Create().SetName("customers-api").SetExternalGitlabProjectID(1).SetAppTypeID(1).Save(context.Background())
+	appType, err := dbClient.AppType.Create().SetID(1).SetName("backend").Save(context.Background())
+	assert.NoError(t, err)
+	assert.NotNil(t, appType)
+
+	app, err := dbClient.App.Create().SetName("customers-api").SetExternalGitlabProjectID(1).SetAppTypeID(1).Save(context.Background())
+	assert.NoError(t, err)
+	assert.NotNil(t, app)
 
 	secretStore := secrets.NewLocalSecretStore()
 
@@ -208,7 +222,9 @@ func TestAppService_GetAppTypes(t *testing.T) {
 	dbClient.Context()
 	defer dbClient.Close()
 
-	dbClient.AppType.Create().SetID(1).SetName("backend").Save(context.Background())
+	appType, err := dbClient.AppType.Create().SetID(1).SetName("backend").Save(context.Background())
+	assert.NoError(t, err)
+	assert.NotNil(t, appType)
 
 	secretStore := secrets.NewLocalSecretStore()
 

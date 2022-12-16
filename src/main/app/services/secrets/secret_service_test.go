@@ -47,9 +47,21 @@ func TestSecretService_GetSecret(t *testing.T) {
 	dbClient.Context()
 	defer dbClient.Close()
 
-	dbClient.AppType.Create().SetID(1).SetName("backend").Save(context.Background())
-	dbClient.App.Create().SetName("customers-api").SetExternalGitlabProjectID(1).SetAppTypeID(1).Save(context.Background())
-	dbClient.Secret.Create().SetKey("PETS_CUSTOMERS-API_MYSECRETKEY").SetValue("MYSECRETVALUE").SetAppID(1).Save(context.Background())
+	appType, err := dbClient.AppType.Create().
+		SetID(1).SetName("backend").Save(context.Background())
+	assert.NoError(t, err)
+	assert.NotNil(t, appType)
+
+	app, err := dbClient.App.Create().
+		SetName("customers-api").SetExternalGitlabProjectID(1).SetAppTypeID(1).Save(context.Background())
+
+	assert.NoError(t, err)
+	assert.NotNil(t, app)
+
+	secret, err := dbClient.Secret.Create().
+		SetKey("PETS_CUSTOMERS-API_MYSECRETKEY").SetValue("MYSECRETVALUE").SetAppID(1).Save(context.Background())
+	assert.NoError(t, err)
+	assert.NotNil(t, secret)
 
 	appService := new(MockAppService)
 
@@ -81,8 +93,16 @@ func TestSecretService_CreateSecret(t *testing.T) {
 	dbClient.Context()
 	defer dbClient.Close()
 
-	dbClient.AppType.Create().SetID(1).SetName("backend").Save(context.Background())
-	dbClient.App.Create().SetName("customers-api").SetExternalGitlabProjectID(1).SetAppTypeID(1).Save(context.Background())
+	appType, err := dbClient.AppType.Create().
+		SetID(1).SetName("backend").Save(context.Background())
+	assert.NoError(t, err)
+	assert.NotNil(t, appType)
+
+	app, err := dbClient.App.Create().
+		SetName("customers-api").SetExternalGitlabProjectID(1).SetAppTypeID(1).Save(context.Background())
+
+	assert.NoError(t, err)
+	assert.NotNil(t, app)
 
 	appService := new(MockAppService)
 	appService.On("GetAppByID").Return(GetApp())
@@ -105,8 +125,16 @@ func TestSecretService_CreateSecret_Conflict(t *testing.T) {
 	dbClient.Context()
 	defer dbClient.Close()
 
-	dbClient.AppType.Create().SetID(1).SetName("backend").Save(context.Background())
-	dbClient.App.Create().SetName("customers-api").SetExternalGitlabProjectID(1).SetAppTypeID(1).Save(context.Background())
+	appType, err := dbClient.AppType.Create().
+		SetID(1).SetName("backend").Save(context.Background())
+	assert.NoError(t, err)
+	assert.NotNil(t, appType)
+
+	app, err := dbClient.App.Create().
+		SetName("customers-api").SetExternalGitlabProjectID(1).SetAppTypeID(1).Save(context.Background())
+
+	assert.NoError(t, err)
+	assert.NotNil(t, app)
 
 	appService := new(MockAppService)
 	appService.On("GetAppByID").Return(GetApp())

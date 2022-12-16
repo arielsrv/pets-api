@@ -9,8 +9,7 @@ import (
 
 func TestContains(t *testing.T) {
 	var values []int
-	values = append(values, 1)
-	values = append(values, 2)
+	values = append(values, 1, 2)
 
 	actual := arrays.Contains(values, 1)
 	assert.True(t, actual)
@@ -18,8 +17,7 @@ func TestContains(t *testing.T) {
 
 func TestContains_NotFound(t *testing.T) {
 	var values []int
-	values = append(values, 1)
-	values = append(values, 2)
+	values = append(values, 1, 2)
 
 	actual := arrays.Contains(values, 3)
 	assert.False(t, actual)

@@ -89,7 +89,7 @@ linters-settings:
       modules:
         - github.com/golang/protobuf:
             recommendations:
-              - google.go.org/protobuf
+              - google.golang.org/protobuf
             reason: "see https://developers.google.com/protocol-buffers/docs/reference/go/faq#modules"
         - github.com/satori/go.uuid:
             recommendations:
@@ -98,7 +98,7 @@ linters-settings:
         - github.com/gofrs/uuid:
             recommendations:
               - github.com/google/uuid
-            reason: "see recommendation from dev-infra team: https://confluence.gtforge.com/x/gQI6Aw"
+            reason: "gofrs' package is not go module"
 
   govet:
     # Enable all analyzers.
@@ -149,7 +149,7 @@ linters:
   disable-all: true
   enable:
     ## enabled by default
-    #- errcheck # checking for unchecked errors, these unchecked errors can be critical bugs in some cases
+    - errcheck # checking for unchecked errors, these unchecked errors can be critical bugs in some cases
     - gosimple # specializes in simplifying a code
     - govet # reports suspicious constructs, such as Printf calls whose arguments do not align with the format string
     - ineffassign # detects when assignments to existing variables are not used
@@ -179,7 +179,7 @@ linters:
     - gocyclo # computes and checks the cyclomatic complexity of functions
     - godot # checks if comments end in a period
     - goimports # in addition to fixing imports, goimports also formats your code in the same style as gofmt
-    #- gomnd # detects magic numbers
+    - gomnd # detects magic numbers
     - gomoddirectives # manages the use of 'replace', 'retract', and 'excludes' directives in go.mod
     - gomodguard # allow and block lists linter for direct Go module dependencies. This is different from depguard where there are different block types for example version constraints and module recommendations
     - goprintffuncname # checks that printf-like functions are named with f at the end
@@ -215,7 +215,7 @@ linters:
     ## you may want to enable
     #- decorder # checks declaration order and count of types, constants, variables and functions
     #- exhaustruct # checks if all structure fields are initialized
-    #- gci # controls go package import order and makes it always deterministic
+    #- gci # controls golang package import order and makes it always deterministic
     #- godox # detects FIXME, TODO and other comment keywords
     #- goheader # checks is file header matches to pattern
     #- interfacebloat # checks the number of methods inside an interface
@@ -242,7 +242,7 @@ linters:
     #- nlreturn # [too strict and mostly code is not more readable] checks for a new line before return and branch statements to increase code clarity
     #- paralleltest # [too many false positives] detects missing usage of t.Parallel() method in your Go test
     #- tagliatelle # checks the struct tags
-    #- thelper # detects go test helpers without t.Helper() call and checks the consistency of test helpers
+    #- thelper # detects golang test helpers without t.Helper() call and checks the consistency of test helpers
     #- wsl # [too strict and mostly code is not more readable] whitespace linter forces you to use empty lines
 
     ## deprecated
