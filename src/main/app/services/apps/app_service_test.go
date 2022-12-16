@@ -46,7 +46,10 @@ func TestAppService_GetGroups(t *testing.T) {
 
 	dbClient := database.NewDBClient(database.NewSQLiteClient(t))
 	dbClient.Context()
-	defer dbClient.Close()
+	defer func(dbClient *database.DBClient) {
+		err := dbClient.Close()
+		assert.NoError(t, err)
+	}(dbClient)
 
 	secretStore := secrets.NewLocalSecretStore()
 
@@ -68,7 +71,10 @@ func TestAppService_GetGroups_Err(t *testing.T) {
 
 	dbClient := database.NewDBClient(database.NewSQLiteClient(t))
 	dbClient.Context()
-	defer dbClient.Close()
+	defer func(dbClient *database.DBClient) {
+		err := dbClient.Close()
+		assert.NoError(t, err)
+	}(dbClient)
 
 	secretStore := secrets.NewLocalSecretStore()
 
@@ -89,7 +95,10 @@ func TestAppService_CreateRepository(t *testing.T) {
 
 	dbClient := database.NewDBClient(database.NewSQLiteClient(t))
 	dbClient.Context()
-	defer dbClient.Close()
+	defer func(dbClient *database.DBClient) {
+		err := dbClient.Close()
+		assert.NoError(t, err)
+	}(dbClient)
 
 	appType, err := dbClient.AppType.Create().SetID(1).SetName("backend").Save(context.Background())
 	assert.NoError(t, err)
@@ -113,7 +122,10 @@ func TestAppService_CreateApp_Conflict(t *testing.T) {
 
 	dbClient := database.NewDBClient(database.NewSQLiteClient(t))
 	dbClient.Context()
-	defer dbClient.Close()
+	defer func(dbClient *database.DBClient) {
+		err := dbClient.Close()
+		assert.NoError(t, err)
+	}(dbClient)
 
 	appType, err := dbClient.AppType.Create().SetID(1).SetName("backend").Save(context.Background())
 	assert.NoError(t, err)
@@ -143,7 +155,10 @@ func TestAppService_GetAppByName(t *testing.T) {
 
 	dbClient := database.NewDBClient(database.NewSQLiteClient(t))
 	dbClient.Context()
-	defer dbClient.Close()
+	defer func(dbClient *database.DBClient) {
+		err := dbClient.Close()
+		assert.NoError(t, err)
+	}(dbClient)
 
 	appType, err := dbClient.AppType.Create().SetID(1).SetName("backend").Save(context.Background())
 	assert.NoError(t, err)
@@ -173,7 +188,10 @@ func TestAppService_GetAppById(t *testing.T) {
 
 	dbClient := database.NewDBClient(database.NewSQLiteClient(t))
 	dbClient.Context()
-	defer dbClient.Close()
+	defer func(dbClient *database.DBClient) {
+		err := dbClient.Close()
+		assert.NoError(t, err)
+	}(dbClient)
 
 	appType, err := dbClient.AppType.Create().SetID(1).SetName("backend").Save(context.Background())
 	assert.NoError(t, err)
@@ -203,7 +221,10 @@ func TestAppService_GetApp_NotFoundErr(t *testing.T) {
 
 	dbClient := database.NewDBClient(database.NewSQLiteClient(t))
 	dbClient.Context()
-	defer dbClient.Close()
+	defer func(dbClient *database.DBClient) {
+		err := dbClient.Close()
+		assert.NoError(t, err)
+	}(dbClient)
 
 	secretStore := secrets.NewLocalSecretStore()
 
@@ -220,7 +241,10 @@ func TestAppService_GetAppTypes(t *testing.T) {
 
 	dbClient := database.NewDBClient(database.NewSQLiteClient(t))
 	dbClient.Context()
-	defer dbClient.Close()
+	defer func(dbClient *database.DBClient) {
+		err := dbClient.Close()
+		assert.NoError(t, err)
+	}(dbClient)
 
 	appType, err := dbClient.AppType.Create().SetID(1).SetName("backend").Save(context.Background())
 	assert.NoError(t, err)

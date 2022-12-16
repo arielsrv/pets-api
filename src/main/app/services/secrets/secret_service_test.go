@@ -45,7 +45,10 @@ func (m *MockAppService) GetAppByID(int64) (*model.AppResponse, error) {
 func TestSecretService_GetSecret(t *testing.T) {
 	dbClient := database.NewDBClient(database.NewSQLiteClient(t))
 	dbClient.Context()
-	defer dbClient.Close()
+	defer func(dbClient *database.DBClient) {
+		err := dbClient.Close()
+		assert.NoError(t, err)
+	}(dbClient)
 
 	appType, err := dbClient.AppType.Create().
 		SetID(1).SetName("backend").Save(context.Background())
@@ -77,7 +80,10 @@ func TestSecretService_GetSecret(t *testing.T) {
 func TestSecretService_GetSecret_NotFound(t *testing.T) {
 	dbClient := database.NewDBClient(database.NewSQLiteClient(t))
 	dbClient.Context()
-	defer dbClient.Close()
+	defer func(dbClient *database.DBClient) {
+		err := dbClient.Close()
+		assert.NoError(t, err)
+	}(dbClient)
 
 	appService := new(MockAppService)
 
@@ -91,7 +97,10 @@ func TestSecretService_GetSecret_NotFound(t *testing.T) {
 func TestSecretService_CreateSecret(t *testing.T) {
 	dbClient := database.NewDBClient(database.NewSQLiteClient(t))
 	dbClient.Context()
-	defer dbClient.Close()
+	defer func(dbClient *database.DBClient) {
+		err := dbClient.Close()
+		assert.NoError(t, err)
+	}(dbClient)
 
 	appType, err := dbClient.AppType.Create().
 		SetID(1).SetName("backend").Save(context.Background())
@@ -123,7 +132,10 @@ func TestSecretService_CreateSecret(t *testing.T) {
 func TestSecretService_CreateSecret_Conflict(t *testing.T) {
 	dbClient := database.NewDBClient(database.NewSQLiteClient(t))
 	dbClient.Context()
-	defer dbClient.Close()
+	defer func(dbClient *database.DBClient) {
+		err := dbClient.Close()
+		assert.NoError(t, err)
+	}(dbClient)
 
 	appType, err := dbClient.AppType.Create().
 		SetID(1).SetName("backend").Save(context.Background())
