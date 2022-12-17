@@ -80,7 +80,8 @@ task build
 
 ## Configuration
 
-Environment configuration is based on **Archaius Config**, you should use a similar folder structure.
+Environment configuration is based on **Archaius Config**, you should use a similar folder
+structure.
 *SCOPE* env variable in remote environment is required
 
 ```
@@ -173,7 +174,8 @@ func main() {
 
 ## Environment
 
-Set up your local environment. For now, you must set some env values as environment variable (export command).
+Set up your local environment. For now, you must set some env values as environment variable (export
+command).
 
     * PROD_CONNECTION_STRING: {mysql_connection_string}
     * GITLAB_TOKEN: {your_access_token}

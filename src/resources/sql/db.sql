@@ -16,12 +16,12 @@ VALUES (2, 'frontend');
 
 create table pets.apps
 (
-    id                  bigint auto_increment
+    id                         bigint auto_increment
         primary key,
-    name                varchar(255)         not null,
-    external_gitlab_project_id bigint               not null,
-    active              tinyint(1) default 1 not null,
-    app_type_id         bigint               null,
+    name                       varchar(255) not null,
+    external_gitlab_project_id bigint       not null,
+    active                     tinyint(1) default 1 not null,
+    app_type_id                bigint null,
     constraint name
         unique (name),
     constraint external_gitlab_project_id
@@ -35,10 +35,10 @@ create table pets.secrets
 (
     id     bigint auto_increment
         primary key,
-    `key`  varchar(255)         not null,
-    value  varchar(255)         not null,
+    `key`  varchar(255) not null,
+    value  varchar(255) not null,
     active tinyint(1) default 1 not null,
-    app_id bigint               not null,
+    app_id bigint       not null,
     constraint `key`
         unique (`key`),
     constraint secrets_apps_app
