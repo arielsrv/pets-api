@@ -8,6 +8,8 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	"github.com/gofiber/fiber/v2"
+
 	"github.com/src/main/app/handlers/apps"
 
 	"github.com/src/main/app/model"
@@ -178,7 +180,7 @@ func TestRepositoriesHandler_CreateApp(t *testing.T) {
 		NewRequest(http.MethodPost, "/apps",
 			bytes.NewBufferString("{\"name\":\"my repo\",\"group_id\":1, \"app_type_id\": 1}"))
 
-	request.Header.Add("Content-Type", "application/json")
+	request.Header.Add(fiber.HeaderContentType, fiber.MIMEApplicationJSON)
 
 	response, err := app.Test(request)
 	assert.NoError(t, err)
@@ -209,7 +211,7 @@ func TestRepositoriesHandler_CreateApp_Err(t *testing.T) {
 		NewRequest(http.MethodPost, "/repositories",
 			bytes.NewBufferString("{\"name\":\"my repo\",\"group_id\":1, \"app_type_id\": 1}"))
 
-	request.Header.Add("Content-Type", "application/json")
+	request.Header.Add(fiber.HeaderContentType, fiber.MIMEApplicationJSON)
 
 	response, err := app.Test(request)
 	assert.NoError(t, err)

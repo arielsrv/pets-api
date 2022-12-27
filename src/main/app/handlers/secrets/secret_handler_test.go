@@ -7,6 +7,8 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	"github.com/gofiber/fiber/v2"
+
 	"github.com/src/main/app/handlers/secrets"
 
 	"github.com/src/main/app/model"
@@ -72,10 +74,9 @@ func TestSecretHandler_CreateSecret(t *testing.T) {
 		NewRequest(http.MethodPost, "/apps/1/secrets",
 			bytes.NewBufferString("{\"key\":\"my_secret_key\",\"value\":\"my_secret_value\"}"))
 
-	request.Header.Add("Content-Type", "application/json")
+	request.Header.Add(fiber.HeaderContentType, fiber.MIMEApplicationJSON)
 
 	response, err := app.Test(request)
-
 	assert.NoError(t, err)
 	assert.NotNil(t, response)
 	assert.Equal(t, http.StatusCreated, response.StatusCode)
