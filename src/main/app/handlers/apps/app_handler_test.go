@@ -306,8 +306,7 @@ func GetAppTypes() ([]model.AppTypeResponse, error) {
 	appType2.Name = "frontend"
 
 	var appsType []model.AppTypeResponse
-	appsType = append(appsType, appType1)
-	appsType = append(appsType, appType2)
+	appsType = append(appsType, appType1, appType2)
 
 	return appsType, nil
 }
@@ -321,8 +320,7 @@ func GetGroups() ([]model.AppGroupResponse, error) {
 	group2.Name = "root/group2"
 
 	var groups []model.AppGroupResponse
-	groups = append(groups, group1)
-	groups = append(groups, group2)
+	groups = append(groups, group1, group2)
 
 	return groups, nil
 }

@@ -75,6 +75,7 @@ func TestSecretHandler_CreateSecret(t *testing.T) {
 	request.Header.Add("Content-Type", "application/json")
 
 	response, err := app.Test(request)
+
 	assert.NoError(t, err)
 	assert.NotNil(t, response)
 	assert.Equal(t, http.StatusCreated, response.StatusCode)

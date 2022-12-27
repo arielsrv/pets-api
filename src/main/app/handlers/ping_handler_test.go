@@ -20,11 +20,11 @@ type PingHandlerSuite struct {
 	pingService *MockPingService
 }
 
-func (suite *PingHandlerSuite) SetupTest() {
-	suite.pingService = new(MockPingService)
-	suite.pingHandler = handlers.NewPingHandler(suite.pingService)
-	suite.app = server.New()
-	suite.app.Add(http.MethodGet, "/ping", suite.pingHandler.Ping)
+func (s *PingHandlerSuite) SetupTest() {
+	s.pingService = new(MockPingService)
+	s.pingHandler = handlers.NewPingHandler(s.pingService)
+	s.app = server.New()
+	s.app.Add(http.MethodGet, "/ping", s.pingHandler.Ping)
 }
 
 func TestRunSuite(t *testing.T) {
@@ -40,18 +40,18 @@ func (mock *MockPingService) Ping() string {
 	return args.Get(0).(string)
 }
 
-func (suite *PingHandlerSuite) TestPingHandler_Ping() {
-	suite.pingService.On("Ping").Return("pong")
+func (s *PingHandlerSuite) TestPingHandler_Ping() {
+	s.pingService.On("Ping").Return("pong")
 
 	request := httptest.NewRequest(http.MethodGet, "/ping", nil)
-	response, err := suite.app.Test(request)
-	suite.NoError(err)
-	suite.NotNil(response)
-	suite.Equal(http.StatusOK, response.StatusCode)
+	response, err := s.app.Test(request)
+	s.NoError(err)
+	s.NotNil(response)
+	s.Equal(http.StatusOK, response.StatusCode)
 
 	body, err := io.ReadAll(response.Body)
-	suite.NoError(err)
-	suite.NotNil(body)
+	s.NoError(err)
+	s.NotNil(body)
 
-	suite.Equal("pong", string(body))
+	s.Equal("pong", string(body))
 }

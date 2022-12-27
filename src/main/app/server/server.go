@@ -110,7 +110,7 @@ func getType(value any) string {
 	return name.String()
 }
 
-func Register(verb string, path string, action func(ctx *fiber.Ctx) error) {
+func Register(verb, path string, action func(ctx *fiber.Ctx) error) {
 	route := &Route{
 		Verb:   verb,
 		Path:   path,

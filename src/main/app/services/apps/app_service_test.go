@@ -292,8 +292,7 @@ func GetGroups() ([]gitlab.GroupResponse, error) {
 	group2.Path = "root/group2"
 
 	var groups []gitlab.GroupResponse
-	groups = append(groups, group1)
-	groups = append(groups, group2)
+	groups = append(groups, group1, group2)
 
 	return groups, nil
 }

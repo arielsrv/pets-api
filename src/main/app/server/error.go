@@ -28,15 +28,11 @@ func ErrorHandler(ctx *fiber.Ctx, err error) error {
 
 	switch {
 	case errors.As(err, &fiberError):
-		{
-			e.StatusCode = fiberError.Code
-			e.Message = fiberError.Message
-		}
+		e.StatusCode = fiberError.Code
+		e.Message = fiberError.Message
 	case errors.As(err, &apiError):
-		{
-			e.StatusCode = apiError.StatusCode
-			e.Message = apiError.Message
-		}
+		e.StatusCode = apiError.StatusCode
+		e.Message = apiError.Message
 	default:
 		e.StatusCode = http.StatusInternalServerError
 		e.Message = err.Error()
