@@ -77,34 +77,7 @@ func (atu *AppTypeUpdate) RemoveApps(a ...*App) *AppTypeUpdate {
 
 // Save executes the query and returns the number of nodes affected by the update operation.
 func (atu *AppTypeUpdate) Save(ctx context.Context) (int, error) {
-	var (
-		err      error
-		affected int
-	)
-	if len(atu.hooks) == 0 {
-		affected, err = atu.sqlSave(ctx)
-	} else {
-		var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
-			mutation, ok := m.(*AppTypeMutation)
-			if !ok {
-				return nil, fmt.Errorf("unexpected mutation type %T", m)
-			}
-			atu.mutation = mutation
-			affected, err = atu.sqlSave(ctx)
-			mutation.done = true
-			return affected, err
-		})
-		for i := len(atu.hooks) - 1; i >= 0; i-- {
-			if atu.hooks[i] == nil {
-				return 0, fmt.Errorf("ent: uninitialized hook (forgotten import ent/runtime?)")
-			}
-			mut = atu.hooks[i](mut)
-		}
-		if _, err := mut.Mutate(ctx, atu.mutation); err != nil {
-			return 0, err
-		}
-	}
-	return affected, err
+	return withHooks[int, AppTypeMutation](ctx, atu.sqlSave, atu.mutation, atu.hooks)
 }
 
 // SaveX is like Save, but panics if an error occurs.
@@ -212,6 +185,7 @@ func (atu *AppTypeUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		return 0, err
 	}
+	atu.mutation.done = true
 	return n, nil
 }
 
@@ -279,40 +253,7 @@ func (atuo *AppTypeUpdateOne) Select(field string, fields ...string) *AppTypeUpd
 
 // Save executes the query and returns the updated AppType entity.
 func (atuo *AppTypeUpdateOne) Save(ctx context.Context) (*AppType, error) {
-	var (
-		err  error
-		node *AppType
-	)
-	if len(atuo.hooks) == 0 {
-		node, err = atuo.sqlSave(ctx)
-	} else {
-		var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
-			mutation, ok := m.(*AppTypeMutation)
-			if !ok {
-				return nil, fmt.Errorf("unexpected mutation type %T", m)
-			}
-			atuo.mutation = mutation
-			node, err = atuo.sqlSave(ctx)
-			mutation.done = true
-			return node, err
-		})
-		for i := len(atuo.hooks) - 1; i >= 0; i-- {
-			if atuo.hooks[i] == nil {
-				return nil, fmt.Errorf("ent: uninitialized hook (forgotten import ent/runtime?)")
-			}
-			mut = atuo.hooks[i](mut)
-		}
-		v, err := mut.Mutate(ctx, atuo.mutation)
-		if err != nil {
-			return nil, err
-		}
-		nv, ok := v.(*AppType)
-		if !ok {
-			return nil, fmt.Errorf("unexpected node type %T returned from AppTypeMutation", v)
-		}
-		node = nv
-	}
-	return node, err
+	return withHooks[*AppType, AppTypeMutation](ctx, atuo.sqlSave, atuo.mutation, atuo.hooks)
 }
 
 // SaveX is like Save, but panics if an error occurs.
@@ -440,5 +381,6 @@ func (atuo *AppTypeUpdateOne) sqlSave(ctx context.Context) (_node *AppType, err 
 		}
 		return nil, err
 	}
+	atuo.mutation.done = true
 	return _node, nil
 }

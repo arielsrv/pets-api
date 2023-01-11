@@ -54,49 +54,7 @@ func (atc *AppTypeCreate) Mutation() *AppTypeMutation {
 
 // Save creates the AppType in the database.
 func (atc *AppTypeCreate) Save(ctx context.Context) (*AppType, error) {
-	var (
-		err  error
-		node *AppType
-	)
-	if len(atc.hooks) == 0 {
-		if err = atc.check(); err != nil {
-			return nil, err
-		}
-		node, err = atc.sqlSave(ctx)
-	} else {
-		var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
-			mutation, ok := m.(*AppTypeMutation)
-			if !ok {
-				return nil, fmt.Errorf("unexpected mutation type %T", m)
-			}
-			if err = atc.check(); err != nil {
-				return nil, err
-			}
-			atc.mutation = mutation
-			if node, err = atc.sqlSave(ctx); err != nil {
-				return nil, err
-			}
-			mutation.id = &node.ID
-			mutation.done = true
-			return node, err
-		})
-		for i := len(atc.hooks) - 1; i >= 0; i-- {
-			if atc.hooks[i] == nil {
-				return nil, fmt.Errorf("ent: uninitialized hook (forgotten import ent/runtime?)")
-			}
-			mut = atc.hooks[i](mut)
-		}
-		v, err := mut.Mutate(ctx, atc.mutation)
-		if err != nil {
-			return nil, err
-		}
-		nv, ok := v.(*AppType)
-		if !ok {
-			return nil, fmt.Errorf("unexpected node type %T returned from AppTypeMutation", v)
-		}
-		node = nv
-	}
-	return node, err
+	return withHooks[*AppType, AppTypeMutation](ctx, atc.sqlSave, atc.mutation, atc.hooks)
 }
 
 // SaveX calls Save and panics if Save returns an error.
@@ -130,6 +88,9 @@ func (atc *AppTypeCreate) check() error {
 }
 
 func (atc *AppTypeCreate) sqlSave(ctx context.Context) (*AppType, error) {
+	if err := atc.check(); err != nil {
+		return nil, err
+	}
 	_node, _spec := atc.createSpec()
 	if err := sqlgraph.CreateNode(ctx, atc.driver, _spec); err != nil {
 		if sqlgraph.IsConstraintError(err) {
@@ -141,6 +102,8 @@ func (atc *AppTypeCreate) sqlSave(ctx context.Context) (*AppType, error) {
 		id := _spec.ID.Value.(int64)
 		_node.ID = int(id)
 	}
+	atc.mutation.id = &_node.ID
+	atc.mutation.done = true
 	return _node, nil
 }
 

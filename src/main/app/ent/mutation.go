@@ -14,6 +14,7 @@ import (
 	"github.com/src/main/app/ent/secret"
 
 	"entgo.io/ent"
+	"entgo.io/ent/dialect/sql"
 )
 
 const (
@@ -360,9 +361,24 @@ func (m *AppMutation) Where(ps ...predicate.App) {
 	m.predicates = append(m.predicates, ps...)
 }
 
+// WhereP appends storage-level predicates to the AppMutation builder. Using this method,
+// users can use type-assertion to append predicates that do not depend on any generated package.
+func (m *AppMutation) WhereP(ps ...func(*sql.Selector)) {
+	p := make([]predicate.App, len(ps))
+	for i := range ps {
+		p[i] = ps[i]
+	}
+	m.Where(p...)
+}
+
 // Op returns the operation name.
 func (m *AppMutation) Op() Op {
 	return m.op
+}
+
+// SetOp allows setting the mutation operation.
+func (m *AppMutation) SetOp(op Op) {
+	m.op = op
 }
 
 // Type returns the node type of this mutation (App).
@@ -826,9 +842,24 @@ func (m *AppTypeMutation) Where(ps ...predicate.AppType) {
 	m.predicates = append(m.predicates, ps...)
 }
 
+// WhereP appends storage-level predicates to the AppTypeMutation builder. Using this method,
+// users can use type-assertion to append predicates that do not depend on any generated package.
+func (m *AppTypeMutation) WhereP(ps ...func(*sql.Selector)) {
+	p := make([]predicate.AppType, len(ps))
+	for i := range ps {
+		p[i] = ps[i]
+	}
+	m.Where(p...)
+}
+
 // Op returns the operation name.
 func (m *AppTypeMutation) Op() Op {
 	return m.op
+}
+
+// SetOp allows setting the mutation operation.
+func (m *AppTypeMutation) SetOp(op Op) {
+	m.op = op
 }
 
 // Type returns the node type of this mutation (AppType).
@@ -1317,9 +1348,24 @@ func (m *SecretMutation) Where(ps ...predicate.Secret) {
 	m.predicates = append(m.predicates, ps...)
 }
 
+// WhereP appends storage-level predicates to the SecretMutation builder. Using this method,
+// users can use type-assertion to append predicates that do not depend on any generated package.
+func (m *SecretMutation) WhereP(ps ...func(*sql.Selector)) {
+	p := make([]predicate.Secret, len(ps))
+	for i := range ps {
+		p[i] = ps[i]
+	}
+	m.Where(p...)
+}
+
 // Op returns the operation name.
 func (m *SecretMutation) Op() Op {
 	return m.op
+}
+
+// SetOp allows setting the mutation operation.
+func (m *SecretMutation) SetOp(op Op) {
+	m.op = op
 }
 
 // Type returns the node type of this mutation (Secret).

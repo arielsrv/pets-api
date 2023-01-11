@@ -15,11 +15,10 @@ type AppFunc func(context.Context, *ent.AppMutation) (ent.Value, error)
 
 // Mutate calls f(ctx, m).
 func (f AppFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
-	mv, ok := m.(*ent.AppMutation)
-	if !ok {
-		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.AppMutation", m)
+	if mv, ok := m.(*ent.AppMutation); ok {
+		return f(ctx, mv)
 	}
-	return f(ctx, mv)
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.AppMutation", m)
 }
 
 // The AppTypeFunc type is an adapter to allow the use of ordinary
@@ -28,11 +27,10 @@ type AppTypeFunc func(context.Context, *ent.AppTypeMutation) (ent.Value, error)
 
 // Mutate calls f(ctx, m).
 func (f AppTypeFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
-	mv, ok := m.(*ent.AppTypeMutation)
-	if !ok {
-		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.AppTypeMutation", m)
+	if mv, ok := m.(*ent.AppTypeMutation); ok {
+		return f(ctx, mv)
 	}
-	return f(ctx, mv)
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.AppTypeMutation", m)
 }
 
 // The SecretFunc type is an adapter to allow the use of ordinary
@@ -41,11 +39,10 @@ type SecretFunc func(context.Context, *ent.SecretMutation) (ent.Value, error)
 
 // Mutate calls f(ctx, m).
 func (f SecretFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
-	mv, ok := m.(*ent.SecretMutation)
-	if !ok {
-		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.SecretMutation", m)
+	if mv, ok := m.(*ent.SecretMutation); ok {
+		return f(ctx, mv)
 	}
-	return f(ctx, mv)
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.SecretMutation", m)
 }
 
 // Condition is a hook condition function.

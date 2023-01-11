@@ -34,7 +34,7 @@ type Client struct {
 
 // NewClient creates a new client configured with the given options.
 func NewClient(opts ...Option) *Client {
-	cfg := config{log: log.Println, hooks: &hooks{}}
+	cfg := config{log: log.Println, hooks: &hooks{}, inters: &inters{}}
 	cfg.options(opts...)
 	client := &Client{config: cfg}
 	client.init()
@@ -137,6 +137,28 @@ func (c *Client) Use(hooks ...Hook) {
 	c.Secret.Use(hooks...)
 }
 
+// Intercept adds the query interceptors to all the entity clients.
+// In order to add interceptors to a specific client, call: `client.Node.Intercept(...)`.
+func (c *Client) Intercept(interceptors ...Interceptor) {
+	c.App.Intercept(interceptors...)
+	c.AppType.Intercept(interceptors...)
+	c.Secret.Intercept(interceptors...)
+}
+
+// Mutate implements the ent.Mutator interface.
+func (c *Client) Mutate(ctx context.Context, m Mutation) (Value, error) {
+	switch m := m.(type) {
+	case *AppMutation:
+		return c.App.mutate(ctx, m)
+	case *AppTypeMutation:
+		return c.AppType.mutate(ctx, m)
+	case *SecretMutation:
+		return c.Secret.mutate(ctx, m)
+	default:
+		return nil, fmt.Errorf("ent: unknown mutation type %T", m)
+	}
+}
+
 // AppClient is a client for the App schema.
 type AppClient struct {
 	config
@@ -151,6 +173,12 @@ func NewAppClient(c config) *AppClient {
 // A call to `Use(f, g, h)` equals to `app.Hooks(f(g(h())))`.
 func (c *AppClient) Use(hooks ...Hook) {
 	c.hooks.App = append(c.hooks.App, hooks...)
+}
+
+// Use adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `app.Intercept(f(g(h())))`.
+func (c *AppClient) Intercept(interceptors ...Interceptor) {
+	c.inters.App = append(c.inters.App, interceptors...)
 }
 
 // Create returns a builder for creating a App entity.
@@ -205,6 +233,7 @@ func (c *AppClient) DeleteOneID(id int64) *AppDeleteOne {
 func (c *AppClient) Query() *AppQuery {
 	return &AppQuery{
 		config: c.config,
+		inters: c.Interceptors(),
 	}
 }
 
@@ -224,7 +253,7 @@ func (c *AppClient) GetX(ctx context.Context, id int64) *App {
 
 // QueryAppsTypes queries the apps_types edge of a App.
 func (c *AppClient) QueryAppsTypes(a *App) *AppTypeQuery {
-	query := &AppTypeQuery{config: c.config}
+	query := (&AppTypeClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
 		id := a.ID
 		step := sqlgraph.NewStep(
@@ -243,6 +272,26 @@ func (c *AppClient) Hooks() []Hook {
 	return c.hooks.App
 }
 
+// Interceptors returns the client interceptors.
+func (c *AppClient) Interceptors() []Interceptor {
+	return c.inters.App
+}
+
+func (c *AppClient) mutate(ctx context.Context, m *AppMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&AppCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&AppUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&AppUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&AppDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown App mutation op: %q", m.Op())
+	}
+}
+
 // AppTypeClient is a client for the AppType schema.
 type AppTypeClient struct {
 	config
@@ -257,6 +306,12 @@ func NewAppTypeClient(c config) *AppTypeClient {
 // A call to `Use(f, g, h)` equals to `apptype.Hooks(f(g(h())))`.
 func (c *AppTypeClient) Use(hooks ...Hook) {
 	c.hooks.AppType = append(c.hooks.AppType, hooks...)
+}
+
+// Use adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `apptype.Intercept(f(g(h())))`.
+func (c *AppTypeClient) Intercept(interceptors ...Interceptor) {
+	c.inters.AppType = append(c.inters.AppType, interceptors...)
 }
 
 // Create returns a builder for creating a AppType entity.
@@ -311,6 +366,7 @@ func (c *AppTypeClient) DeleteOneID(id int) *AppTypeDeleteOne {
 func (c *AppTypeClient) Query() *AppTypeQuery {
 	return &AppTypeQuery{
 		config: c.config,
+		inters: c.Interceptors(),
 	}
 }
 
@@ -330,7 +386,7 @@ func (c *AppTypeClient) GetX(ctx context.Context, id int) *AppType {
 
 // QueryApps queries the apps edge of a AppType.
 func (c *AppTypeClient) QueryApps(at *AppType) *AppQuery {
-	query := &AppQuery{config: c.config}
+	query := (&AppClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
 		id := at.ID
 		step := sqlgraph.NewStep(
@@ -349,6 +405,26 @@ func (c *AppTypeClient) Hooks() []Hook {
 	return c.hooks.AppType
 }
 
+// Interceptors returns the client interceptors.
+func (c *AppTypeClient) Interceptors() []Interceptor {
+	return c.inters.AppType
+}
+
+func (c *AppTypeClient) mutate(ctx context.Context, m *AppTypeMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&AppTypeCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&AppTypeUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&AppTypeUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&AppTypeDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown AppType mutation op: %q", m.Op())
+	}
+}
+
 // SecretClient is a client for the Secret schema.
 type SecretClient struct {
 	config
@@ -363,6 +439,12 @@ func NewSecretClient(c config) *SecretClient {
 // A call to `Use(f, g, h)` equals to `secret.Hooks(f(g(h())))`.
 func (c *SecretClient) Use(hooks ...Hook) {
 	c.hooks.Secret = append(c.hooks.Secret, hooks...)
+}
+
+// Use adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `secret.Intercept(f(g(h())))`.
+func (c *SecretClient) Intercept(interceptors ...Interceptor) {
+	c.inters.Secret = append(c.inters.Secret, interceptors...)
 }
 
 // Create returns a builder for creating a Secret entity.
@@ -417,6 +499,7 @@ func (c *SecretClient) DeleteOneID(id int64) *SecretDeleteOne {
 func (c *SecretClient) Query() *SecretQuery {
 	return &SecretQuery{
 		config: c.config,
+		inters: c.Interceptors(),
 	}
 }
 
@@ -436,7 +519,7 @@ func (c *SecretClient) GetX(ctx context.Context, id int64) *Secret {
 
 // QueryApp queries the app edge of a Secret.
 func (c *SecretClient) QueryApp(s *Secret) *AppQuery {
-	query := &AppQuery{config: c.config}
+	query := (&AppClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
 		id := s.ID
 		step := sqlgraph.NewStep(
@@ -453,4 +536,24 @@ func (c *SecretClient) QueryApp(s *Secret) *AppQuery {
 // Hooks returns the client hooks.
 func (c *SecretClient) Hooks() []Hook {
 	return c.hooks.Secret
+}
+
+// Interceptors returns the client interceptors.
+func (c *SecretClient) Interceptors() []Interceptor {
+	return c.inters.Secret
+}
+
+func (c *SecretClient) mutate(ctx context.Context, m *SecretMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&SecretCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&SecretUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&SecretUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&SecretDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown Secret mutation op: %q", m.Op())
+	}
 }
