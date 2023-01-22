@@ -145,7 +145,7 @@ rest:
       pool:
         size: 20
         timeout: 2000
-        connection-timeout: 5000
+        connection-timeout: 3000
   client:
     gitlab:
       pool: default
