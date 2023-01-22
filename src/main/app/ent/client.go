@@ -233,6 +233,7 @@ func (c *AppClient) DeleteOneID(id int64) *AppDeleteOne {
 func (c *AppClient) Query() *AppQuery {
 	return &AppQuery{
 		config: c.config,
+		ctx:    &QueryContext{Type: TypeApp},
 		inters: c.Interceptors(),
 	}
 }
@@ -366,6 +367,7 @@ func (c *AppTypeClient) DeleteOneID(id int) *AppTypeDeleteOne {
 func (c *AppTypeClient) Query() *AppTypeQuery {
 	return &AppTypeQuery{
 		config: c.config,
+		ctx:    &QueryContext{Type: TypeAppType},
 		inters: c.Interceptors(),
 	}
 }
@@ -499,6 +501,7 @@ func (c *SecretClient) DeleteOneID(id int64) *SecretDeleteOne {
 func (c *SecretClient) Query() *SecretQuery {
 	return &SecretQuery{
 		config: c.config,
+		ctx:    &QueryContext{Type: TypeSecret},
 		inters: c.Interceptors(),
 	}
 }

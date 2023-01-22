@@ -18,11 +18,8 @@ import (
 // SecretQuery is the builder for querying Secret entities.
 type SecretQuery struct {
 	config
-	limit      *int
-	offset     *int
-	unique     *bool
+	ctx        *QueryContext
 	order      []OrderFunc
-	fields     []string
 	inters     []Interceptor
 	predicates []predicate.Secret
 	withApp    *AppQuery
@@ -39,20 +36,20 @@ func (sq *SecretQuery) Where(ps ...predicate.Secret) *SecretQuery {
 
 // Limit the number of records to be returned by this query.
 func (sq *SecretQuery) Limit(limit int) *SecretQuery {
-	sq.limit = &limit
+	sq.ctx.Limit = &limit
 	return sq
 }
 
 // Offset to start from.
 func (sq *SecretQuery) Offset(offset int) *SecretQuery {
-	sq.offset = &offset
+	sq.ctx.Offset = &offset
 	return sq
 }
 
 // Unique configures the query builder to filter duplicate records on query.
 // By default, unique is set to true, and can be disabled using this method.
 func (sq *SecretQuery) Unique(unique bool) *SecretQuery {
-	sq.unique = &unique
+	sq.ctx.Unique = &unique
 	return sq
 }
 
@@ -87,7 +84,7 @@ func (sq *SecretQuery) QueryApp() *AppQuery {
 // First returns the first Secret entity from the query.
 // Returns a *NotFoundError when no Secret was found.
 func (sq *SecretQuery) First(ctx context.Context) (*Secret, error) {
-	nodes, err := sq.Limit(1).All(newQueryContext(ctx, TypeSecret, "First"))
+	nodes, err := sq.Limit(1).All(setContextOp(ctx, sq.ctx, "First"))
 	if err != nil {
 		return nil, err
 	}
@@ -110,7 +107,7 @@ func (sq *SecretQuery) FirstX(ctx context.Context) *Secret {
 // Returns a *NotFoundError when no Secret ID was found.
 func (sq *SecretQuery) FirstID(ctx context.Context) (id int64, err error) {
 	var ids []int64
-	if ids, err = sq.Limit(1).IDs(newQueryContext(ctx, TypeSecret, "FirstID")); err != nil {
+	if ids, err = sq.Limit(1).IDs(setContextOp(ctx, sq.ctx, "FirstID")); err != nil {
 		return
 	}
 	if len(ids) == 0 {
@@ -133,7 +130,7 @@ func (sq *SecretQuery) FirstIDX(ctx context.Context) int64 {
 // Returns a *NotSingularError when more than one Secret entity is found.
 // Returns a *NotFoundError when no Secret entities are found.
 func (sq *SecretQuery) Only(ctx context.Context) (*Secret, error) {
-	nodes, err := sq.Limit(2).All(newQueryContext(ctx, TypeSecret, "Only"))
+	nodes, err := sq.Limit(2).All(setContextOp(ctx, sq.ctx, "Only"))
 	if err != nil {
 		return nil, err
 	}
@@ -161,7 +158,7 @@ func (sq *SecretQuery) OnlyX(ctx context.Context) *Secret {
 // Returns a *NotFoundError when no entities are found.
 func (sq *SecretQuery) OnlyID(ctx context.Context) (id int64, err error) {
 	var ids []int64
-	if ids, err = sq.Limit(2).IDs(newQueryContext(ctx, TypeSecret, "OnlyID")); err != nil {
+	if ids, err = sq.Limit(2).IDs(setContextOp(ctx, sq.ctx, "OnlyID")); err != nil {
 		return
 	}
 	switch len(ids) {
@@ -186,7 +183,7 @@ func (sq *SecretQuery) OnlyIDX(ctx context.Context) int64 {
 
 // All executes the query and returns a list of Secrets.
 func (sq *SecretQuery) All(ctx context.Context) ([]*Secret, error) {
-	ctx = newQueryContext(ctx, TypeSecret, "All")
+	ctx = setContextOp(ctx, sq.ctx, "All")
 	if err := sq.prepareQuery(ctx); err != nil {
 		return nil, err
 	}
@@ -206,7 +203,7 @@ func (sq *SecretQuery) AllX(ctx context.Context) []*Secret {
 // IDs executes the query and returns a list of Secret IDs.
 func (sq *SecretQuery) IDs(ctx context.Context) ([]int64, error) {
 	var ids []int64
-	ctx = newQueryContext(ctx, TypeSecret, "IDs")
+	ctx = setContextOp(ctx, sq.ctx, "IDs")
 	if err := sq.Select(secret.FieldID).Scan(ctx, &ids); err != nil {
 		return nil, err
 	}
@@ -224,7 +221,7 @@ func (sq *SecretQuery) IDsX(ctx context.Context) []int64 {
 
 // Count returns the count of the given query.
 func (sq *SecretQuery) Count(ctx context.Context) (int, error) {
-	ctx = newQueryContext(ctx, TypeSecret, "Count")
+	ctx = setContextOp(ctx, sq.ctx, "Count")
 	if err := sq.prepareQuery(ctx); err != nil {
 		return 0, err
 	}
@@ -242,7 +239,7 @@ func (sq *SecretQuery) CountX(ctx context.Context) int {
 
 // Exist returns true if the query has elements in the graph.
 func (sq *SecretQuery) Exist(ctx context.Context) (bool, error) {
-	ctx = newQueryContext(ctx, TypeSecret, "Exist")
+	ctx = setContextOp(ctx, sq.ctx, "Exist")
 	switch _, err := sq.FirstID(ctx); {
 	case IsNotFound(err):
 		return false, nil
@@ -270,16 +267,14 @@ func (sq *SecretQuery) Clone() *SecretQuery {
 	}
 	return &SecretQuery{
 		config:     sq.config,
-		limit:      sq.limit,
-		offset:     sq.offset,
+		ctx:        sq.ctx.Clone(),
 		order:      append([]OrderFunc{}, sq.order...),
 		inters:     append([]Interceptor{}, sq.inters...),
 		predicates: append([]predicate.Secret{}, sq.predicates...),
 		withApp:    sq.withApp.Clone(),
 		// clone intermediate query.
-		sql:    sq.sql.Clone(),
-		path:   sq.path,
-		unique: sq.unique,
+		sql:  sq.sql.Clone(),
+		path: sq.path,
 	}
 }
 
@@ -309,9 +304,9 @@ func (sq *SecretQuery) WithApp(opts ...func(*AppQuery)) *SecretQuery {
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
 func (sq *SecretQuery) GroupBy(field string, fields ...string) *SecretGroupBy {
-	sq.fields = append([]string{field}, fields...)
+	sq.ctx.Fields = append([]string{field}, fields...)
 	grbuild := &SecretGroupBy{build: sq}
-	grbuild.flds = &sq.fields
+	grbuild.flds = &sq.ctx.Fields
 	grbuild.label = secret.Label
 	grbuild.scan = grbuild.Scan
 	return grbuild
@@ -330,10 +325,10 @@ func (sq *SecretQuery) GroupBy(field string, fields ...string) *SecretGroupBy {
 //		Select(secret.FieldKey).
 //		Scan(ctx, &v)
 func (sq *SecretQuery) Select(fields ...string) *SecretSelect {
-	sq.fields = append(sq.fields, fields...)
+	sq.ctx.Fields = append(sq.ctx.Fields, fields...)
 	sbuild := &SecretSelect{SecretQuery: sq}
 	sbuild.label = secret.Label
-	sbuild.flds, sbuild.scan = &sq.fields, sbuild.Scan
+	sbuild.flds, sbuild.scan = &sq.ctx.Fields, sbuild.Scan
 	return sbuild
 }
 
@@ -353,7 +348,7 @@ func (sq *SecretQuery) prepareQuery(ctx context.Context) error {
 			}
 		}
 	}
-	for _, f := range sq.fields {
+	for _, f := range sq.ctx.Fields {
 		if !secret.ValidColumn(f) {
 			return &ValidationError{Name: f, err: fmt.Errorf("ent: invalid field %q for query", f)}
 		}
@@ -413,6 +408,9 @@ func (sq *SecretQuery) loadApp(ctx context.Context, query *AppQuery, nodes []*Se
 		}
 		nodeids[fk] = append(nodeids[fk], nodes[i])
 	}
+	if len(ids) == 0 {
+		return nil
+	}
 	query.Where(app.IDIn(ids...))
 	neighbors, err := query.All(ctx)
 	if err != nil {
@@ -432,9 +430,9 @@ func (sq *SecretQuery) loadApp(ctx context.Context, query *AppQuery, nodes []*Se
 
 func (sq *SecretQuery) sqlCount(ctx context.Context) (int, error) {
 	_spec := sq.querySpec()
-	_spec.Node.Columns = sq.fields
-	if len(sq.fields) > 0 {
-		_spec.Unique = sq.unique != nil && *sq.unique
+	_spec.Node.Columns = sq.ctx.Fields
+	if len(sq.ctx.Fields) > 0 {
+		_spec.Unique = sq.ctx.Unique != nil && *sq.ctx.Unique
 	}
 	return sqlgraph.CountNodes(ctx, sq.driver, _spec)
 }
@@ -452,10 +450,10 @@ func (sq *SecretQuery) querySpec() *sqlgraph.QuerySpec {
 		From:   sq.sql,
 		Unique: true,
 	}
-	if unique := sq.unique; unique != nil {
+	if unique := sq.ctx.Unique; unique != nil {
 		_spec.Unique = *unique
 	}
-	if fields := sq.fields; len(fields) > 0 {
+	if fields := sq.ctx.Fields; len(fields) > 0 {
 		_spec.Node.Columns = make([]string, 0, len(fields))
 		_spec.Node.Columns = append(_spec.Node.Columns, secret.FieldID)
 		for i := range fields {
@@ -471,10 +469,10 @@ func (sq *SecretQuery) querySpec() *sqlgraph.QuerySpec {
 			}
 		}
 	}
-	if limit := sq.limit; limit != nil {
+	if limit := sq.ctx.Limit; limit != nil {
 		_spec.Limit = *limit
 	}
-	if offset := sq.offset; offset != nil {
+	if offset := sq.ctx.Offset; offset != nil {
 		_spec.Offset = *offset
 	}
 	if ps := sq.order; len(ps) > 0 {
@@ -490,7 +488,7 @@ func (sq *SecretQuery) querySpec() *sqlgraph.QuerySpec {
 func (sq *SecretQuery) sqlQuery(ctx context.Context) *sql.Selector {
 	builder := sql.Dialect(sq.driver.Dialect())
 	t1 := builder.Table(secret.Table)
-	columns := sq.fields
+	columns := sq.ctx.Fields
 	if len(columns) == 0 {
 		columns = secret.Columns
 	}
@@ -499,7 +497,7 @@ func (sq *SecretQuery) sqlQuery(ctx context.Context) *sql.Selector {
 		selector = sq.sql
 		selector.Select(selector.Columns(columns...)...)
 	}
-	if sq.unique != nil && *sq.unique {
+	if sq.ctx.Unique != nil && *sq.ctx.Unique {
 		selector.Distinct()
 	}
 	for _, p := range sq.predicates {
@@ -508,12 +506,12 @@ func (sq *SecretQuery) sqlQuery(ctx context.Context) *sql.Selector {
 	for _, p := range sq.order {
 		p(selector)
 	}
-	if offset := sq.offset; offset != nil {
+	if offset := sq.ctx.Offset; offset != nil {
 		// limit is mandatory for offset clause. We start
 		// with default value, and override it below if needed.
 		selector.Offset(*offset).Limit(math.MaxInt32)
 	}
-	if limit := sq.limit; limit != nil {
+	if limit := sq.ctx.Limit; limit != nil {
 		selector.Limit(*limit)
 	}
 	return selector
@@ -533,7 +531,7 @@ func (sgb *SecretGroupBy) Aggregate(fns ...AggregateFunc) *SecretGroupBy {
 
 // Scan applies the selector query and scans the result into the given value.
 func (sgb *SecretGroupBy) Scan(ctx context.Context, v any) error {
-	ctx = newQueryContext(ctx, TypeSecret, "GroupBy")
+	ctx = setContextOp(ctx, sgb.build.ctx, "GroupBy")
 	if err := sgb.build.prepareQuery(ctx); err != nil {
 		return err
 	}
@@ -581,7 +579,7 @@ func (ss *SecretSelect) Aggregate(fns ...AggregateFunc) *SecretSelect {
 
 // Scan applies the selector query and scans the result into the given value.
 func (ss *SecretSelect) Scan(ctx context.Context, v any) error {
-	ctx = newQueryContext(ctx, TypeSecret, "Select")
+	ctx = setContextOp(ctx, ss.ctx, "Select")
 	if err := ss.prepareQuery(ctx); err != nil {
 		return err
 	}

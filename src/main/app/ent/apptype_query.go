@@ -19,11 +19,8 @@ import (
 // AppTypeQuery is the builder for querying AppType entities.
 type AppTypeQuery struct {
 	config
-	limit      *int
-	offset     *int
-	unique     *bool
+	ctx        *QueryContext
 	order      []OrderFunc
-	fields     []string
 	inters     []Interceptor
 	predicates []predicate.AppType
 	withApps   *AppQuery
@@ -40,20 +37,20 @@ func (atq *AppTypeQuery) Where(ps ...predicate.AppType) *AppTypeQuery {
 
 // Limit the number of records to be returned by this query.
 func (atq *AppTypeQuery) Limit(limit int) *AppTypeQuery {
-	atq.limit = &limit
+	atq.ctx.Limit = &limit
 	return atq
 }
 
 // Offset to start from.
 func (atq *AppTypeQuery) Offset(offset int) *AppTypeQuery {
-	atq.offset = &offset
+	atq.ctx.Offset = &offset
 	return atq
 }
 
 // Unique configures the query builder to filter duplicate records on query.
 // By default, unique is set to true, and can be disabled using this method.
 func (atq *AppTypeQuery) Unique(unique bool) *AppTypeQuery {
-	atq.unique = &unique
+	atq.ctx.Unique = &unique
 	return atq
 }
 
@@ -88,7 +85,7 @@ func (atq *AppTypeQuery) QueryApps() *AppQuery {
 // First returns the first AppType entity from the query.
 // Returns a *NotFoundError when no AppType was found.
 func (atq *AppTypeQuery) First(ctx context.Context) (*AppType, error) {
-	nodes, err := atq.Limit(1).All(newQueryContext(ctx, TypeAppType, "First"))
+	nodes, err := atq.Limit(1).All(setContextOp(ctx, atq.ctx, "First"))
 	if err != nil {
 		return nil, err
 	}
@@ -111,7 +108,7 @@ func (atq *AppTypeQuery) FirstX(ctx context.Context) *AppType {
 // Returns a *NotFoundError when no AppType ID was found.
 func (atq *AppTypeQuery) FirstID(ctx context.Context) (id int, err error) {
 	var ids []int
-	if ids, err = atq.Limit(1).IDs(newQueryContext(ctx, TypeAppType, "FirstID")); err != nil {
+	if ids, err = atq.Limit(1).IDs(setContextOp(ctx, atq.ctx, "FirstID")); err != nil {
 		return
 	}
 	if len(ids) == 0 {
@@ -134,7 +131,7 @@ func (atq *AppTypeQuery) FirstIDX(ctx context.Context) int {
 // Returns a *NotSingularError when more than one AppType entity is found.
 // Returns a *NotFoundError when no AppType entities are found.
 func (atq *AppTypeQuery) Only(ctx context.Context) (*AppType, error) {
-	nodes, err := atq.Limit(2).All(newQueryContext(ctx, TypeAppType, "Only"))
+	nodes, err := atq.Limit(2).All(setContextOp(ctx, atq.ctx, "Only"))
 	if err != nil {
 		return nil, err
 	}
@@ -162,7 +159,7 @@ func (atq *AppTypeQuery) OnlyX(ctx context.Context) *AppType {
 // Returns a *NotFoundError when no entities are found.
 func (atq *AppTypeQuery) OnlyID(ctx context.Context) (id int, err error) {
 	var ids []int
-	if ids, err = atq.Limit(2).IDs(newQueryContext(ctx, TypeAppType, "OnlyID")); err != nil {
+	if ids, err = atq.Limit(2).IDs(setContextOp(ctx, atq.ctx, "OnlyID")); err != nil {
 		return
 	}
 	switch len(ids) {
@@ -187,7 +184,7 @@ func (atq *AppTypeQuery) OnlyIDX(ctx context.Context) int {
 
 // All executes the query and returns a list of AppTypes.
 func (atq *AppTypeQuery) All(ctx context.Context) ([]*AppType, error) {
-	ctx = newQueryContext(ctx, TypeAppType, "All")
+	ctx = setContextOp(ctx, atq.ctx, "All")
 	if err := atq.prepareQuery(ctx); err != nil {
 		return nil, err
 	}
@@ -207,7 +204,7 @@ func (atq *AppTypeQuery) AllX(ctx context.Context) []*AppType {
 // IDs executes the query and returns a list of AppType IDs.
 func (atq *AppTypeQuery) IDs(ctx context.Context) ([]int, error) {
 	var ids []int
-	ctx = newQueryContext(ctx, TypeAppType, "IDs")
+	ctx = setContextOp(ctx, atq.ctx, "IDs")
 	if err := atq.Select(apptype.FieldID).Scan(ctx, &ids); err != nil {
 		return nil, err
 	}
@@ -225,7 +222,7 @@ func (atq *AppTypeQuery) IDsX(ctx context.Context) []int {
 
 // Count returns the count of the given query.
 func (atq *AppTypeQuery) Count(ctx context.Context) (int, error) {
-	ctx = newQueryContext(ctx, TypeAppType, "Count")
+	ctx = setContextOp(ctx, atq.ctx, "Count")
 	if err := atq.prepareQuery(ctx); err != nil {
 		return 0, err
 	}
@@ -243,7 +240,7 @@ func (atq *AppTypeQuery) CountX(ctx context.Context) int {
 
 // Exist returns true if the query has elements in the graph.
 func (atq *AppTypeQuery) Exist(ctx context.Context) (bool, error) {
-	ctx = newQueryContext(ctx, TypeAppType, "Exist")
+	ctx = setContextOp(ctx, atq.ctx, "Exist")
 	switch _, err := atq.FirstID(ctx); {
 	case IsNotFound(err):
 		return false, nil
@@ -271,16 +268,14 @@ func (atq *AppTypeQuery) Clone() *AppTypeQuery {
 	}
 	return &AppTypeQuery{
 		config:     atq.config,
-		limit:      atq.limit,
-		offset:     atq.offset,
+		ctx:        atq.ctx.Clone(),
 		order:      append([]OrderFunc{}, atq.order...),
 		inters:     append([]Interceptor{}, atq.inters...),
 		predicates: append([]predicate.AppType{}, atq.predicates...),
 		withApps:   atq.withApps.Clone(),
 		// clone intermediate query.
-		sql:    atq.sql.Clone(),
-		path:   atq.path,
-		unique: atq.unique,
+		sql:  atq.sql.Clone(),
+		path: atq.path,
 	}
 }
 
@@ -310,9 +305,9 @@ func (atq *AppTypeQuery) WithApps(opts ...func(*AppQuery)) *AppTypeQuery {
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
 func (atq *AppTypeQuery) GroupBy(field string, fields ...string) *AppTypeGroupBy {
-	atq.fields = append([]string{field}, fields...)
+	atq.ctx.Fields = append([]string{field}, fields...)
 	grbuild := &AppTypeGroupBy{build: atq}
-	grbuild.flds = &atq.fields
+	grbuild.flds = &atq.ctx.Fields
 	grbuild.label = apptype.Label
 	grbuild.scan = grbuild.Scan
 	return grbuild
@@ -331,10 +326,10 @@ func (atq *AppTypeQuery) GroupBy(field string, fields ...string) *AppTypeGroupBy
 //		Select(apptype.FieldName).
 //		Scan(ctx, &v)
 func (atq *AppTypeQuery) Select(fields ...string) *AppTypeSelect {
-	atq.fields = append(atq.fields, fields...)
+	atq.ctx.Fields = append(atq.ctx.Fields, fields...)
 	sbuild := &AppTypeSelect{AppTypeQuery: atq}
 	sbuild.label = apptype.Label
-	sbuild.flds, sbuild.scan = &atq.fields, sbuild.Scan
+	sbuild.flds, sbuild.scan = &atq.ctx.Fields, sbuild.Scan
 	return sbuild
 }
 
@@ -354,7 +349,7 @@ func (atq *AppTypeQuery) prepareQuery(ctx context.Context) error {
 			}
 		}
 	}
-	for _, f := range atq.fields {
+	for _, f := range atq.ctx.Fields {
 		if !apptype.ValidColumn(f) {
 			return &ValidationError{Name: f, err: fmt.Errorf("ent: invalid field %q for query", f)}
 		}
@@ -435,9 +430,9 @@ func (atq *AppTypeQuery) loadApps(ctx context.Context, query *AppQuery, nodes []
 
 func (atq *AppTypeQuery) sqlCount(ctx context.Context) (int, error) {
 	_spec := atq.querySpec()
-	_spec.Node.Columns = atq.fields
-	if len(atq.fields) > 0 {
-		_spec.Unique = atq.unique != nil && *atq.unique
+	_spec.Node.Columns = atq.ctx.Fields
+	if len(atq.ctx.Fields) > 0 {
+		_spec.Unique = atq.ctx.Unique != nil && *atq.ctx.Unique
 	}
 	return sqlgraph.CountNodes(ctx, atq.driver, _spec)
 }
@@ -455,10 +450,10 @@ func (atq *AppTypeQuery) querySpec() *sqlgraph.QuerySpec {
 		From:   atq.sql,
 		Unique: true,
 	}
-	if unique := atq.unique; unique != nil {
+	if unique := atq.ctx.Unique; unique != nil {
 		_spec.Unique = *unique
 	}
-	if fields := atq.fields; len(fields) > 0 {
+	if fields := atq.ctx.Fields; len(fields) > 0 {
 		_spec.Node.Columns = make([]string, 0, len(fields))
 		_spec.Node.Columns = append(_spec.Node.Columns, apptype.FieldID)
 		for i := range fields {
@@ -474,10 +469,10 @@ func (atq *AppTypeQuery) querySpec() *sqlgraph.QuerySpec {
 			}
 		}
 	}
-	if limit := atq.limit; limit != nil {
+	if limit := atq.ctx.Limit; limit != nil {
 		_spec.Limit = *limit
 	}
-	if offset := atq.offset; offset != nil {
+	if offset := atq.ctx.Offset; offset != nil {
 		_spec.Offset = *offset
 	}
 	if ps := atq.order; len(ps) > 0 {
@@ -493,7 +488,7 @@ func (atq *AppTypeQuery) querySpec() *sqlgraph.QuerySpec {
 func (atq *AppTypeQuery) sqlQuery(ctx context.Context) *sql.Selector {
 	builder := sql.Dialect(atq.driver.Dialect())
 	t1 := builder.Table(apptype.Table)
-	columns := atq.fields
+	columns := atq.ctx.Fields
 	if len(columns) == 0 {
 		columns = apptype.Columns
 	}
@@ -502,7 +497,7 @@ func (atq *AppTypeQuery) sqlQuery(ctx context.Context) *sql.Selector {
 		selector = atq.sql
 		selector.Select(selector.Columns(columns...)...)
 	}
-	if atq.unique != nil && *atq.unique {
+	if atq.ctx.Unique != nil && *atq.ctx.Unique {
 		selector.Distinct()
 	}
 	for _, p := range atq.predicates {
@@ -511,12 +506,12 @@ func (atq *AppTypeQuery) sqlQuery(ctx context.Context) *sql.Selector {
 	for _, p := range atq.order {
 		p(selector)
 	}
-	if offset := atq.offset; offset != nil {
+	if offset := atq.ctx.Offset; offset != nil {
 		// limit is mandatory for offset clause. We start
 		// with default value, and override it below if needed.
 		selector.Offset(*offset).Limit(math.MaxInt32)
 	}
-	if limit := atq.limit; limit != nil {
+	if limit := atq.ctx.Limit; limit != nil {
 		selector.Limit(*limit)
 	}
 	return selector
@@ -536,7 +531,7 @@ func (atgb *AppTypeGroupBy) Aggregate(fns ...AggregateFunc) *AppTypeGroupBy {
 
 // Scan applies the selector query and scans the result into the given value.
 func (atgb *AppTypeGroupBy) Scan(ctx context.Context, v any) error {
-	ctx = newQueryContext(ctx, TypeAppType, "GroupBy")
+	ctx = setContextOp(ctx, atgb.build.ctx, "GroupBy")
 	if err := atgb.build.prepareQuery(ctx); err != nil {
 		return err
 	}
@@ -584,7 +579,7 @@ func (ats *AppTypeSelect) Aggregate(fns ...AggregateFunc) *AppTypeSelect {
 
 // Scan applies the selector query and scans the result into the given value.
 func (ats *AppTypeSelect) Scan(ctx context.Context, v any) error {
-	ctx = newQueryContext(ctx, TypeAppType, "Select")
+	ctx = setContextOp(ctx, ats.ctx, "Select")
 	if err := ats.prepareQuery(ctx); err != nil {
 		return err
 	}

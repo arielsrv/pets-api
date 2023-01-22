@@ -114,14 +114,14 @@ func (s *Secret) assignValues(columns []string, values []any) error {
 
 // QueryApp queries the "app" edge of the Secret entity.
 func (s *Secret) QueryApp() *AppQuery {
-	return (&SecretClient{config: s.config}).QueryApp(s)
+	return NewSecretClient(s.config).QueryApp(s)
 }
 
 // Update returns a builder for updating this Secret.
 // Note that you need to call Secret.Unwrap() before calling this method if this Secret
 // was returned from a transaction, and the transaction was committed or rolled back.
 func (s *Secret) Update() *SecretUpdateOne {
-	return (&SecretClient{config: s.config}).UpdateOne(s)
+	return NewSecretClient(s.config).UpdateOne(s)
 }
 
 // Unwrap unwraps the Secret entity that was returned from a transaction after it was closed,

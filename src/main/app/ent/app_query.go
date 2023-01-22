@@ -18,11 +18,8 @@ import (
 // AppQuery is the builder for querying App entities.
 type AppQuery struct {
 	config
-	limit         *int
-	offset        *int
-	unique        *bool
+	ctx           *QueryContext
 	order         []OrderFunc
-	fields        []string
 	inters        []Interceptor
 	predicates    []predicate.App
 	withAppsTypes *AppTypeQuery
@@ -39,20 +36,20 @@ func (aq *AppQuery) Where(ps ...predicate.App) *AppQuery {
 
 // Limit the number of records to be returned by this query.
 func (aq *AppQuery) Limit(limit int) *AppQuery {
-	aq.limit = &limit
+	aq.ctx.Limit = &limit
 	return aq
 }
 
 // Offset to start from.
 func (aq *AppQuery) Offset(offset int) *AppQuery {
-	aq.offset = &offset
+	aq.ctx.Offset = &offset
 	return aq
 }
 
 // Unique configures the query builder to filter duplicate records on query.
 // By default, unique is set to true, and can be disabled using this method.
 func (aq *AppQuery) Unique(unique bool) *AppQuery {
-	aq.unique = &unique
+	aq.ctx.Unique = &unique
 	return aq
 }
 
@@ -87,7 +84,7 @@ func (aq *AppQuery) QueryAppsTypes() *AppTypeQuery {
 // First returns the first App entity from the query.
 // Returns a *NotFoundError when no App was found.
 func (aq *AppQuery) First(ctx context.Context) (*App, error) {
-	nodes, err := aq.Limit(1).All(newQueryContext(ctx, TypeApp, "First"))
+	nodes, err := aq.Limit(1).All(setContextOp(ctx, aq.ctx, "First"))
 	if err != nil {
 		return nil, err
 	}
@@ -110,7 +107,7 @@ func (aq *AppQuery) FirstX(ctx context.Context) *App {
 // Returns a *NotFoundError when no App ID was found.
 func (aq *AppQuery) FirstID(ctx context.Context) (id int64, err error) {
 	var ids []int64
-	if ids, err = aq.Limit(1).IDs(newQueryContext(ctx, TypeApp, "FirstID")); err != nil {
+	if ids, err = aq.Limit(1).IDs(setContextOp(ctx, aq.ctx, "FirstID")); err != nil {
 		return
 	}
 	if len(ids) == 0 {
@@ -133,7 +130,7 @@ func (aq *AppQuery) FirstIDX(ctx context.Context) int64 {
 // Returns a *NotSingularError when more than one App entity is found.
 // Returns a *NotFoundError when no App entities are found.
 func (aq *AppQuery) Only(ctx context.Context) (*App, error) {
-	nodes, err := aq.Limit(2).All(newQueryContext(ctx, TypeApp, "Only"))
+	nodes, err := aq.Limit(2).All(setContextOp(ctx, aq.ctx, "Only"))
 	if err != nil {
 		return nil, err
 	}
@@ -161,7 +158,7 @@ func (aq *AppQuery) OnlyX(ctx context.Context) *App {
 // Returns a *NotFoundError when no entities are found.
 func (aq *AppQuery) OnlyID(ctx context.Context) (id int64, err error) {
 	var ids []int64
-	if ids, err = aq.Limit(2).IDs(newQueryContext(ctx, TypeApp, "OnlyID")); err != nil {
+	if ids, err = aq.Limit(2).IDs(setContextOp(ctx, aq.ctx, "OnlyID")); err != nil {
 		return
 	}
 	switch len(ids) {
@@ -186,7 +183,7 @@ func (aq *AppQuery) OnlyIDX(ctx context.Context) int64 {
 
 // All executes the query and returns a list of Apps.
 func (aq *AppQuery) All(ctx context.Context) ([]*App, error) {
-	ctx = newQueryContext(ctx, TypeApp, "All")
+	ctx = setContextOp(ctx, aq.ctx, "All")
 	if err := aq.prepareQuery(ctx); err != nil {
 		return nil, err
 	}
@@ -206,7 +203,7 @@ func (aq *AppQuery) AllX(ctx context.Context) []*App {
 // IDs executes the query and returns a list of App IDs.
 func (aq *AppQuery) IDs(ctx context.Context) ([]int64, error) {
 	var ids []int64
-	ctx = newQueryContext(ctx, TypeApp, "IDs")
+	ctx = setContextOp(ctx, aq.ctx, "IDs")
 	if err := aq.Select(app.FieldID).Scan(ctx, &ids); err != nil {
 		return nil, err
 	}
@@ -224,7 +221,7 @@ func (aq *AppQuery) IDsX(ctx context.Context) []int64 {
 
 // Count returns the count of the given query.
 func (aq *AppQuery) Count(ctx context.Context) (int, error) {
-	ctx = newQueryContext(ctx, TypeApp, "Count")
+	ctx = setContextOp(ctx, aq.ctx, "Count")
 	if err := aq.prepareQuery(ctx); err != nil {
 		return 0, err
 	}
@@ -242,7 +239,7 @@ func (aq *AppQuery) CountX(ctx context.Context) int {
 
 // Exist returns true if the query has elements in the graph.
 func (aq *AppQuery) Exist(ctx context.Context) (bool, error) {
-	ctx = newQueryContext(ctx, TypeApp, "Exist")
+	ctx = setContextOp(ctx, aq.ctx, "Exist")
 	switch _, err := aq.FirstID(ctx); {
 	case IsNotFound(err):
 		return false, nil
@@ -270,16 +267,14 @@ func (aq *AppQuery) Clone() *AppQuery {
 	}
 	return &AppQuery{
 		config:        aq.config,
-		limit:         aq.limit,
-		offset:        aq.offset,
+		ctx:           aq.ctx.Clone(),
 		order:         append([]OrderFunc{}, aq.order...),
 		inters:        append([]Interceptor{}, aq.inters...),
 		predicates:    append([]predicate.App{}, aq.predicates...),
 		withAppsTypes: aq.withAppsTypes.Clone(),
 		// clone intermediate query.
-		sql:    aq.sql.Clone(),
-		path:   aq.path,
-		unique: aq.unique,
+		sql:  aq.sql.Clone(),
+		path: aq.path,
 	}
 }
 
@@ -309,9 +304,9 @@ func (aq *AppQuery) WithAppsTypes(opts ...func(*AppTypeQuery)) *AppQuery {
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
 func (aq *AppQuery) GroupBy(field string, fields ...string) *AppGroupBy {
-	aq.fields = append([]string{field}, fields...)
+	aq.ctx.Fields = append([]string{field}, fields...)
 	grbuild := &AppGroupBy{build: aq}
-	grbuild.flds = &aq.fields
+	grbuild.flds = &aq.ctx.Fields
 	grbuild.label = app.Label
 	grbuild.scan = grbuild.Scan
 	return grbuild
@@ -330,10 +325,10 @@ func (aq *AppQuery) GroupBy(field string, fields ...string) *AppGroupBy {
 //		Select(app.FieldName).
 //		Scan(ctx, &v)
 func (aq *AppQuery) Select(fields ...string) *AppSelect {
-	aq.fields = append(aq.fields, fields...)
+	aq.ctx.Fields = append(aq.ctx.Fields, fields...)
 	sbuild := &AppSelect{AppQuery: aq}
 	sbuild.label = app.Label
-	sbuild.flds, sbuild.scan = &aq.fields, sbuild.Scan
+	sbuild.flds, sbuild.scan = &aq.ctx.Fields, sbuild.Scan
 	return sbuild
 }
 
@@ -353,7 +348,7 @@ func (aq *AppQuery) prepareQuery(ctx context.Context) error {
 			}
 		}
 	}
-	for _, f := range aq.fields {
+	for _, f := range aq.ctx.Fields {
 		if !app.ValidColumn(f) {
 			return &ValidationError{Name: f, err: fmt.Errorf("ent: invalid field %q for query", f)}
 		}
@@ -413,6 +408,9 @@ func (aq *AppQuery) loadAppsTypes(ctx context.Context, query *AppTypeQuery, node
 		}
 		nodeids[fk] = append(nodeids[fk], nodes[i])
 	}
+	if len(ids) == 0 {
+		return nil
+	}
 	query.Where(apptype.IDIn(ids...))
 	neighbors, err := query.All(ctx)
 	if err != nil {
@@ -432,9 +430,9 @@ func (aq *AppQuery) loadAppsTypes(ctx context.Context, query *AppTypeQuery, node
 
 func (aq *AppQuery) sqlCount(ctx context.Context) (int, error) {
 	_spec := aq.querySpec()
-	_spec.Node.Columns = aq.fields
-	if len(aq.fields) > 0 {
-		_spec.Unique = aq.unique != nil && *aq.unique
+	_spec.Node.Columns = aq.ctx.Fields
+	if len(aq.ctx.Fields) > 0 {
+		_spec.Unique = aq.ctx.Unique != nil && *aq.ctx.Unique
 	}
 	return sqlgraph.CountNodes(ctx, aq.driver, _spec)
 }
@@ -452,10 +450,10 @@ func (aq *AppQuery) querySpec() *sqlgraph.QuerySpec {
 		From:   aq.sql,
 		Unique: true,
 	}
-	if unique := aq.unique; unique != nil {
+	if unique := aq.ctx.Unique; unique != nil {
 		_spec.Unique = *unique
 	}
-	if fields := aq.fields; len(fields) > 0 {
+	if fields := aq.ctx.Fields; len(fields) > 0 {
 		_spec.Node.Columns = make([]string, 0, len(fields))
 		_spec.Node.Columns = append(_spec.Node.Columns, app.FieldID)
 		for i := range fields {
@@ -471,10 +469,10 @@ func (aq *AppQuery) querySpec() *sqlgraph.QuerySpec {
 			}
 		}
 	}
-	if limit := aq.limit; limit != nil {
+	if limit := aq.ctx.Limit; limit != nil {
 		_spec.Limit = *limit
 	}
-	if offset := aq.offset; offset != nil {
+	if offset := aq.ctx.Offset; offset != nil {
 		_spec.Offset = *offset
 	}
 	if ps := aq.order; len(ps) > 0 {
@@ -490,7 +488,7 @@ func (aq *AppQuery) querySpec() *sqlgraph.QuerySpec {
 func (aq *AppQuery) sqlQuery(ctx context.Context) *sql.Selector {
 	builder := sql.Dialect(aq.driver.Dialect())
 	t1 := builder.Table(app.Table)
-	columns := aq.fields
+	columns := aq.ctx.Fields
 	if len(columns) == 0 {
 		columns = app.Columns
 	}
@@ -499,7 +497,7 @@ func (aq *AppQuery) sqlQuery(ctx context.Context) *sql.Selector {
 		selector = aq.sql
 		selector.Select(selector.Columns(columns...)...)
 	}
-	if aq.unique != nil && *aq.unique {
+	if aq.ctx.Unique != nil && *aq.ctx.Unique {
 		selector.Distinct()
 	}
 	for _, p := range aq.predicates {
@@ -508,12 +506,12 @@ func (aq *AppQuery) sqlQuery(ctx context.Context) *sql.Selector {
 	for _, p := range aq.order {
 		p(selector)
 	}
-	if offset := aq.offset; offset != nil {
+	if offset := aq.ctx.Offset; offset != nil {
 		// limit is mandatory for offset clause. We start
 		// with default value, and override it below if needed.
 		selector.Offset(*offset).Limit(math.MaxInt32)
 	}
-	if limit := aq.limit; limit != nil {
+	if limit := aq.ctx.Limit; limit != nil {
 		selector.Limit(*limit)
 	}
 	return selector
@@ -533,7 +531,7 @@ func (agb *AppGroupBy) Aggregate(fns ...AggregateFunc) *AppGroupBy {
 
 // Scan applies the selector query and scans the result into the given value.
 func (agb *AppGroupBy) Scan(ctx context.Context, v any) error {
-	ctx = newQueryContext(ctx, TypeApp, "GroupBy")
+	ctx = setContextOp(ctx, agb.build.ctx, "GroupBy")
 	if err := agb.build.prepareQuery(ctx); err != nil {
 		return err
 	}
@@ -581,7 +579,7 @@ func (as *AppSelect) Aggregate(fns ...AggregateFunc) *AppSelect {
 
 // Scan applies the selector query and scans the result into the given value.
 func (as *AppSelect) Scan(ctx context.Context, v any) error {
-	ctx = newQueryContext(ctx, TypeApp, "Select")
+	ctx = setContextOp(ctx, as.ctx, "Select")
 	if err := as.prepareQuery(ctx); err != nil {
 		return err
 	}

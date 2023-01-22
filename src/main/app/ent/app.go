@@ -114,14 +114,14 @@ func (a *App) assignValues(columns []string, values []any) error {
 
 // QueryAppsTypes queries the "apps_types" edge of the App entity.
 func (a *App) QueryAppsTypes() *AppTypeQuery {
-	return (&AppClient{config: a.config}).QueryAppsTypes(a)
+	return NewAppClient(a.config).QueryAppsTypes(a)
 }
 
 // Update returns a builder for updating this App.
 // Note that you need to call App.Unwrap() before calling this method if this App
 // was returned from a transaction, and the transaction was committed or rolled back.
 func (a *App) Update() *AppUpdateOne {
-	return (&AppClient{config: a.config}).UpdateOne(a)
+	return NewAppClient(a.config).UpdateOne(a)
 }
 
 // Unwrap unwraps the App entity that was returned from a transaction after it was closed,
