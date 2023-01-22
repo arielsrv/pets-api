@@ -71,7 +71,8 @@ func (s *SecretService) CreateSecret(appID int64, secretModel *model.CreateSecre
 		return nil, server.NewError(http.StatusConflict, fmt.Sprintf("secret %s for app already exist.", secretModel.Key))
 	}
 
-	result, err := s.dbClient.Context().Secret.Create().
+	result, err := s.dbClient.Context().Secret.
+		Create().
 		SetKey(secretModel.Key).
 		SetValue(secretModel.Value).
 		SetAppID(appModel.ID).
