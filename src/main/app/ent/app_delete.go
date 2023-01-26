@@ -69,6 +69,12 @@ type AppDeleteOne struct {
 	ad *AppDelete
 }
 
+// Where appends a list predicates to the AppDelete builder.
+func (ado *AppDeleteOne) Where(ps ...predicate.App) *AppDeleteOne {
+	ado.ad.mutation.Where(ps...)
+	return ado
+}
+
 // Exec executes the deletion query.
 func (ado *AppDeleteOne) Exec(ctx context.Context) error {
 	n, err := ado.ad.Exec(ctx)
@@ -84,5 +90,7 @@ func (ado *AppDeleteOne) Exec(ctx context.Context) error {
 
 // ExecX is like Exec, but panics if an error occurs.
 func (ado *AppDeleteOne) ExecX(ctx context.Context) {
-	ado.ad.ExecX(ctx)
+	if err := ado.Exec(ctx); err != nil {
+		panic(err)
+	}
 }

@@ -69,6 +69,12 @@ type AppTypeDeleteOne struct {
 	atd *AppTypeDelete
 }
 
+// Where appends a list predicates to the AppTypeDelete builder.
+func (atdo *AppTypeDeleteOne) Where(ps ...predicate.AppType) *AppTypeDeleteOne {
+	atdo.atd.mutation.Where(ps...)
+	return atdo
+}
+
 // Exec executes the deletion query.
 func (atdo *AppTypeDeleteOne) Exec(ctx context.Context) error {
 	n, err := atdo.atd.Exec(ctx)
@@ -84,5 +90,7 @@ func (atdo *AppTypeDeleteOne) Exec(ctx context.Context) error {
 
 // ExecX is like Exec, but panics if an error occurs.
 func (atdo *AppTypeDeleteOne) ExecX(ctx context.Context) {
-	atdo.atd.ExecX(ctx)
+	if err := atdo.Exec(ctx); err != nil {
+		panic(err)
+	}
 }

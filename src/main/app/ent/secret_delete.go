@@ -69,6 +69,12 @@ type SecretDeleteOne struct {
 	sd *SecretDelete
 }
 
+// Where appends a list predicates to the SecretDelete builder.
+func (sdo *SecretDeleteOne) Where(ps ...predicate.Secret) *SecretDeleteOne {
+	sdo.sd.mutation.Where(ps...)
+	return sdo
+}
+
 // Exec executes the deletion query.
 func (sdo *SecretDeleteOne) Exec(ctx context.Context) error {
 	n, err := sdo.sd.Exec(ctx)
@@ -84,5 +90,7 @@ func (sdo *SecretDeleteOne) Exec(ctx context.Context) error {
 
 // ExecX is like Exec, but panics if an error occurs.
 func (sdo *SecretDeleteOne) ExecX(ctx context.Context) {
-	sdo.sd.ExecX(ctx)
+	if err := sdo.Exec(ctx); err != nil {
+		panic(err)
+	}
 }
