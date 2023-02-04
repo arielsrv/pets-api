@@ -54,10 +54,6 @@ func (s *SecretService) CreateSecret(appID int64, secretModel *model.CreateSecre
 		return nil, err
 	}
 
-	createAppResponse := new(model.CreateSecretResponse)
-	createAppResponse.OriginalKey = secretModel.Key
-	createAppResponse.Key = strings.ToUpper(secretModel.Key)
-
 	alreadyExist, err := s.dbClient.Context().Secret.
 		Query().
 		Where(secret.Key(secretModel.Key)).
@@ -82,6 +78,9 @@ func (s *SecretService) CreateSecret(appID int64, secretModel *model.CreateSecre
 		return nil, err
 	}
 
+	createAppResponse := new(model.CreateSecretResponse)
+	createAppResponse.OriginalKey = secretModel.Key
+	createAppResponse.Key = strings.ToUpper(secretModel.Key)
 	createAppResponse.SnippetURL = fmt.Sprintf("/apps/%d/secrets/%d/snippets", appID, result.ID)
 
 	return createAppResponse, nil
