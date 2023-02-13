@@ -3,7 +3,7 @@ module github.com
 go 1.20
 
 require (
-	entgo.io/ent v0.11.7
+	entgo.io/ent v0.11.8
 	github.com/arielsrv/ikp_go-restclient v0.0.2
 	github.com/go-chassis/go-archaius v1.5.6
 	github.com/go-sql-driver/mysql v1.7.0
