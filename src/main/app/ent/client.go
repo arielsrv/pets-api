@@ -175,7 +175,7 @@ func (c *AppClient) Use(hooks ...Hook) {
 	c.hooks.App = append(c.hooks.App, hooks...)
 }
 
-// Use adds a list of query interceptors to the interceptors stack.
+// Intercept adds a list of query interceptors to the interceptors stack.
 // A call to `Intercept(f, g, h)` equals to `app.Intercept(f(g(h())))`.
 func (c *AppClient) Intercept(interceptors ...Interceptor) {
 	c.inters.App = append(c.inters.App, interceptors...)
@@ -309,7 +309,7 @@ func (c *AppTypeClient) Use(hooks ...Hook) {
 	c.hooks.AppType = append(c.hooks.AppType, hooks...)
 }
 
-// Use adds a list of query interceptors to the interceptors stack.
+// Intercept adds a list of query interceptors to the interceptors stack.
 // A call to `Intercept(f, g, h)` equals to `apptype.Intercept(f(g(h())))`.
 func (c *AppTypeClient) Intercept(interceptors ...Interceptor) {
 	c.inters.AppType = append(c.inters.AppType, interceptors...)
@@ -443,7 +443,7 @@ func (c *SecretClient) Use(hooks ...Hook) {
 	c.hooks.Secret = append(c.hooks.Secret, hooks...)
 }
 
-// Use adds a list of query interceptors to the interceptors stack.
+// Intercept adds a list of query interceptors to the interceptors stack.
 // A call to `Intercept(f, g, h)` equals to `secret.Intercept(f(g(h())))`.
 func (c *SecretClient) Intercept(interceptors ...Interceptor) {
 	c.inters.Secret = append(c.inters.Secret, interceptors...)

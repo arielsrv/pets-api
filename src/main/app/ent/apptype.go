@@ -117,9 +117,3 @@ func (at *AppType) String() string {
 
 // AppTypes is a parsable slice of AppType.
 type AppTypes []*AppType
-
-func (at AppTypes) config(cfg config) {
-	for _i := range at {
-		at[_i].config = cfg
-	}
-}

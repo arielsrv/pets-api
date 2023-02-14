@@ -147,13 +147,7 @@ func (sc *SecretCreate) sqlSave(ctx context.Context) (*Secret, error) {
 func (sc *SecretCreate) createSpec() (*Secret, *sqlgraph.CreateSpec) {
 	var (
 		_node = &Secret{config: sc.config}
-		_spec = &sqlgraph.CreateSpec{
-			Table: secret.Table,
-			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeInt64,
-				Column: secret.FieldID,
-			},
-		}
+		_spec = sqlgraph.NewCreateSpec(secret.Table, sqlgraph.NewFieldSpec(secret.FieldID, field.TypeInt64))
 	)
 	if id, ok := sc.mutation.ID(); ok {
 		_node.ID = id

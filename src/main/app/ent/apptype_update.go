@@ -103,16 +103,7 @@ func (atu *AppTypeUpdate) ExecX(ctx context.Context) {
 }
 
 func (atu *AppTypeUpdate) sqlSave(ctx context.Context) (n int, err error) {
-	_spec := &sqlgraph.UpdateSpec{
-		Node: &sqlgraph.NodeSpec{
-			Table:   apptype.Table,
-			Columns: apptype.Columns,
-			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeInt,
-				Column: apptype.FieldID,
-			},
-		},
-	}
+	_spec := sqlgraph.NewUpdateSpec(apptype.Table, apptype.Columns, sqlgraph.NewFieldSpec(apptype.FieldID, field.TypeInt))
 	if ps := atu.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
@@ -244,6 +235,12 @@ func (atuo *AppTypeUpdateOne) RemoveApps(a ...*App) *AppTypeUpdateOne {
 	return atuo.RemoveAppIDs(ids...)
 }
 
+// Where appends a list predicates to the AppTypeUpdate builder.
+func (atuo *AppTypeUpdateOne) Where(ps ...predicate.AppType) *AppTypeUpdateOne {
+	atuo.mutation.Where(ps...)
+	return atuo
+}
+
 // Select allows selecting one or more fields (columns) of the returned entity.
 // The default is selecting all fields defined in the entity schema.
 func (atuo *AppTypeUpdateOne) Select(field string, fields ...string) *AppTypeUpdateOne {
@@ -279,16 +276,7 @@ func (atuo *AppTypeUpdateOne) ExecX(ctx context.Context) {
 }
 
 func (atuo *AppTypeUpdateOne) sqlSave(ctx context.Context) (_node *AppType, err error) {
-	_spec := &sqlgraph.UpdateSpec{
-		Node: &sqlgraph.NodeSpec{
-			Table:   apptype.Table,
-			Columns: apptype.Columns,
-			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeInt,
-				Column: apptype.FieldID,
-			},
-		},
-	}
+	_spec := sqlgraph.NewUpdateSpec(apptype.Table, apptype.Columns, sqlgraph.NewFieldSpec(apptype.FieldID, field.TypeInt))
 	id, ok := atuo.mutation.ID()
 	if !ok {
 		return nil, &ValidationError{Name: "id", err: errors.New(`ent: missing "AppType.id" for update`)}

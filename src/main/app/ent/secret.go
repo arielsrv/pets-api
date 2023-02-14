@@ -157,9 +157,3 @@ func (s *Secret) String() string {
 
 // Secrets is a parsable slice of Secret.
 type Secrets []*Secret
-
-func (s Secrets) config(cfg config) {
-	for _i := range s {
-		s[_i].config = cfg
-	}
-}

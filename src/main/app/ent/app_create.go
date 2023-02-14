@@ -153,13 +153,7 @@ func (ac *AppCreate) sqlSave(ctx context.Context) (*App, error) {
 func (ac *AppCreate) createSpec() (*App, *sqlgraph.CreateSpec) {
 	var (
 		_node = &App{config: ac.config}
-		_spec = &sqlgraph.CreateSpec{
-			Table: app.Table,
-			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeInt64,
-				Column: app.FieldID,
-			},
-		}
+		_spec = sqlgraph.NewCreateSpec(app.Table, sqlgraph.NewFieldSpec(app.FieldID, field.TypeInt64))
 	)
 	if id, ok := ac.mutation.ID(); ok {
 		_node.ID = id

@@ -201,10 +201,12 @@ func (sq *SecretQuery) AllX(ctx context.Context) []*Secret {
 }
 
 // IDs executes the query and returns a list of Secret IDs.
-func (sq *SecretQuery) IDs(ctx context.Context) ([]int64, error) {
-	var ids []int64
+func (sq *SecretQuery) IDs(ctx context.Context) (ids []int64, err error) {
+	if sq.ctx.Unique == nil && sq.path != nil {
+		sq.Unique(true)
+	}
 	ctx = setContextOp(ctx, sq.ctx, "IDs")
-	if err := sq.Select(secret.FieldID).Scan(ctx, &ids); err != nil {
+	if err = sq.Select(secret.FieldID).Scan(ctx, &ids); err != nil {
 		return nil, err
 	}
 	return ids, nil
@@ -438,20 +440,12 @@ func (sq *SecretQuery) sqlCount(ctx context.Context) (int, error) {
 }
 
 func (sq *SecretQuery) querySpec() *sqlgraph.QuerySpec {
-	_spec := &sqlgraph.QuerySpec{
-		Node: &sqlgraph.NodeSpec{
-			Table:   secret.Table,
-			Columns: secret.Columns,
-			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeInt64,
-				Column: secret.FieldID,
-			},
-		},
-		From:   sq.sql,
-		Unique: true,
-	}
+	_spec := sqlgraph.NewQuerySpec(secret.Table, secret.Columns, sqlgraph.NewFieldSpec(secret.FieldID, field.TypeInt64))
+	_spec.From = sq.sql
 	if unique := sq.ctx.Unique; unique != nil {
 		_spec.Unique = *unique
+	} else if sq.path != nil {
+		_spec.Unique = true
 	}
 	if fields := sq.ctx.Fields; len(fields) > 0 {
 		_spec.Node.Columns = make([]string, 0, len(fields))

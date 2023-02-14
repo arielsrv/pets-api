@@ -40,15 +40,7 @@ func (sd *SecretDelete) ExecX(ctx context.Context) int {
 }
 
 func (sd *SecretDelete) sqlExec(ctx context.Context) (int, error) {
-	_spec := &sqlgraph.DeleteSpec{
-		Node: &sqlgraph.NodeSpec{
-			Table: secret.Table,
-			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeInt64,
-				Column: secret.FieldID,
-			},
-		},
-	}
+	_spec := sqlgraph.NewDeleteSpec(secret.Table, sqlgraph.NewFieldSpec(secret.FieldID, field.TypeInt64))
 	if ps := sd.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {

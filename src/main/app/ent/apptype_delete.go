@@ -40,15 +40,7 @@ func (atd *AppTypeDelete) ExecX(ctx context.Context) int {
 }
 
 func (atd *AppTypeDelete) sqlExec(ctx context.Context) (int, error) {
-	_spec := &sqlgraph.DeleteSpec{
-		Node: &sqlgraph.NodeSpec{
-			Table: apptype.Table,
-			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeInt,
-				Column: apptype.FieldID,
-			},
-		},
-	}
+	_spec := sqlgraph.NewDeleteSpec(apptype.Table, sqlgraph.NewFieldSpec(apptype.FieldID, field.TypeInt))
 	if ps := atd.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
