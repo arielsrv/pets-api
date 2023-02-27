@@ -11,7 +11,7 @@ require (
 	github.com/gofiber/swagger v0.1.9
 	github.com/gofiber/template v1.7.5
 	github.com/mattn/go-sqlite3 v1.14.16
-	github.com/stretchr/testify v1.8.1
+	github.com/stretchr/testify v1.8.2
 	github.com/swaggo/swag v1.8.10
 	github.com/valyala/fasthttp v1.44.0
 )
