@@ -4,7 +4,7 @@ go 1.20
 
 require (
 	entgo.io/ent v0.11.8
-	github.com/arielsrv/ikp_go-restclient v0.0.2
+	github.com/arielsrv/ikp_go-restclient v0.0.5
 	github.com/go-chassis/go-archaius v1.5.6
 	github.com/go-sql-driver/mysql v1.7.0
 	github.com/gofiber/fiber/v2 v2.42.0
