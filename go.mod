@@ -7,12 +7,12 @@ require (
 	github.com/arielsrv/ikp_go-restclient v0.0.5
 	github.com/go-chassis/go-archaius v1.5.6
 	github.com/go-sql-driver/mysql v1.7.0
-	github.com/gofiber/fiber/v2 v2.42.0
-	github.com/gofiber/swagger v0.1.9
+	github.com/gofiber/fiber/v2 v2.44.0
+	github.com/gofiber/swagger v0.1.11
 	github.com/gofiber/template v1.7.5
 	github.com/mattn/go-sqlite3 v1.14.16
 	github.com/stretchr/testify v1.8.2
-	github.com/swaggo/swag v1.8.11
+	github.com/swaggo/swag v1.8.12
 	github.com/valyala/fasthttp v1.45.0
 )
 
@@ -39,26 +39,26 @@ require (
 	github.com/klauspost/compress v1.16.3 // indirect
 	github.com/mailru/easyjson v0.7.6 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
-	github.com/mattn/go-isatty v0.0.17 // indirect
+	github.com/mattn/go-isatty v0.0.18 // indirect
 	github.com/mattn/go-runewidth v0.0.14 // indirect
 	github.com/mitchellh/go-wordwrap v0.0.0-20150314170334-ad45545899c7 // indirect
-	github.com/philhofer/fwd v1.1.1 // indirect
+	github.com/philhofer/fwd v1.1.2 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/rivo/uniseg v0.2.0 // indirect
 	github.com/savsgio/dictpool v0.0.0-20221023140959-7bf2e61cea94 // indirect
-	github.com/savsgio/gotils v0.0.0-20220530130905-52f3993e8d6d // indirect
+	github.com/savsgio/gotils v0.0.0-20230208104028-c358bd845dee // indirect
 	github.com/spf13/cast v1.4.1 // indirect
 	github.com/stretchr/objx v0.5.0 // indirect
-	github.com/swaggo/files v0.0.0-20220728132757-551d4a08d97a // indirect
-	github.com/tinylib/msgp v1.1.6 // indirect
+	github.com/swaggo/files/v2 v2.0.0 // indirect
+	github.com/tinylib/msgp v1.1.8 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/tcplisten v1.0.0 // indirect
 	github.com/zclconf/go-cty v1.8.0 // indirect
-	golang.org/x/mod v0.8.0 // indirect
+	golang.org/x/mod v0.9.0 // indirect
 	golang.org/x/net v0.8.0 // indirect
-	golang.org/x/sys v0.6.0 // indirect
+	golang.org/x/sys v0.7.0 // indirect
 	golang.org/x/text v0.8.0 // indirect
-	golang.org/x/tools v0.6.1-0.20230222164832-25d2519c8696 // indirect
+	golang.org/x/tools v0.7.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
