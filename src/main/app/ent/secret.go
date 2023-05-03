@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"strings"
 
+	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
 	"github.com/src/main/app/ent/app"
 	"github.com/src/main/app/ent/secret"
@@ -26,7 +27,8 @@ type Secret struct {
 	Active bool `json:"active,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the SecretQuery when eager-loading is set.
-	Edges SecretEdges `json:"edges"`
+	Edges        SecretEdges `json:"edges"`
+	selectValues sql.SelectValues
 }
 
 // SecretEdges holds the relations/edges for other nodes in the graph.
@@ -63,7 +65,7 @@ func (*Secret) scanValues(columns []string) ([]any, error) {
 		case secret.FieldKey, secret.FieldValue:
 			values[i] = new(sql.NullString)
 		default:
-			return nil, fmt.Errorf("unexpected column %q for type Secret", columns[i])
+			values[i] = new(sql.UnknownType)
 		}
 	}
 	return values, nil
@@ -107,9 +109,17 @@ func (s *Secret) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				s.Active = value.Bool
 			}
+		default:
+			s.selectValues.Set(columns[i], values[i])
 		}
 	}
 	return nil
+}
+
+// GetValue returns the ent.Value that was dynamically selected and assigned to the Secret.
+// This includes values selected through modifiers, order, etc.
+func (s *Secret) GetValue(name string) (ent.Value, error) {
+	return s.selectValues.Get(name)
 }
 
 // QueryApp queries the "app" edge of the Secret entity.

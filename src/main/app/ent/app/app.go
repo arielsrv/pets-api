@@ -2,6 +2,11 @@
 
 package app
 
+import (
+	"entgo.io/ent/dialect/sql"
+	"entgo.io/ent/dialect/sql/sqlgraph"
+)
+
 const (
 	// Label holds the string label denoting the app type in the database.
 	Label = "app"
@@ -51,3 +56,45 @@ var (
 	// DefaultActive holds the default value on creation for the "active" field.
 	DefaultActive bool
 )
+
+// OrderOption defines the ordering options for the App queries.
+type OrderOption func(*sql.Selector)
+
+// ByID orders the results by the id field.
+func ByID(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldID, opts...).ToFunc()
+}
+
+// ByName orders the results by the name field.
+func ByName(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldName, opts...).ToFunc()
+}
+
+// ByExternalGitlabProjectID orders the results by the external_gitlab_project_id field.
+func ByExternalGitlabProjectID(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldExternalGitlabProjectID, opts...).ToFunc()
+}
+
+// ByAppTypeID orders the results by the app_type_id field.
+func ByAppTypeID(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldAppTypeID, opts...).ToFunc()
+}
+
+// ByActive orders the results by the active field.
+func ByActive(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldActive, opts...).ToFunc()
+}
+
+// ByAppsTypesField orders the results by apps_types field.
+func ByAppsTypesField(field string, opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newAppsTypesStep(), sql.OrderByField(field, opts...))
+	}
+}
+func newAppsTypesStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(AppsTypesInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.M2O, true, AppsTypesTable, AppsTypesColumn),
+	)
+}

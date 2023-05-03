@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"strings"
 
+	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
 	"github.com/src/main/app/ent/app"
 	"github.com/src/main/app/ent/apptype"
@@ -26,7 +27,8 @@ type App struct {
 	Active bool `json:"active,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the AppQuery when eager-loading is set.
-	Edges AppEdges `json:"edges"`
+	Edges        AppEdges `json:"edges"`
+	selectValues sql.SelectValues
 }
 
 // AppEdges holds the relations/edges for other nodes in the graph.
@@ -63,7 +65,7 @@ func (*App) scanValues(columns []string) ([]any, error) {
 		case app.FieldName:
 			values[i] = new(sql.NullString)
 		default:
-			return nil, fmt.Errorf("unexpected column %q for type App", columns[i])
+			values[i] = new(sql.UnknownType)
 		}
 	}
 	return values, nil
@@ -107,9 +109,17 @@ func (a *App) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				a.Active = value.Bool
 			}
+		default:
+			a.selectValues.Set(columns[i], values[i])
 		}
 	}
 	return nil
+}
+
+// Value returns the ent.Value that was dynamically selected and assigned to the App.
+// This includes values selected through modifiers, order, etc.
+func (a *App) Value(name string) (ent.Value, error) {
+	return a.selectValues.Get(name)
 }
 
 // QueryAppsTypes queries the "apps_types" edge of the App entity.

@@ -20,7 +20,7 @@ import (
 type AppTypeQuery struct {
 	config
 	ctx        *QueryContext
-	order      []OrderFunc
+	order      []apptype.OrderOption
 	inters     []Interceptor
 	predicates []predicate.AppType
 	withApps   *AppQuery
@@ -55,7 +55,7 @@ func (atq *AppTypeQuery) Unique(unique bool) *AppTypeQuery {
 }
 
 // Order specifies how the records should be ordered.
-func (atq *AppTypeQuery) Order(o ...OrderFunc) *AppTypeQuery {
+func (atq *AppTypeQuery) Order(o ...apptype.OrderOption) *AppTypeQuery {
 	atq.order = append(atq.order, o...)
 	return atq
 }
@@ -271,7 +271,7 @@ func (atq *AppTypeQuery) Clone() *AppTypeQuery {
 	return &AppTypeQuery{
 		config:     atq.config,
 		ctx:        atq.ctx.Clone(),
-		order:      append([]OrderFunc{}, atq.order...),
+		order:      append([]apptype.OrderOption{}, atq.order...),
 		inters:     append([]Interceptor{}, atq.inters...),
 		predicates: append([]predicate.AppType{}, atq.predicates...),
 		withApps:   atq.withApps.Clone(),
@@ -412,8 +412,11 @@ func (atq *AppTypeQuery) loadApps(ctx context.Context, query *AppQuery, nodes []
 			init(nodes[i])
 		}
 	}
+	if len(query.ctx.Fields) > 0 {
+		query.ctx.AppendFieldOnce(app.FieldAppTypeID)
+	}
 	query.Where(predicate.App(func(s *sql.Selector) {
-		s.Where(sql.InValues(apptype.AppsColumn, fks...))
+		s.Where(sql.InValues(s.C(apptype.AppsColumn), fks...))
 	}))
 	neighbors, err := query.All(ctx)
 	if err != nil {
@@ -423,7 +426,7 @@ func (atq *AppTypeQuery) loadApps(ctx context.Context, query *AppQuery, nodes []
 		fk := n.AppTypeID
 		node, ok := nodeids[fk]
 		if !ok {
-			return fmt.Errorf(`unexpected foreign-key "app_type_id" returned %v for node %v`, fk, n.ID)
+			return fmt.Errorf(`unexpected referenced foreign-key "app_type_id" returned %v for node %v`, fk, n.ID)
 		}
 		assign(node, n)
 	}

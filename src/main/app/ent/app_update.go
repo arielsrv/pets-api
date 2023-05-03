@@ -91,7 +91,7 @@ func (au *AppUpdate) ClearAppsTypes() *AppUpdate {
 
 // Save executes the query and returns the number of nodes affected by the update operation.
 func (au *AppUpdate) Save(ctx context.Context) (int, error) {
-	return withHooks[int, AppMutation](ctx, au.sqlSave, au.mutation, au.hooks)
+	return withHooks(ctx, au.sqlSave, au.mutation, au.hooks)
 }
 
 // SaveX is like Save, but panics if an error occurs.
@@ -156,10 +156,7 @@ func (au *AppUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Columns: []string{app.AppsTypesColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt,
-					Column: apptype.FieldID,
-				},
+				IDSpec: sqlgraph.NewFieldSpec(apptype.FieldID, field.TypeInt),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
@@ -172,10 +169,7 @@ func (au *AppUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Columns: []string{app.AppsTypesColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt,
-					Column: apptype.FieldID,
-				},
+				IDSpec: sqlgraph.NewFieldSpec(apptype.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {
@@ -279,7 +273,7 @@ func (auo *AppUpdateOne) Select(field string, fields ...string) *AppUpdateOne {
 
 // Save executes the query and returns the updated App entity.
 func (auo *AppUpdateOne) Save(ctx context.Context) (*App, error) {
-	return withHooks[*App, AppMutation](ctx, auo.sqlSave, auo.mutation, auo.hooks)
+	return withHooks(ctx, auo.sqlSave, auo.mutation, auo.hooks)
 }
 
 // SaveX is like Save, but panics if an error occurs.
@@ -361,10 +355,7 @@ func (auo *AppUpdateOne) sqlSave(ctx context.Context) (_node *App, err error) {
 			Columns: []string{app.AppsTypesColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt,
-					Column: apptype.FieldID,
-				},
+				IDSpec: sqlgraph.NewFieldSpec(apptype.FieldID, field.TypeInt),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
@@ -377,10 +368,7 @@ func (auo *AppUpdateOne) sqlSave(ctx context.Context) (_node *App, err error) {
 			Columns: []string{app.AppsTypesColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt,
-					Column: apptype.FieldID,
-				},
+				IDSpec: sqlgraph.NewFieldSpec(apptype.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {

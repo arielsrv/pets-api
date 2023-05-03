@@ -78,7 +78,7 @@ func (su *SecretUpdate) ClearApp() *SecretUpdate {
 
 // Save executes the query and returns the number of nodes affected by the update operation.
 func (su *SecretUpdate) Save(ctx context.Context) (int, error) {
-	return withHooks[int, SecretMutation](ctx, su.sqlSave, su.mutation, su.hooks)
+	return withHooks(ctx, su.sqlSave, su.mutation, su.hooks)
 }
 
 // SaveX is like Save, but panics if an error occurs.
@@ -140,10 +140,7 @@ func (su *SecretUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Columns: []string{secret.AppColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt64,
-					Column: app.FieldID,
-				},
+				IDSpec: sqlgraph.NewFieldSpec(app.FieldID, field.TypeInt64),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
@@ -156,10 +153,7 @@ func (su *SecretUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Columns: []string{secret.AppColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt64,
-					Column: app.FieldID,
-				},
+				IDSpec: sqlgraph.NewFieldSpec(app.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {
@@ -250,7 +244,7 @@ func (suo *SecretUpdateOne) Select(field string, fields ...string) *SecretUpdate
 
 // Save executes the query and returns the updated Secret entity.
 func (suo *SecretUpdateOne) Save(ctx context.Context) (*Secret, error) {
-	return withHooks[*Secret, SecretMutation](ctx, suo.sqlSave, suo.mutation, suo.hooks)
+	return withHooks(ctx, suo.sqlSave, suo.mutation, suo.hooks)
 }
 
 // SaveX is like Save, but panics if an error occurs.
@@ -329,10 +323,7 @@ func (suo *SecretUpdateOne) sqlSave(ctx context.Context) (_node *Secret, err err
 			Columns: []string{secret.AppColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt64,
-					Column: app.FieldID,
-				},
+				IDSpec: sqlgraph.NewFieldSpec(app.FieldID, field.TypeInt64),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
@@ -345,10 +336,7 @@ func (suo *SecretUpdateOne) sqlSave(ctx context.Context) (_node *Secret, err err
 			Columns: []string{secret.AppColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt64,
-					Column: app.FieldID,
-				},
+				IDSpec: sqlgraph.NewFieldSpec(app.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {

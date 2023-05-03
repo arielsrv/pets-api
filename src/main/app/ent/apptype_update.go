@@ -77,7 +77,7 @@ func (atu *AppTypeUpdate) RemoveApps(a ...*App) *AppTypeUpdate {
 
 // Save executes the query and returns the number of nodes affected by the update operation.
 func (atu *AppTypeUpdate) Save(ctx context.Context) (int, error) {
-	return withHooks[int, AppTypeMutation](ctx, atu.sqlSave, atu.mutation, atu.hooks)
+	return withHooks(ctx, atu.sqlSave, atu.mutation, atu.hooks)
 }
 
 // SaveX is like Save, but panics if an error occurs.
@@ -122,10 +122,7 @@ func (atu *AppTypeUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Columns: []string{apptype.AppsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt64,
-					Column: app.FieldID,
-				},
+				IDSpec: sqlgraph.NewFieldSpec(app.FieldID, field.TypeInt64),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
@@ -138,10 +135,7 @@ func (atu *AppTypeUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Columns: []string{apptype.AppsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt64,
-					Column: app.FieldID,
-				},
+				IDSpec: sqlgraph.NewFieldSpec(app.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {
@@ -157,10 +151,7 @@ func (atu *AppTypeUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Columns: []string{apptype.AppsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt64,
-					Column: app.FieldID,
-				},
+				IDSpec: sqlgraph.NewFieldSpec(app.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {
@@ -250,7 +241,7 @@ func (atuo *AppTypeUpdateOne) Select(field string, fields ...string) *AppTypeUpd
 
 // Save executes the query and returns the updated AppType entity.
 func (atuo *AppTypeUpdateOne) Save(ctx context.Context) (*AppType, error) {
-	return withHooks[*AppType, AppTypeMutation](ctx, atuo.sqlSave, atuo.mutation, atuo.hooks)
+	return withHooks(ctx, atuo.sqlSave, atuo.mutation, atuo.hooks)
 }
 
 // SaveX is like Save, but panics if an error occurs.
@@ -312,10 +303,7 @@ func (atuo *AppTypeUpdateOne) sqlSave(ctx context.Context) (_node *AppType, err 
 			Columns: []string{apptype.AppsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt64,
-					Column: app.FieldID,
-				},
+				IDSpec: sqlgraph.NewFieldSpec(app.FieldID, field.TypeInt64),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
@@ -328,10 +316,7 @@ func (atuo *AppTypeUpdateOne) sqlSave(ctx context.Context) (_node *AppType, err 
 			Columns: []string{apptype.AppsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt64,
-					Column: app.FieldID,
-				},
+				IDSpec: sqlgraph.NewFieldSpec(app.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {
@@ -347,10 +332,7 @@ func (atuo *AppTypeUpdateOne) sqlSave(ctx context.Context) (_node *AppType, err 
 			Columns: []string{apptype.AppsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt64,
-					Column: app.FieldID,
-				},
+				IDSpec: sqlgraph.NewFieldSpec(app.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {

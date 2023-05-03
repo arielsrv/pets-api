@@ -8,13 +8,12 @@ import (
 	"fmt"
 	"sync"
 
+	"entgo.io/ent"
+	"entgo.io/ent/dialect/sql"
 	"github.com/src/main/app/ent/app"
 	"github.com/src/main/app/ent/apptype"
 	"github.com/src/main/app/ent/predicate"
 	"github.com/src/main/app/ent/secret"
-
-	"entgo.io/ent"
-	"entgo.io/ent/dialect/sql"
 )
 
 const (

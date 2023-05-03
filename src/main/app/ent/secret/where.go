@@ -247,11 +247,7 @@ func HasApp() predicate.Secret {
 // HasAppWith applies the HasEdge predicate on the "app" edge with a given conditions (other predicates).
 func HasAppWith(preds ...predicate.App) predicate.Secret {
 	return predicate.Secret(func(s *sql.Selector) {
-		step := sqlgraph.NewStep(
-			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(AppInverseTable, FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, false, AppTable, AppColumn),
-		)
+		step := newAppStep()
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {
 				p(s)

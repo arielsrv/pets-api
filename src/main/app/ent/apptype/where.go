@@ -137,11 +137,7 @@ func HasApps() predicate.AppType {
 // HasAppsWith applies the HasEdge predicate on the "apps" edge with a given conditions (other predicates).
 func HasAppsWith(preds ...predicate.App) predicate.AppType {
 	return predicate.AppType(func(s *sql.Selector) {
-		step := sqlgraph.NewStep(
-			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(AppsInverseTable, FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, AppsTable, AppsColumn),
-		)
+		step := newAppsStep()
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {
 				p(s)

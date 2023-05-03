@@ -54,7 +54,7 @@ func (atc *AppTypeCreate) Mutation() *AppTypeMutation {
 
 // Save creates the AppType in the database.
 func (atc *AppTypeCreate) Save(ctx context.Context) (*AppType, error) {
-	return withHooks[*AppType, AppTypeMutation](ctx, atc.sqlSave, atc.mutation, atc.hooks)
+	return withHooks(ctx, atc.sqlSave, atc.mutation, atc.hooks)
 }
 
 // SaveX calls Save and panics if Save returns an error.
@@ -128,10 +128,7 @@ func (atc *AppTypeCreate) createSpec() (*AppType, *sqlgraph.CreateSpec) {
 			Columns: []string{apptype.AppsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt64,
-					Column: app.FieldID,
-				},
+				IDSpec: sqlgraph.NewFieldSpec(app.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {
@@ -165,8 +162,8 @@ func (atcb *AppTypeCreateBulk) Save(ctx context.Context) ([]*AppType, error) {
 					return nil, err
 				}
 				builder.mutation = mutation
-				nodes[i], specs[i] = builder.createSpec()
 				var err error
+				nodes[i], specs[i] = builder.createSpec()
 				if i < len(mutators)-1 {
 					_, err = mutators[i+1].Mutate(root, atcb.builders[i+1].mutation)
 				} else {
