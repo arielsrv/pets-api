@@ -10,11 +10,11 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 
-	"github.com/src/main/app/handlers/apps"
+	"github.com/arielsrv/pets-api/src/main/app/handlers/apps"
 
-	"github.com/src/main/app/model"
+	"github.com/arielsrv/pets-api/src/main/app/model"
 
-	"github.com/src/main/app/server"
+	"github.com/arielsrv/pets-api/src/main/app/server"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 

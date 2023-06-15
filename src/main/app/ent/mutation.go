@@ -10,10 +10,10 @@ import (
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
-	"github.com/src/main/app/ent/app"
-	"github.com/src/main/app/ent/apptype"
-	"github.com/src/main/app/ent/predicate"
-	"github.com/src/main/app/ent/secret"
+	"github.com/arielsrv/pets-api/src/main/app/ent/app"
+	"github.com/arielsrv/pets-api/src/main/app/ent/apptype"
+	"github.com/arielsrv/pets-api/src/main/app/ent/predicate"
+	"github.com/arielsrv/pets-api/src/main/app/ent/secret"
 )
 
 const (

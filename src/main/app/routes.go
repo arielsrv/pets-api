@@ -1,11 +1,11 @@
 package app
 
 import (
-	"github.com/src/main/app/handlers"
-	"github.com/src/main/app/handlers/apps"
-	"github.com/src/main/app/handlers/secrets"
-	"github.com/src/main/app/handlers/snippets"
-	"github.com/src/main/app/server"
+	"github.com/arielsrv/pets-api/src/main/app/handlers"
+	"github.com/arielsrv/pets-api/src/main/app/handlers/apps"
+	"github.com/arielsrv/pets-api/src/main/app/handlers/secrets"
+	"github.com/arielsrv/pets-api/src/main/app/handlers/snippets"
+	"github.com/arielsrv/pets-api/src/main/app/server"
 )
 
 func RegisterRoutes() {

@@ -3,9 +3,9 @@
 package ent
 
 import (
-	"github.com/src/main/app/ent/app"
-	"github.com/src/main/app/ent/schema"
-	"github.com/src/main/app/ent/secret"
+	"github.com/arielsrv/pets-api/src/main/app/ent/app"
+	"github.com/arielsrv/pets-api/src/main/app/ent/schema"
+	"github.com/arielsrv/pets-api/src/main/app/ent/secret"
 )
 
 // The init function reads all schema descriptors with runtime code

@@ -8,15 +8,15 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/src/main/app/ent/migrate"
+	"github.com/arielsrv/pets-api/src/main/app/ent/migrate"
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
-	"github.com/src/main/app/ent/app"
-	"github.com/src/main/app/ent/apptype"
-	"github.com/src/main/app/ent/secret"
+	"github.com/arielsrv/pets-api/src/main/app/ent/app"
+	"github.com/arielsrv/pets-api/src/main/app/ent/apptype"
+	"github.com/arielsrv/pets-api/src/main/app/ent/secret"
 )
 
 // Client is the client that holds all ent builders.

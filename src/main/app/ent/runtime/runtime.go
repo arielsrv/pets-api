@@ -2,7 +2,7 @@
 
 package runtime
 
-// The schema-stitching logic is generated in github.com/src/main/app/ent/runtime.go
+// The schema-stitching logic is generated in github.com/arielsrv/pets-api/src/main/app/ent/runtime.go
 
 const (
 	Version = "v0.12.3"                                         // Version of ent codegen.

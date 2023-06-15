@@ -3,7 +3,7 @@ package services_test
 import (
 	"testing"
 
-	"github.com/src/main/app/services"
+	"github.com/arielsrv/pets-api/src/main/app/services"
 
 	"github.com/stretchr/testify/assert"
 )

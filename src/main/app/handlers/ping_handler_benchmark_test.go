@@ -7,8 +7,8 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/src/main/app/handlers"
-	"github.com/src/main/app/server"
+	"github.com/arielsrv/pets-api/src/main/app/handlers"
+	"github.com/arielsrv/pets-api/src/main/app/server"
 )
 
 func BenchmarkPingHandler_Ping(b *testing.B) {

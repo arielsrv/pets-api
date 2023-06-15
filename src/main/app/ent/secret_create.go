@@ -9,8 +9,8 @@ import (
 
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
-	"github.com/src/main/app/ent/app"
-	"github.com/src/main/app/ent/secret"
+	"github.com/arielsrv/pets-api/src/main/app/ent/app"
+	"github.com/arielsrv/pets-api/src/main/app/ent/secret"
 )
 
 // SecretCreate is the builder for creating a Secret entity.

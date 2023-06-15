@@ -3,7 +3,7 @@ package arrays_test
 import (
 	"testing"
 
-	"github.com/src/main/app/helpers/arrays"
+	"github.com/arielsrv/pets-api/src/main/app/helpers/arrays"
 	"github.com/stretchr/testify/assert"
 )
 

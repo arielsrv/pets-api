@@ -1,6 +1,6 @@
 package model
 
-import "github.com/src/main/app/ent/property"
+import "github.com/arielsrv/pets-api/src/main/app/ent/property"
 
 type CreateAppRequest struct {
 	Name      string           `json:"name,omitempty"`

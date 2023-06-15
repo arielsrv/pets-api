@@ -8,8 +8,8 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
-	"github.com/src/main/app/ent/apptype"
-	"github.com/src/main/app/ent/predicate"
+	"github.com/arielsrv/pets-api/src/main/app/ent/apptype"
+	"github.com/arielsrv/pets-api/src/main/app/ent/predicate"
 )
 
 // AppTypeDelete is the builder for deleting a AppType entity.

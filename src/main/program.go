@@ -3,8 +3,8 @@ package main
 import (
 	"log"
 
-	"github.com/src/main/app"
-	_ "github.com/src/resources/docs"
+	"github.com/arielsrv/pets-api/src/main/app"
+	_ "github.com/arielsrv/pets-api/src/resources/docs"
 )
 
 // @title Pets API.

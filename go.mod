@@ -1,4 +1,4 @@
-module github.com
+module github.com/arielsrv/pets-api
 
 go 1.20
 

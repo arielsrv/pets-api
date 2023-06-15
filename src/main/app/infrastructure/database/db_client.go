@@ -3,8 +3,8 @@ package database
 import (
 	"sync"
 
+	"github.com/arielsrv/pets-api/src/main/app/ent"
 	_ "github.com/mattn/go-sqlite3"
-	"github.com/src/main/app/ent"
 )
 
 type IDbClient interface {

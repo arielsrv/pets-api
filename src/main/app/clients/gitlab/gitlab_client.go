@@ -5,9 +5,9 @@ import (
 
 	"github.com/arielsrv/ikp_go-restclient/rest"
 
-	"github.com/src/main/app/config"
-	"github.com/src/main/app/infrastructure/secrets"
-	"github.com/src/main/app/server"
+	"github.com/arielsrv/pets-api/src/main/app/config"
+	"github.com/arielsrv/pets-api/src/main/app/infrastructure/secrets"
+	"github.com/arielsrv/pets-api/src/main/app/server"
 
 	"net/http"
 	"strconv"

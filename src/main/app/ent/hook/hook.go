@@ -6,7 +6,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/src/main/app/ent"
+	"github.com/arielsrv/pets-api/src/main/app/ent"
 )
 
 // The AppFunc type is an adapter to allow the use of ordinary

@@ -7,7 +7,7 @@ import (
 
 	"github.com/arielsrv/ikp_go-restclient/rest"
 
-	"github.com/src/main/app/helpers/arrays"
+	"github.com/arielsrv/pets-api/src/main/app/helpers/arrays"
 
 	"github.com/go-chassis/go-archaius"
 )

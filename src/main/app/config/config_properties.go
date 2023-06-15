@@ -7,10 +7,10 @@ import (
 	"path"
 	"runtime"
 
-	"github.com/src/main/app/helpers/files"
+	"github.com/arielsrv/pets-api/src/main/app/helpers/files"
 
+	"github.com/arielsrv/pets-api/src/main/app/config/env"
 	"github.com/go-chassis/go-archaius"
-	"github.com/src/main/app/config/env"
 )
 
 const (

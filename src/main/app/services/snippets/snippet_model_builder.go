@@ -3,9 +3,9 @@ package snippets
 import (
 	"fmt"
 
-	"github.com/src/main/app/config"
-	"github.com/src/main/app/infrastructure/files"
-	"github.com/src/main/app/model"
+	"github.com/arielsrv/pets-api/src/main/app/config"
+	"github.com/arielsrv/pets-api/src/main/app/infrastructure/files"
+	"github.com/arielsrv/pets-api/src/main/app/model"
 )
 
 type ISnippetModelBuilder interface {

@@ -9,8 +9,8 @@ import (
 
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
-	"github.com/src/main/app/ent/app"
-	"github.com/src/main/app/ent/apptype"
+	"github.com/arielsrv/pets-api/src/main/app/ent/app"
+	"github.com/arielsrv/pets-api/src/main/app/ent/apptype"
 )
 
 // AppTypeCreate is the builder for creating a AppType entity.

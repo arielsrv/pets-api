@@ -8,8 +8,8 @@ import (
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
-	"github.com/src/main/app/ent/app"
-	"github.com/src/main/app/ent/secret"
+	"github.com/arielsrv/pets-api/src/main/app/ent/app"
+	"github.com/arielsrv/pets-api/src/main/app/ent/secret"
 )
 
 // Secret is the model entity for the Secret schema.

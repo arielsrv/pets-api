@@ -5,12 +5,12 @@ package enttest
 import (
 	"context"
 
-	"github.com/src/main/app/ent"
+	"github.com/arielsrv/pets-api/src/main/app/ent"
 	// required by schema hooks.
-	_ "github.com/src/main/app/ent/runtime"
+	_ "github.com/arielsrv/pets-api/src/main/app/ent/runtime"
 
 	"entgo.io/ent/dialect/sql/schema"
-	"github.com/src/main/app/ent/migrate"
+	"github.com/arielsrv/pets-api/src/main/app/ent/migrate"
 )
 
 type (

@@ -5,7 +5,7 @@ import (
 
 	"github.com/gofiber/template/html/v2"
 
-	"github.com/src/main/app/config"
+	"github.com/arielsrv/pets-api/src/main/app/config"
 
 	"reflect"
 
