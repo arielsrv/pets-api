@@ -3,6 +3,8 @@ package server
 import (
 	"net/http"
 
+	"github.com/gofiber/template/html/v2"
+
 	"github.com/src/main/app/config"
 
 	"reflect"
@@ -12,7 +14,6 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/gofiber/fiber/v2/middleware/requestid"
 	"github.com/gofiber/swagger"
-	"github.com/gofiber/template/html"
 )
 
 type App struct {
