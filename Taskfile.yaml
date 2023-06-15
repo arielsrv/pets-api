@@ -62,6 +62,15 @@ tasks:
       - mkdir -p $BUILD_FOLDER/..
       - go build -v $SOURCE_FOLDER/$ENTRY_POINT.go
       - mv $ENTRY_POINT $BUILD_FOLDER
+  docker:build:
+    desc: docker build
+    cmds:
+      - echo {{.GO_VERSION}} {{.GITLAB_TOKEN}}
+      - docker build -t {{.CLI_ARGS}} .
+  docker:deploy:
+    desc: docker deploy
+    cmds:
+      - docker run -p 8080:8080 --name {{.CLI_ARGS}}
   all:
     desc: Run relevant tasks.
     cmds:

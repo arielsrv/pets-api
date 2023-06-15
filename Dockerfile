@@ -1,13 +1,9 @@
-# Compile stage
-FROM golang:1.20.4-bullseye AS build
-
-RUN sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d
+FROM golang:1.20.5 AS build
 
 ADD . /app
 WORKDIR /app
 
-RUN task
+RUN go install github.com/go-task/task/v3/cmd/task@latest
+RUN task build
 
-EXPOSE 8080 8080
-
-CMD ["./build/program"]
+ENTRYPOINT ["./build/program"]
