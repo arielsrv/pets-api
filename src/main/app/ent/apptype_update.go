@@ -10,9 +10,9 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
-	"github.com/src/main/app/ent/app"
-	"github.com/src/main/app/ent/apptype"
-	"github.com/src/main/app/ent/predicate"
+	"github.com/arielsrv/pets-api/src/main/app/ent/app"
+	"github.com/arielsrv/pets-api/src/main/app/ent/apptype"
+	"github.com/arielsrv/pets-api/src/main/app/ent/predicate"
 )
 
 // AppTypeUpdate is the builder for updating AppType entities.

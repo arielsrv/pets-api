@@ -5,7 +5,7 @@ package app
 import (
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
-	"github.com/src/main/app/ent/predicate"
+	"github.com/arielsrv/pets-api/src/main/app/ent/predicate"
 )
 
 // ID filters vertices based on their ID field.

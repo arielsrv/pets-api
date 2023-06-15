@@ -6,12 +6,12 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/src/main/app/helpers/ensure"
+	"github.com/arielsrv/pets-api/src/main/app/helpers/ensure"
 
-	"github.com/src/main/app/server"
+	"github.com/arielsrv/pets-api/src/main/app/server"
 
+	"github.com/arielsrv/pets-api/src/main/app/ent/property"
 	"github.com/gofiber/fiber/v2"
-	"github.com/src/main/app/ent/property"
 	"github.com/stretchr/testify/assert"
 	"github.com/valyala/fasthttp"
 )

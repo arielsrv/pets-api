@@ -3,7 +3,7 @@ package secrets
 import (
 	"fmt"
 
-	"github.com/src/main/app/config"
+	"github.com/arielsrv/pets-api/src/main/app/config"
 )
 
 type LocalSecretStore struct {

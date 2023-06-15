@@ -1,9 +1,9 @@
 package handlers
 
 import (
+	"github.com/arielsrv/pets-api/src/main/app/server"
+	"github.com/arielsrv/pets-api/src/main/app/services"
 	"github.com/gofiber/fiber/v2"
-	"github.com/src/main/app/server"
-	"github.com/src/main/app/services"
 )
 
 type IPingHandler interface {

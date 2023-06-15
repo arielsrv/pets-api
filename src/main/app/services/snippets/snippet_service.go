@@ -3,9 +3,9 @@ package snippets
 import (
 	"strings"
 
-	"github.com/src/main/app/services/secrets"
+	"github.com/arielsrv/pets-api/src/main/app/services/secrets"
 
-	"github.com/src/main/app/model"
+	"github.com/arielsrv/pets-api/src/main/app/model"
 )
 
 type SnippetType string

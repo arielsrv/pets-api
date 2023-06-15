@@ -4,9 +4,9 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/src/main/app/services/snippets"
+	"github.com/arielsrv/pets-api/src/main/app/services/snippets"
 
-	"github.com/src/main/app/model"
+	"github.com/arielsrv/pets-api/src/main/app/model"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )

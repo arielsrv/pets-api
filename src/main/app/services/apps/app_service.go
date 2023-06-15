@@ -6,17 +6,17 @@ import (
 	"net/http"
 	"net/url"
 
-	"github.com/src/main/app/infrastructure/secrets"
+	"github.com/arielsrv/pets-api/src/main/app/infrastructure/secrets"
 
-	"github.com/src/main/app/infrastructure/database"
+	"github.com/arielsrv/pets-api/src/main/app/infrastructure/database"
 
-	"github.com/src/main/app/server"
+	"github.com/arielsrv/pets-api/src/main/app/server"
 
-	"github.com/src/main/app/clients/gitlab"
-	"github.com/src/main/app/config"
-	"github.com/src/main/app/ent"
-	"github.com/src/main/app/ent/app"
-	"github.com/src/main/app/model"
+	"github.com/arielsrv/pets-api/src/main/app/clients/gitlab"
+	"github.com/arielsrv/pets-api/src/main/app/config"
+	"github.com/arielsrv/pets-api/src/main/app/ent"
+	"github.com/arielsrv/pets-api/src/main/app/ent/app"
+	"github.com/arielsrv/pets-api/src/main/app/model"
 )
 
 type IAppService interface {

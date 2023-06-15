@@ -155,8 +155,8 @@ rest:
 package main
 
 import (
-	"github.com/src/main/app/clients/gitlab"
-	"github.com/src/main/app/config"
+	"github.com/arielsrv/pets-api/src/main/app/clients/gitlab"
+	"github.com/arielsrv/pets-api/src/main/app/config"
 	"log"
 )
 

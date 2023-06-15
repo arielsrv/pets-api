@@ -1,9 +1,9 @@
 package snippets
 
 import (
+	"github.com/arielsrv/pets-api/src/main/app/helpers/ensure"
+	"github.com/arielsrv/pets-api/src/main/app/services/snippets"
 	"github.com/gofiber/fiber/v2"
-	"github.com/src/main/app/helpers/ensure"
-	"github.com/src/main/app/services/snippets"
 )
 
 type SnippetHandler struct {

@@ -3,7 +3,7 @@ package ensure
 import (
 	"net/http"
 
-	"github.com/src/main/app/server"
+	"github.com/arielsrv/pets-api/src/main/app/server"
 )
 
 func NotEmpty(value string, message string) error {

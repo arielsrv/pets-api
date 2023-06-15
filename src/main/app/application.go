@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/src/main/app/config/env"
+	"github.com/arielsrv/pets-api/src/main/app/config/env"
 
-	"github.com/src/main/app/config"
-	"github.com/src/main/app/server"
+	"github.com/arielsrv/pets-api/src/main/app/config"
+	"github.com/arielsrv/pets-api/src/main/app/server"
 )
 
 func Run() error {

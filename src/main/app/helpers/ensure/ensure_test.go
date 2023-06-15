@@ -3,8 +3,8 @@ package ensure_test
 import (
 	"testing"
 
-	"github.com/src/main/app/ent/property"
-	"github.com/src/main/app/helpers/ensure"
+	"github.com/arielsrv/pets-api/src/main/app/ent/property"
+	"github.com/arielsrv/pets-api/src/main/app/helpers/ensure"
 	"github.com/stretchr/testify/assert"
 )
 

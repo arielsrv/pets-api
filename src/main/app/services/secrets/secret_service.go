@@ -6,14 +6,14 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/src/main/app/services/apps"
+	"github.com/arielsrv/pets-api/src/main/app/services/apps"
 
-	"github.com/src/main/app/infrastructure/database"
-	"github.com/src/main/app/server"
+	"github.com/arielsrv/pets-api/src/main/app/infrastructure/database"
+	"github.com/arielsrv/pets-api/src/main/app/server"
 
-	"github.com/src/main/app/ent"
-	"github.com/src/main/app/ent/secret"
-	"github.com/src/main/app/model"
+	"github.com/arielsrv/pets-api/src/main/app/ent"
+	"github.com/arielsrv/pets-api/src/main/app/ent/secret"
+	"github.com/arielsrv/pets-api/src/main/app/model"
 )
 
 type ISecretService interface {

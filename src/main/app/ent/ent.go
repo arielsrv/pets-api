@@ -12,9 +12,9 @@ import (
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
-	"github.com/src/main/app/ent/app"
-	"github.com/src/main/app/ent/apptype"
-	"github.com/src/main/app/ent/secret"
+	"github.com/arielsrv/pets-api/src/main/app/ent/app"
+	"github.com/arielsrv/pets-api/src/main/app/ent/apptype"
+	"github.com/arielsrv/pets-api/src/main/app/ent/secret"
 )
 
 // ent aliases to avoid import conflicts in user's code.

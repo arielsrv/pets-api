@@ -4,7 +4,7 @@ import (
 	"context"
 	"log"
 
-	"github.com/src/main/app/ent"
+	"github.com/arielsrv/pets-api/src/main/app/ent"
 )
 
 type MySQLClient struct {

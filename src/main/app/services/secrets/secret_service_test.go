@@ -4,11 +4,11 @@ import (
 	"context"
 	"testing"
 
-	"github.com/src/main/app/services/secrets"
+	"github.com/arielsrv/pets-api/src/main/app/services/secrets"
 
-	"github.com/src/main/app/infrastructure/database"
+	"github.com/arielsrv/pets-api/src/main/app/infrastructure/database"
 
-	"github.com/src/main/app/model"
+	"github.com/arielsrv/pets-api/src/main/app/model"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )

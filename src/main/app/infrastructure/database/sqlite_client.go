@@ -3,8 +3,8 @@ package database
 import (
 	"testing"
 
-	"github.com/src/main/app/ent"
-	"github.com/src/main/app/ent/enttest"
+	"github.com/arielsrv/pets-api/src/main/app/ent"
+	"github.com/arielsrv/pets-api/src/main/app/ent/enttest"
 )
 
 type SQLiteClient struct {
