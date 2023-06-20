@@ -13,7 +13,7 @@ require (
 	github.com/mattn/go-sqlite3 v1.14.17
 	github.com/stretchr/testify v1.8.4
 	github.com/swaggo/swag v1.16.1
-	github.com/valyala/fasthttp v1.47.0
+	github.com/valyala/fasthttp v1.48.0
 )
 
 require (
