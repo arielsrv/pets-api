@@ -1,6 +1,7 @@
-# This code is licensed under the terms of the MIT license.
+# This code is licensed under the terms of the MIT license https://opensource.org/license/mit
+# Copyright (c) 2021 Marat Reymers
 
-## Golden config for golangci-lint v1.53.2
+## Golden config for golangci-lint v1.54.1
 #
 # This is the best config for golangci-lint based on my experience and opinion.
 # It is very strict, but not extremely strict.
@@ -74,6 +75,9 @@ linters-settings:
     # If lower than 0, disable the check.
     # Default: 40
     statements: 50
+    # Ignore comments when counting lines.
+    # Default false
+    ignore-comments: true
 
   gocognit:
     # Minimal code complexity to report.
@@ -115,18 +119,18 @@ linters-settings:
       # List of blocked modules.
       # Default: []
       modules:
-        - github.com/golang/protobuf:
-            recommendations:
-              - google.golang.org/protobuf
-            reason: "see https://developers.google.com/protocol-buffers/docs/reference/go/faq#modules"
-        - github.com/satori/go.uuid:
-            recommendations:
-              - github.com/google/uuid
-            reason: "satori's package is not maintained"
-        - github.com/gofrs/uuid:
-            recommendations:
-              - github.com/google/uuid
-            reason: "gofrs' package is not go module"
+        -   github.com/golang/protobuf:
+              recommendations:
+                - google.golang.org/protobuf
+              reason: "see https://developers.google.com/protocol-buffers/docs/reference/go/faq#modules"
+        -   github.com/satori/go.uuid:
+              recommendations:
+                - github.com/google/uuid
+              reason: "satori's package is not maintained"
+        -   github.com/gofrs/uuid:
+              recommendations:
+                - github.com/google/uuid
+              reason: "gofrs' package is not go module"
 
   govet:
     # Enable all analyzers.
@@ -201,7 +205,7 @@ linters:
     - funlen # tool for detection of long functions
     - gocheckcompilerdirectives # validates go compiler directive comments (//go:)
     #- gochecknoglobals # checks that no global variables exist
-    #- gochecknoinits # checks that no init functions are present in Go code
+    - gochecknoinits # checks that no init functions are present in Go code
     - gocognit # computes and checks the cognitive complexity of functions
     - goconst # finds repeated strings that could be replaced by a constant
     - gocritic # provides diagnostics that check for bugs, performance and style issues
@@ -229,7 +233,7 @@ linters:
     - predeclared # finds code that shadows one of Go's predeclared identifiers
     - promlinter # checks Prometheus metrics naming via promlint
     - reassign # checks that package variables are not reassigned
-    #- revive # fast, configurable, extensible, flexible, and beautiful linter for Go, drop-in replacement of golint
+    - revive # fast, configurable, extensible, flexible, and beautiful linter for Go, drop-in replacement of golint
     - rowserrcheck # checks whether Err of rows is checked successfully
     - sqlclosecheck # checks that sql.Rows and sql.Stmt are closed
     - stylecheck # is a replacement for golint
@@ -300,16 +304,16 @@ issues:
   max-same-issues: 50
 
   exclude-rules:
-    - source: "(noinspection|TODO)"
-      linters: [ godot ]
-    - source: "//noinspection"
-      linters: [ gocritic ]
-    - path: "_test\\.go"
-      linters:
-        - bodyclose
-        - dupl
-        - funlen
-        - goconst
-        - gosec
-        - noctx
-        - wrapcheck
+    -   source: "(noinspection|TODO)"
+        linters: [ godot ]
+    -   source: "//noinspection"
+        linters: [ gocritic ]
+    -   path: "_test\\.go"
+        linters:
+          - bodyclose
+          - dupl
+          - funlen
+          - goconst
+          - gosec
+          - noctx
+          - wrapcheck
