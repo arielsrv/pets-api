@@ -9,7 +9,7 @@ require (
 	github.com/go-sql-driver/mysql v1.7.1
 	github.com/gofiber/fiber/v2 v2.48.0
 	github.com/gofiber/swagger v0.1.12
-	github.com/gofiber/template/html/v2 v2.0.4
+	github.com/gofiber/template/html/v2 v2.0.5
 	github.com/mattn/go-sqlite3 v1.14.17
 	github.com/stretchr/testify v1.8.4
 	github.com/swaggo/swag v1.16.1
