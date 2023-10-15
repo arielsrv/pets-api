@@ -324,6 +324,7 @@ func (m *AppMutation) SetAppsTypesID(id int) {
 // ClearAppsTypes clears the "apps_types" edge to the AppType entity.
 func (m *AppMutation) ClearAppsTypes() {
 	m.clearedapps_types = true
+	m.clearedFields[app.FieldAppTypeID] = struct{}{}
 }
 
 // AppsTypesCleared reports if the "apps_types" edge to the AppType entity was cleared.
@@ -1319,6 +1320,7 @@ func (m *SecretMutation) ResetActive() {
 // ClearApp clears the "app" edge to the App entity.
 func (m *SecretMutation) ClearApp() {
 	m.clearedapp = true
+	m.clearedFields[secret.FieldAppID] = struct{}{}
 }
 
 // AppCleared reports if the "app" edge to the App entity was cleared.

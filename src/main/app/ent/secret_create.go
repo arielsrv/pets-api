@@ -188,11 +188,15 @@ func (sc *SecretCreate) createSpec() (*Secret, *sqlgraph.CreateSpec) {
 // SecretCreateBulk is the builder for creating many Secret entities in bulk.
 type SecretCreateBulk struct {
 	config
+	err      error
 	builders []*SecretCreate
 }
 
 // Save creates the Secret entities in the database.
 func (scb *SecretCreateBulk) Save(ctx context.Context) ([]*Secret, error) {
+	if scb.err != nil {
+		return nil, scb.err
+	}
 	specs := make([]*sqlgraph.CreateSpec, len(scb.builders))
 	nodes := make([]*Secret, len(scb.builders))
 	mutators := make([]Mutator, len(scb.builders))
