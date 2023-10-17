@@ -7,8 +7,8 @@ require (
 	github.com/arielsrv/ikp_go-restclient v0.0.5
 	github.com/go-chassis/go-archaius v1.5.6
 	github.com/go-sql-driver/mysql v1.7.1
-	github.com/gofiber/fiber/v2 v2.49.2
-	github.com/gofiber/swagger v0.1.13
+	github.com/gofiber/fiber/v2 v2.50.0
+	github.com/gofiber/swagger v0.1.14
 	github.com/gofiber/template/html/v2 v2.0.5
 	github.com/mattn/go-sqlite3 v1.14.17
 	github.com/stretchr/testify v1.8.4
