@@ -2,6 +2,8 @@ module github.com/arielsrv/pets-api
 
 go 1.21
 
+toolchain go1.21.5
+
 require (
 	entgo.io/ent v0.12.5
 	github.com/arielsrv/ikp_go-restclient v0.0.5
