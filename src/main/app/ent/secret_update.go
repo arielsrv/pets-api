@@ -34,15 +34,39 @@ func (su *SecretUpdate) SetKey(s string) *SecretUpdate {
 	return su
 }
 
+// SetNillableKey sets the "key" field if the given value is not nil.
+func (su *SecretUpdate) SetNillableKey(s *string) *SecretUpdate {
+	if s != nil {
+		su.SetKey(*s)
+	}
+	return su
+}
+
 // SetValue sets the "value" field.
 func (su *SecretUpdate) SetValue(s string) *SecretUpdate {
 	su.mutation.SetValue(s)
 	return su
 }
 
+// SetNillableValue sets the "value" field if the given value is not nil.
+func (su *SecretUpdate) SetNillableValue(s *string) *SecretUpdate {
+	if s != nil {
+		su.SetValue(*s)
+	}
+	return su
+}
+
 // SetAppID sets the "app_id" field.
 func (su *SecretUpdate) SetAppID(i int64) *SecretUpdate {
 	su.mutation.SetAppID(i)
+	return su
+}
+
+// SetNillableAppID sets the "app_id" field if the given value is not nil.
+func (su *SecretUpdate) SetNillableAppID(i *int64) *SecretUpdate {
+	if i != nil {
+		su.SetAppID(*i)
+	}
 	return su
 }
 
@@ -187,15 +211,39 @@ func (suo *SecretUpdateOne) SetKey(s string) *SecretUpdateOne {
 	return suo
 }
 
+// SetNillableKey sets the "key" field if the given value is not nil.
+func (suo *SecretUpdateOne) SetNillableKey(s *string) *SecretUpdateOne {
+	if s != nil {
+		suo.SetKey(*s)
+	}
+	return suo
+}
+
 // SetValue sets the "value" field.
 func (suo *SecretUpdateOne) SetValue(s string) *SecretUpdateOne {
 	suo.mutation.SetValue(s)
 	return suo
 }
 
+// SetNillableValue sets the "value" field if the given value is not nil.
+func (suo *SecretUpdateOne) SetNillableValue(s *string) *SecretUpdateOne {
+	if s != nil {
+		suo.SetValue(*s)
+	}
+	return suo
+}
+
 // SetAppID sets the "app_id" field.
 func (suo *SecretUpdateOne) SetAppID(i int64) *SecretUpdateOne {
 	suo.mutation.SetAppID(i)
+	return suo
+}
+
+// SetNillableAppID sets the "app_id" field if the given value is not nil.
+func (suo *SecretUpdateOne) SetNillableAppID(i *int64) *SecretUpdateOne {
+	if i != nil {
+		suo.SetAppID(*i)
+	}
 	return suo
 }
 

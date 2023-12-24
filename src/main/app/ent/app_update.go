@@ -34,10 +34,26 @@ func (au *AppUpdate) SetName(s string) *AppUpdate {
 	return au
 }
 
+// SetNillableName sets the "name" field if the given value is not nil.
+func (au *AppUpdate) SetNillableName(s *string) *AppUpdate {
+	if s != nil {
+		au.SetName(*s)
+	}
+	return au
+}
+
 // SetExternalGitlabProjectID sets the "external_gitlab_project_id" field.
 func (au *AppUpdate) SetExternalGitlabProjectID(i int64) *AppUpdate {
 	au.mutation.ResetExternalGitlabProjectID()
 	au.mutation.SetExternalGitlabProjectID(i)
+	return au
+}
+
+// SetNillableExternalGitlabProjectID sets the "external_gitlab_project_id" field if the given value is not nil.
+func (au *AppUpdate) SetNillableExternalGitlabProjectID(i *int64) *AppUpdate {
+	if i != nil {
+		au.SetExternalGitlabProjectID(*i)
+	}
 	return au
 }
 
@@ -50,6 +66,14 @@ func (au *AppUpdate) AddExternalGitlabProjectID(i int64) *AppUpdate {
 // SetAppTypeID sets the "app_type_id" field.
 func (au *AppUpdate) SetAppTypeID(i int) *AppUpdate {
 	au.mutation.SetAppTypeID(i)
+	return au
+}
+
+// SetNillableAppTypeID sets the "app_type_id" field if the given value is not nil.
+func (au *AppUpdate) SetNillableAppTypeID(i *int) *AppUpdate {
+	if i != nil {
+		au.SetAppTypeID(*i)
+	}
 	return au
 }
 
@@ -203,10 +227,26 @@ func (auo *AppUpdateOne) SetName(s string) *AppUpdateOne {
 	return auo
 }
 
+// SetNillableName sets the "name" field if the given value is not nil.
+func (auo *AppUpdateOne) SetNillableName(s *string) *AppUpdateOne {
+	if s != nil {
+		auo.SetName(*s)
+	}
+	return auo
+}
+
 // SetExternalGitlabProjectID sets the "external_gitlab_project_id" field.
 func (auo *AppUpdateOne) SetExternalGitlabProjectID(i int64) *AppUpdateOne {
 	auo.mutation.ResetExternalGitlabProjectID()
 	auo.mutation.SetExternalGitlabProjectID(i)
+	return auo
+}
+
+// SetNillableExternalGitlabProjectID sets the "external_gitlab_project_id" field if the given value is not nil.
+func (auo *AppUpdateOne) SetNillableExternalGitlabProjectID(i *int64) *AppUpdateOne {
+	if i != nil {
+		auo.SetExternalGitlabProjectID(*i)
+	}
 	return auo
 }
 
@@ -219,6 +259,14 @@ func (auo *AppUpdateOne) AddExternalGitlabProjectID(i int64) *AppUpdateOne {
 // SetAppTypeID sets the "app_type_id" field.
 func (auo *AppUpdateOne) SetAppTypeID(i int) *AppUpdateOne {
 	auo.mutation.SetAppTypeID(i)
+	return auo
+}
+
+// SetNillableAppTypeID sets the "app_type_id" field if the given value is not nil.
+func (auo *AppUpdateOne) SetNillableAppTypeID(i *int) *AppUpdateOne {
+	if i != nil {
+		auo.SetAppTypeID(*i)
+	}
 	return auo
 }
 
