@@ -34,6 +34,14 @@ func (atu *AppTypeUpdate) SetName(s string) *AppTypeUpdate {
 	return atu
 }
 
+// SetNillableName sets the "name" field if the given value is not nil.
+func (atu *AppTypeUpdate) SetNillableName(s *string) *AppTypeUpdate {
+	if s != nil {
+		atu.SetName(*s)
+	}
+	return atu
+}
+
 // AddAppIDs adds the "apps" edge to the App entity by IDs.
 func (atu *AppTypeUpdate) AddAppIDs(ids ...int64) *AppTypeUpdate {
 	atu.mutation.AddAppIDs(ids...)
@@ -182,6 +190,14 @@ type AppTypeUpdateOne struct {
 // SetName sets the "name" field.
 func (atuo *AppTypeUpdateOne) SetName(s string) *AppTypeUpdateOne {
 	atuo.mutation.SetName(s)
+	return atuo
+}
+
+// SetNillableName sets the "name" field if the given value is not nil.
+func (atuo *AppTypeUpdateOne) SetNillableName(s *string) *AppTypeUpdateOne {
+	if s != nil {
+		atuo.SetName(*s)
+	}
 	return atuo
 }
 
