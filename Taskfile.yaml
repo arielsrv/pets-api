@@ -19,6 +19,7 @@ tasks:
   build-model:
     desc: Builds the model
     cmds:
+      - go install entgo.io/ent/cmd/ent@latest
       - go generate ./$ORM_OUTPUT_FOLDER
   lint:
     desc: Use golangci-lint (.golangci.yml).
