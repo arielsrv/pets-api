@@ -185,7 +185,3 @@ Also, you can set the same values inside resources/config/dev/config.yml
 ### Local services
 
 If you want to run program.go you must install mysql in your environment.
-
-### Docker compose
-
-If you want to run isolated local environment you must install docker and run docker-compose.

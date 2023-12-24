@@ -3,17 +3,17 @@ module github.com/arielsrv/pets-api
 go 1.21
 
 require (
-	entgo.io/ent v0.12.4
+	entgo.io/ent v0.12.5
 	github.com/arielsrv/ikp_go-restclient v0.0.5
 	github.com/go-chassis/go-archaius v1.5.6
 	github.com/go-sql-driver/mysql v1.7.1
 	github.com/gofiber/fiber/v2 v2.51.0
-	github.com/gofiber/swagger v0.1.13
+	github.com/gofiber/swagger v0.1.14
 	github.com/gofiber/template/html/v2 v2.0.5
-	github.com/mattn/go-sqlite3 v1.14.17
+	github.com/mattn/go-sqlite3 v1.14.19
 	github.com/stretchr/testify v1.8.4
 	github.com/swaggo/swag v1.16.2
-	github.com/valyala/fasthttp v1.50.0
+	github.com/valyala/fasthttp v1.51.0
 )
 
 require (
@@ -38,7 +38,7 @@ require (
 	github.com/google/uuid v1.4.0 // indirect
 	github.com/hashicorp/hcl/v2 v2.13.0 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
-	github.com/klauspost/compress v1.16.7 // indirect
+	github.com/klauspost/compress v1.17.0 // indirect
 	github.com/mailru/easyjson v0.7.6 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
