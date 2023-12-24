@@ -14,13 +14,11 @@ type Secret struct {
 // Fields of the Secret.
 func (Secret) Fields() []ent.Field {
 	return []ent.Field{
-		field.Int64("id").
-			StructTag(`json:"oid,omitempty"`),
+		field.Int64("id").StructTag(`json:"oid,omitempty"`),
 		field.String("key"),
 		field.String("value"),
 		field.Int64("app_id"),
-		field.Bool("active").
-			Default(true),
+		field.Bool("active").Default(true),
 	}
 }
 

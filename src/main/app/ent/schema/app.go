@@ -14,15 +14,11 @@ type App struct {
 // Fields of the App.
 func (App) Fields() []ent.Field {
 	return []ent.Field{
-		field.Int64("id").
-			StructTag(`json:"oid,omitempty"`),
-		field.String("name").
-			Unique(),
-		field.Int64("external_gitlab_project_id").
-			Unique(),
+		field.Int64("id").StructTag(`json:"oid,omitempty"`),
+		field.String("name").Unique(),
+		field.Int64("external_gitlab_project_id").Unique(),
 		field.Int("app_type_id"),
-		field.Bool("active").
-			Default(true),
+		field.Bool("active").Default(true),
 	}
 }
 
