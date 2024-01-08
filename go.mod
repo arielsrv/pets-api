@@ -9,7 +9,7 @@ require (
 	github.com/arielsrv/ikp_go-restclient v0.0.5
 	github.com/go-chassis/go-archaius v1.5.6
 	github.com/go-sql-driver/mysql v1.7.1
-	github.com/gofiber/fiber/v2 v2.51.0
+	github.com/gofiber/fiber/v2 v2.52.0
 	github.com/gofiber/swagger v0.1.14
 	github.com/gofiber/template/html/v2 v2.0.5
 	github.com/mattn/go-sqlite3 v1.14.19
@@ -37,7 +37,7 @@ require (
 	github.com/gofiber/template v1.8.2 // indirect
 	github.com/gofiber/utils v1.1.0 // indirect
 	github.com/google/go-cmp v0.5.6 // indirect
-	github.com/google/uuid v1.4.0 // indirect
+	github.com/google/uuid v1.5.0 // indirect
 	github.com/hashicorp/hcl/v2 v2.13.0 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/klauspost/compress v1.17.0 // indirect
@@ -56,7 +56,7 @@ require (
 	github.com/zclconf/go-cty v1.8.0 // indirect
 	golang.org/x/mod v0.10.0 // indirect
 	golang.org/x/net v0.17.0 // indirect
-	golang.org/x/sys v0.14.0 // indirect
+	golang.org/x/sys v0.15.0 // indirect
 	golang.org/x/text v0.13.0 // indirect
 	golang.org/x/tools v0.8.1-0.20230428195545-5283a0178901 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
