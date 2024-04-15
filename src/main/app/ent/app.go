@@ -43,12 +43,10 @@ type AppEdges struct {
 // AppsTypesOrErr returns the AppsTypes value or an error if the edge
 // was not loaded in eager-loading, or loaded but was not found.
 func (e AppEdges) AppsTypesOrErr() (*AppType, error) {
-	if e.loadedTypes[0] {
-		if e.AppsTypes == nil {
-			// Edge was loaded but was not found.
-			return nil, &NotFoundError{label: apptype.Label}
-		}
+	if e.AppsTypes != nil {
 		return e.AppsTypes, nil
+	} else if e.loadedTypes[0] {
+		return nil, &NotFoundError{label: apptype.Label}
 	}
 	return nil, &NotLoadedError{edge: "apps_types"}
 }

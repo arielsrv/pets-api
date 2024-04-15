@@ -43,12 +43,10 @@ type SecretEdges struct {
 // AppOrErr returns the App value or an error if the edge
 // was not loaded in eager-loading, or loaded but was not found.
 func (e SecretEdges) AppOrErr() (*App, error) {
-	if e.loadedTypes[0] {
-		if e.App == nil {
-			// Edge was loaded but was not found.
-			return nil, &NotFoundError{label: app.Label}
-		}
+	if e.App != nil {
 		return e.App, nil
+	} else if e.loadedTypes[0] {
+		return nil, &NotFoundError{label: app.Label}
 	}
 	return nil, &NotLoadedError{edge: "app"}
 }
