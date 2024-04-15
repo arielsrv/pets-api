@@ -13,7 +13,7 @@ require (
 	github.com/gofiber/swagger v0.1.14
 	github.com/gofiber/template/html/v2 v2.0.5
 	github.com/mattn/go-sqlite3 v1.14.22
-	github.com/stretchr/testify v1.8.4
+	github.com/stretchr/testify v1.9.0
 	github.com/swaggo/swag v1.16.3
 	github.com/valyala/fasthttp v1.51.0
 )
@@ -49,7 +49,7 @@ require (
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/rivo/uniseg v0.2.0 // indirect
 	github.com/spf13/cast v1.3.0 // indirect
-	github.com/stretchr/objx v0.5.0 // indirect
+	github.com/stretchr/objx v0.5.2 // indirect
 	github.com/swaggo/files/v2 v2.0.0 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/tcplisten v1.0.0 // indirect
