@@ -124,7 +124,7 @@ func (ac *AppCreate) check() error {
 	if _, ok := ac.mutation.Active(); !ok {
 		return &ValidationError{Name: "active", err: errors.New(`ent: missing required field "App.active"`)}
 	}
-	if _, ok := ac.mutation.AppsTypesID(); !ok {
+	if len(ac.mutation.AppsTypesIDs()) == 0 {
 		return &ValidationError{Name: "apps_types", err: errors.New(`ent: missing required edge "App.apps_types"`)}
 	}
 	return nil

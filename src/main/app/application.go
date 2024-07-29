@@ -4,9 +4,8 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/arielsrv/pets-api/src/main/app/config/env"
-
 	"github.com/arielsrv/pets-api/src/main/app/config"
+	"github.com/arielsrv/pets-api/src/main/app/config/env"
 	"github.com/arielsrv/pets-api/src/main/app/server"
 )
 

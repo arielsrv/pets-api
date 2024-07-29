@@ -7,18 +7,14 @@ import (
 	"testing"
 
 	"github.com/arielsrv/pets-api/src/main/app/clients/gitlab"
-
-	"github.com/arielsrv/pets-api/src/main/app/services/apps"
-
-	"github.com/arielsrv/pets-api/src/main/app/infrastructure/secrets"
-
-	"github.com/arielsrv/pets-api/src/main/app/infrastructure/database"
-
 	"github.com/arielsrv/pets-api/src/main/app/ent"
+	"github.com/arielsrv/pets-api/src/main/app/infrastructure/database"
+	"github.com/arielsrv/pets-api/src/main/app/infrastructure/secrets"
 	"github.com/arielsrv/pets-api/src/main/app/model"
-
+	"github.com/arielsrv/pets-api/src/main/app/services/apps"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
+	"github.com/stretchr/testify/require"
 )
 
 type MockClient struct {
@@ -48,7 +44,7 @@ func TestAppService_GetGroups(t *testing.T) {
 	dbClient.Context()
 	defer func(dbClient *database.DBClient) {
 		err := dbClient.Close()
-		assert.NoError(t, err)
+		require.NoError(t, err)
 	}(dbClient)
 
 	secretStore := secrets.NewLocalSecretStore()
@@ -56,7 +52,7 @@ func TestAppService_GetGroups(t *testing.T) {
 	service := apps.NewAppService(client, dbClient, secretStore)
 	actual, err := service.GetGroups()
 
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotNil(t, actual)
 	assert.Len(t, actual, 2)
 	assert.Equal(t, int64(1), actual[0].ID)
@@ -73,7 +69,7 @@ func TestAppService_GetGroups_Err(t *testing.T) {
 	dbClient.Context()
 	defer func(dbClient *database.DBClient) {
 		err := dbClient.Close()
-		assert.NoError(t, err)
+		require.NoError(t, err)
 	}(dbClient)
 
 	secretStore := secrets.NewLocalSecretStore()
@@ -81,7 +77,7 @@ func TestAppService_GetGroups_Err(t *testing.T) {
 	service := apps.NewAppService(client, dbClient, secretStore)
 	actual, err := service.GetGroups()
 
-	assert.Error(t, err)
+	require.Error(t, err)
 	assert.Nil(t, actual)
 }
 
@@ -97,11 +93,11 @@ func TestAppService_CreateRepository(t *testing.T) {
 	dbClient.Context()
 	defer func(dbClient *database.DBClient) {
 		err := dbClient.Close()
-		assert.NoError(t, err)
+		require.NoError(t, err)
 	}(dbClient)
 
 	appType, err := dbClient.AppType.Create().SetID(1).SetName("backend").Save(context.Background())
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotNil(t, appType)
 
 	secretStore := secrets.NewLocalSecretStore()
@@ -112,7 +108,7 @@ func TestAppService_CreateRepository(t *testing.T) {
 	appModel.AppTypeID = 1
 	actual, err := service.CreateApp(appModel)
 
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotNil(t, actual)
 }
 
@@ -124,11 +120,11 @@ func TestAppService_CreateApp_Conflict(t *testing.T) {
 	dbClient.Context()
 	defer func(dbClient *database.DBClient) {
 		err := dbClient.Close()
-		assert.NoError(t, err)
+		require.NoError(t, err)
 	}(dbClient)
 
 	appType, err := dbClient.AppType.Create().SetID(1).SetName("backend").Save(context.Background())
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotNil(t, appType)
 
 	secretStore := secrets.NewLocalSecretStore()
@@ -140,11 +136,11 @@ func TestAppService_CreateApp_Conflict(t *testing.T) {
 	repositoryModel.AppTypeID = 1
 
 	actual, err := service.CreateApp(repositoryModel)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotNil(t, actual)
 
 	actual, err = service.CreateApp(repositoryModel)
-	assert.Error(t, err)
+	require.Error(t, err)
 	assert.Nil(t, actual)
 	assert.Equal(t, "project name users-api already exist", err.Error())
 }
@@ -157,15 +153,15 @@ func TestAppService_GetAppByName(t *testing.T) {
 	dbClient.Context()
 	defer func(dbClient *database.DBClient) {
 		err := dbClient.Close()
-		assert.NoError(t, err)
+		require.NoError(t, err)
 	}(dbClient)
 
 	appType, err := dbClient.AppType.Create().SetID(1).SetName("backend").Save(context.Background())
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotNil(t, appType)
 
 	app, err := dbClient.App.Create().SetName("customers-api").SetExternalGitlabProjectID(1).SetAppTypeID(1).Save(context.Background())
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotNil(t, app)
 
 	secretStore := secrets.NewLocalSecretStore()
@@ -174,9 +170,9 @@ func TestAppService_GetAppByName(t *testing.T) {
 	actual, err := service.GetAppByName("customers-api")
 
 	accessToken := secretStore.GetSecret("GITLAB_TOKEN")
-	assert.NoError(t, accessToken.Err)
+	require.NoError(t, accessToken.Err)
 
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotNil(t, actual)
 	assert.Equal(t, int64(1), actual.ID)
 	assert.Equal(t, fmt.Sprintf("https://oauth2:%s@domain.com/repo_url", accessToken.Value), actual.URL)
@@ -190,15 +186,15 @@ func TestAppService_GetAppById(t *testing.T) {
 	dbClient.Context()
 	defer func(dbClient *database.DBClient) {
 		err := dbClient.Close()
-		assert.NoError(t, err)
+		require.NoError(t, err)
 	}(dbClient)
 
 	appType, err := dbClient.AppType.Create().SetID(1).SetName("backend").Save(context.Background())
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotNil(t, appType)
 
 	app, err := dbClient.App.Create().SetName("customers-api").SetExternalGitlabProjectID(1).SetAppTypeID(1).Save(context.Background())
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotNil(t, app)
 
 	secretStore := secrets.NewLocalSecretStore()
@@ -207,9 +203,9 @@ func TestAppService_GetAppById(t *testing.T) {
 	actual, err := service.GetAppByID(1)
 
 	accessToken := secretStore.GetSecret("GITLAB_TOKEN")
-	assert.NoError(t, accessToken.Err)
+	require.NoError(t, accessToken.Err)
 
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotNil(t, actual)
 	assert.Equal(t, int64(1), actual.ID)
 	assert.Equal(t, fmt.Sprintf("https://oauth2:%s@domain.com/repo_url", accessToken.Value), actual.URL)
@@ -223,7 +219,7 @@ func TestAppService_GetApp_NotFoundErr(t *testing.T) {
 	dbClient.Context()
 	defer func(dbClient *database.DBClient) {
 		err := dbClient.Close()
-		assert.NoError(t, err)
+		require.NoError(t, err)
 	}(dbClient)
 
 	secretStore := secrets.NewLocalSecretStore()
@@ -231,7 +227,7 @@ func TestAppService_GetApp_NotFoundErr(t *testing.T) {
 	service := apps.NewAppService(client, dbClient, secretStore)
 	actual, err := service.GetAppByName("loyalty-api")
 
-	assert.Error(t, err)
+	require.Error(t, err)
 	assert.Nil(t, actual)
 	assert.Equal(t, "application with name loyalty-api not found", err.Error())
 }
@@ -243,11 +239,11 @@ func TestAppService_GetAppTypes(t *testing.T) {
 	dbClient.Context()
 	defer func(dbClient *database.DBClient) {
 		err := dbClient.Close()
-		assert.NoError(t, err)
+		require.NoError(t, err)
 	}(dbClient)
 
 	appType, err := dbClient.AppType.Create().SetID(1).SetName("backend").Save(context.Background())
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotNil(t, appType)
 
 	secretStore := secrets.NewLocalSecretStore()
@@ -255,7 +251,7 @@ func TestAppService_GetAppTypes(t *testing.T) {
 	service := apps.NewAppService(client, dbClient, secretStore)
 	actual, err := service.GetAppTypes()
 
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotNil(t, actual)
 	assert.Len(t, actual, 1)
 	assert.Equal(t, 1, actual[0].ID)

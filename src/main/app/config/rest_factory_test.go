@@ -10,11 +10,12 @@ import (
 	"github.com/arielsrv/pets-api/src/main/app/config"
 	"github.com/go-chassis/go-archaius"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestProvideRestClients(t *testing.T) {
 	err := setUp("rest_factory_test.yml")
-	assert.NoError(t, err)
+	require.NoError(t, err)
 
 	restClientFactory := config.ProvideRestClients()
 	assert.Greater(t, len(restClientFactory.GetClients()), 1)
@@ -31,12 +32,12 @@ func TestProvideRestClients(t *testing.T) {
 	assert.Equal(t, time.Millisecond*1000*5, amazonClient.ConnectTimeout)
 	assert.Equal(t, 20, amazonClient.CustomPool.MaxIdleConnsPerHost)
 
-	assert.True(t, amazonClient == googleClient)
+	assert.Same(t, amazonClient, googleClient)
 }
 
 func TestProvideRestClients_NotReusedPool(t *testing.T) {
 	err := setUp("rest_factory_test.yml")
-	assert.NoError(t, err)
+	require.NoError(t, err)
 
 	restClientFactory := config.ProvideRestClients()
 
@@ -52,7 +53,7 @@ func TestProvideRestClients_NotReusedPool(t *testing.T) {
 	assert.Equal(t, time.Millisecond*1000*5, second.ConnectTimeout)
 	assert.Equal(t, 20, second.CustomPool.MaxIdleConnsPerHost)
 
-	assert.True(t, second != first)
+	assert.NotSame(t, second, first)
 }
 
 func setUp(file string) error {

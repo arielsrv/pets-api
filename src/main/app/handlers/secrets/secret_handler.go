@@ -3,14 +3,11 @@ package secrets
 import (
 	"net/http"
 
-	"github.com/arielsrv/pets-api/src/main/app/model"
-
 	"github.com/arielsrv/pets-api/src/main/app/helpers/ensure"
-
+	"github.com/arielsrv/pets-api/src/main/app/model"
+	"github.com/arielsrv/pets-api/src/main/app/server"
 	"github.com/arielsrv/pets-api/src/main/app/services/apps"
 	"github.com/arielsrv/pets-api/src/main/app/services/secrets"
-
-	"github.com/arielsrv/pets-api/src/main/app/server"
 	"github.com/gofiber/fiber/v2"
 )
 

@@ -6,17 +6,14 @@ import (
 	"net/http"
 	"net/url"
 
-	"github.com/arielsrv/pets-api/src/main/app/infrastructure/secrets"
-
-	"github.com/arielsrv/pets-api/src/main/app/infrastructure/database"
-
-	"github.com/arielsrv/pets-api/src/main/app/server"
-
 	"github.com/arielsrv/pets-api/src/main/app/clients/gitlab"
 	"github.com/arielsrv/pets-api/src/main/app/config"
 	"github.com/arielsrv/pets-api/src/main/app/ent"
 	"github.com/arielsrv/pets-api/src/main/app/ent/app"
+	"github.com/arielsrv/pets-api/src/main/app/infrastructure/database"
+	"github.com/arielsrv/pets-api/src/main/app/infrastructure/secrets"
 	"github.com/arielsrv/pets-api/src/main/app/model"
+	"github.com/arielsrv/pets-api/src/main/app/server"
 )
 
 type IAppService interface {
@@ -133,7 +130,7 @@ func (s *AppService) GetAppTypes() ([]model.AppTypeResponse, error) {
 		return nil, err
 	}
 
-	var appTypesModel []model.AppTypeResponse
+	appTypesModel := make([]model.AppTypeResponse, 0, len(appTypes))
 	for _, appType := range appTypes {
 		var appTypeModel model.AppTypeResponse
 		appTypeModel.ID = appType.ID
@@ -150,7 +147,7 @@ func (s *AppService) GetGroups() ([]model.AppGroupResponse, error) {
 		return nil, err
 	}
 
-	var groupsDto []model.AppGroupResponse
+	groupsDto := make([]model.AppGroupResponse, 0, len(groupsResponse))
 	for _, groupResponse := range groupsResponse {
 		var groupDto model.AppGroupResponse
 		groupDto.ID = groupResponse.ID

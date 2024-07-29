@@ -7,9 +7,8 @@ import (
 	"path"
 	"runtime"
 
-	"github.com/arielsrv/pets-api/src/main/app/helpers/files"
-
 	"github.com/arielsrv/pets-api/src/main/app/config/env"
+	"github.com/arielsrv/pets-api/src/main/app/helpers/files"
 	"github.com/go-chassis/go-archaius"
 )
 

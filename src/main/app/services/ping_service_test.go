@@ -4,7 +4,6 @@ import (
 	"testing"
 
 	"github.com/arielsrv/pets-api/src/main/app/services"
-
 	"github.com/stretchr/testify/assert"
 )
 

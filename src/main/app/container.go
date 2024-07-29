@@ -3,24 +3,20 @@ package app
 import (
 	"log"
 
+	"github.com/arielsrv/pets-api/src/main/app/clients/gitlab"
+	"github.com/arielsrv/pets-api/src/main/app/config"
+	"github.com/arielsrv/pets-api/src/main/app/config/env"
 	pingHandler "github.com/arielsrv/pets-api/src/main/app/handlers"
 	appHandler "github.com/arielsrv/pets-api/src/main/app/handlers/apps"
 	secretHandler "github.com/arielsrv/pets-api/src/main/app/handlers/secrets"
 	snippetHandler "github.com/arielsrv/pets-api/src/main/app/handlers/snippets"
+	"github.com/arielsrv/pets-api/src/main/app/infrastructure/database"
+	"github.com/arielsrv/pets-api/src/main/app/infrastructure/secrets"
+	"github.com/arielsrv/pets-api/src/main/app/server"
 	pingService "github.com/arielsrv/pets-api/src/main/app/services"
 	appService "github.com/arielsrv/pets-api/src/main/app/services/apps"
 	secretService "github.com/arielsrv/pets-api/src/main/app/services/secrets"
 	snippetService "github.com/arielsrv/pets-api/src/main/app/services/snippets"
-
-	"github.com/arielsrv/pets-api/src/main/app/config"
-	"github.com/arielsrv/pets-api/src/main/app/config/env"
-
-	"github.com/arielsrv/pets-api/src/main/app/infrastructure/database"
-	"github.com/arielsrv/pets-api/src/main/app/infrastructure/secrets"
-
-	"github.com/arielsrv/pets-api/src/main/app/clients/gitlab"
-	"github.com/arielsrv/pets-api/src/main/app/server"
-
 	_ "github.com/go-sql-driver/mysql"
 )
 

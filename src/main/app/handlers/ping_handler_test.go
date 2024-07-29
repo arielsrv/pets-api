@@ -8,7 +8,6 @@ import (
 
 	"github.com/arielsrv/pets-api/src/main/app/handlers"
 	"github.com/arielsrv/pets-api/src/main/app/server"
-
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/suite"
 )
@@ -45,12 +44,12 @@ func (s *PingHandlerSuite) TestPingHandler_Ping() {
 
 	request := httptest.NewRequest(http.MethodGet, "/ping", nil)
 	response, err := s.app.Test(request)
-	s.NoError(err)
+	s.Require().NoError(err)
 	s.NotNil(response)
 	s.Equal(http.StatusOK, response.StatusCode)
 
 	body, err := io.ReadAll(response.Body)
-	s.NoError(err)
+	s.Require().NoError(err)
 	s.NotNil(body)
 
 	s.Equal("pong", string(body))

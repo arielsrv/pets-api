@@ -11,6 +11,7 @@ import (
 	"github.com/arielsrv/pets-api/src/main/app/server"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
+	"github.com/stretchr/testify/require"
 )
 
 type MockSnippetService struct {
@@ -33,12 +34,12 @@ func TestSnippetHandler_GetSnippet(t *testing.T) {
 
 	request := httptest.NewRequest(http.MethodGet, "/apps/1/secrets/2/snippets", nil)
 	response, err := app.Test(request)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotNil(t, response)
 	assert.Equal(t, http.StatusOK, response.StatusCode)
 
 	body, err := io.ReadAll(response.Body)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotNil(t, body)
 
 	assert.NotEmpty(t, string(body))

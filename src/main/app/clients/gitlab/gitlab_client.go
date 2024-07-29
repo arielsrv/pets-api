@@ -2,15 +2,13 @@ package gitlab
 
 import (
 	"fmt"
+	"net/http"
+	"strconv"
 
 	"github.com/arielsrv/ikp_go-restclient/rest"
-
 	"github.com/arielsrv/pets-api/src/main/app/config"
 	"github.com/arielsrv/pets-api/src/main/app/infrastructure/secrets"
 	"github.com/arielsrv/pets-api/src/main/app/server"
-
-	"net/http"
-	"strconv"
 )
 
 type IGitLabClient interface {
@@ -78,7 +76,7 @@ func (c *Client) GetGroups() ([]GroupResponse, error) {
 		return nil, err
 	}
 
-	total, err := strconv.Atoi(response.Response.Header.Get("x-total-pages"))
+	total, err := strconv.Atoi(response.Response.Header.Get("X-Total-Pages"))
 	if err != nil {
 		return nil, err
 	}

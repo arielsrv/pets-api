@@ -3,9 +3,8 @@ package snippets
 import (
 	"strings"
 
-	"github.com/arielsrv/pets-api/src/main/app/services/secrets"
-
 	"github.com/arielsrv/pets-api/src/main/app/model"
+	"github.com/arielsrv/pets-api/src/main/app/services/secrets"
 )
 
 type SnippetType string
@@ -64,7 +63,7 @@ func (s SnippetService) GetSecrets(secretID int64) ([]model.SnippetViewModel, er
 		return nil, err
 	}
 
-	var snippets []model.SnippetViewModel
+	snippets := make([]model.SnippetViewModel, 0, len(s.snippets[string(Secret)]))
 	for _, secret := range s.snippets[string(Secret)] {
 		snippet := new(model.SnippetViewModel)
 

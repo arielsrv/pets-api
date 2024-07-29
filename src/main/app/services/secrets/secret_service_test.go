@@ -4,13 +4,12 @@ import (
 	"context"
 	"testing"
 
-	"github.com/arielsrv/pets-api/src/main/app/services/secrets"
-
 	"github.com/arielsrv/pets-api/src/main/app/infrastructure/database"
-
 	"github.com/arielsrv/pets-api/src/main/app/model"
+	"github.com/arielsrv/pets-api/src/main/app/services/secrets"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
+	"github.com/stretchr/testify/require"
 )
 
 type MockAppService struct {
@@ -47,23 +46,23 @@ func TestSecretService_GetSecret(t *testing.T) {
 	dbClient.Context()
 	defer func(dbClient *database.DBClient) {
 		err := dbClient.Close()
-		assert.NoError(t, err)
+		require.NoError(t, err)
 	}(dbClient)
 
 	appType, err := dbClient.AppType.Create().
 		SetID(1).SetName("backend").Save(context.Background())
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotNil(t, appType)
 
 	app, err := dbClient.App.Create().
 		SetName("customers-api").SetExternalGitlabProjectID(1).SetAppTypeID(1).Save(context.Background())
 
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotNil(t, app)
 
 	secret, err := dbClient.Secret.Create().
 		SetKey("PETS_CUSTOMERS-API_MYSECRETKEY").SetValue("MYSECRETVALUE").SetAppID(1).Save(context.Background())
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotNil(t, secret)
 
 	appService := new(MockAppService)
@@ -71,7 +70,7 @@ func TestSecretService_GetSecret(t *testing.T) {
 	service := secrets.NewSecretService(dbClient, appService)
 	actual, err := service.GetSecret(1)
 
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotNil(t, actual)
 
 	assert.Equal(t, "PETS_CUSTOMERS-API_MYSECRETKEY", actual)
@@ -82,7 +81,7 @@ func TestSecretService_GetSecret_NotFound(t *testing.T) {
 	dbClient.Context()
 	defer func(dbClient *database.DBClient) {
 		err := dbClient.Close()
-		assert.NoError(t, err)
+		require.NoError(t, err)
 	}(dbClient)
 
 	appService := new(MockAppService)
@@ -90,7 +89,7 @@ func TestSecretService_GetSecret_NotFound(t *testing.T) {
 	service := secrets.NewSecretService(dbClient, appService)
 	actual, err := service.GetSecret(2)
 
-	assert.Error(t, err)
+	require.Error(t, err)
 	assert.NotNil(t, actual)
 }
 
@@ -99,18 +98,18 @@ func TestSecretService_CreateSecret(t *testing.T) {
 	dbClient.Context()
 	defer func(dbClient *database.DBClient) {
 		err := dbClient.Close()
-		assert.NoError(t, err)
+		require.NoError(t, err)
 	}(dbClient)
 
 	appType, err := dbClient.AppType.Create().
 		SetID(1).SetName("backend").Save(context.Background())
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotNil(t, appType)
 
 	app, err := dbClient.App.Create().
 		SetName("customers-api").SetExternalGitlabProjectID(1).SetAppTypeID(1).Save(context.Background())
 
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotNil(t, app)
 
 	appService := new(MockAppService)
@@ -122,7 +121,7 @@ func TestSecretService_CreateSecret(t *testing.T) {
 	secretModel.Value = "MYSECRETVALUE"
 	actual, err := service.CreateSecret(1, secretModel)
 
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotNil(t, actual)
 
 	assert.Equal(t, "MYSECRETKEY", actual.Key)
@@ -134,18 +133,18 @@ func TestSecretService_CreateSecret_Conflict(t *testing.T) {
 	dbClient.Context()
 	defer func(dbClient *database.DBClient) {
 		err := dbClient.Close()
-		assert.NoError(t, err)
+		require.NoError(t, err)
 	}(dbClient)
 
 	appType, err := dbClient.AppType.Create().
 		SetID(1).SetName("backend").Save(context.Background())
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotNil(t, appType)
 
 	app, err := dbClient.App.Create().
 		SetName("customers-api").SetExternalGitlabProjectID(1).SetAppTypeID(1).Save(context.Background())
 
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotNil(t, app)
 
 	appService := new(MockAppService)
@@ -157,7 +156,7 @@ func TestSecretService_CreateSecret_Conflict(t *testing.T) {
 	secretModel.Value = "MYSECRETVALUE"
 	actual, err := service.CreateSecret(1, secretModel)
 
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotNil(t, actual)
 
 	assert.Equal(t, "MYSECRETKEY", actual.Key)
@@ -165,7 +164,7 @@ func TestSecretService_CreateSecret_Conflict(t *testing.T) {
 
 	conflict, err := service.CreateSecret(1, secretModel)
 
-	assert.Error(t, err)
+	require.Error(t, err)
 	assert.Nil(t, conflict)
 }
 

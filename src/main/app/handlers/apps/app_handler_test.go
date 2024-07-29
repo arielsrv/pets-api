@@ -8,17 +8,14 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/gofiber/fiber/v2"
-
 	"github.com/arielsrv/pets-api/src/main/app/handlers/apps"
-
 	"github.com/arielsrv/pets-api/src/main/app/model"
-
 	"github.com/arielsrv/pets-api/src/main/app/server"
+	"github.com/gofiber/fiber/v2"
+	_ "github.com/mattn/go-sqlite3"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
-
-	_ "github.com/mattn/go-sqlite3"
+	"github.com/stretchr/testify/require"
 )
 
 type MockAppService struct {
@@ -60,12 +57,12 @@ func TestAppHandler_GetGroups(t *testing.T) {
 
 	request := httptest.NewRequest(http.MethodGet, "/apps/groups", nil)
 	response, err := app.Test(request)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotNil(t, response)
 	assert.Equal(t, http.StatusOK, response.StatusCode)
 
 	body, err := io.ReadAll(response.Body)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotNil(t, body)
 
 	assert.Equal(t, "[{\"id\":1,\"name\":\"root/group1\"},{\"id\":2,\"name\":\"root/group2\"}]", string(body))
@@ -81,12 +78,12 @@ func TestAppHandler_GetApp(t *testing.T) {
 
 	request := httptest.NewRequest(http.MethodGet, "/apps?app_name=go", nil)
 	response, err := app.Test(request)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotNil(t, response)
 	assert.Equal(t, http.StatusOK, response.StatusCode)
 
 	body, err := io.ReadAll(response.Body)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotNil(t, body)
 
 	assert.Equal(t, "{\"id\":1,\"url\":\"repo_url\"}", string(body))
@@ -102,12 +99,12 @@ func TestAppHandler_GetApp_BadRequestErr(t *testing.T) {
 
 	request := httptest.NewRequest(http.MethodGet, "/apps", nil)
 	response, err := app.Test(request)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotNil(t, response)
 	assert.Equal(t, http.StatusBadRequest, response.StatusCode)
 
 	body, err := io.ReadAll(response.Body)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotNil(t, body)
 
 	assert.Equal(t, "{\"status_code\":400,\"message\":\"bad request error, missing app_name\"}", string(body))
@@ -123,12 +120,12 @@ func TestAppHandler_GetApp_NotFoundErr(t *testing.T) {
 
 	request := httptest.NewRequest(http.MethodGet, "/apps?app_name=customers-api", nil)
 	response, err := app.Test(request)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotNil(t, response)
 	assert.Equal(t, http.StatusNotFound, response.StatusCode)
 
 	body, err := io.ReadAll(response.Body)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotNil(t, body)
 
 	assert.Equal(t, "{\"status_code\":404,\"message\":\"app with name customer-api not found\"}", string(body))
@@ -154,12 +151,12 @@ func TestAppHandler_GetGroups_Err(t *testing.T) {
 
 	request := httptest.NewRequest(http.MethodGet, "/repositories/groups", nil)
 	response, err := app.Test(request)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotNil(t, response)
 	assert.Equal(t, http.StatusInternalServerError, response.StatusCode)
 
 	body, err := io.ReadAll(response.Body)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotNil(t, body)
 
 	assert.Equal(t, "{\"status_code\":500,\"message\":\"src server error\"}", string(body))
@@ -183,12 +180,12 @@ func TestRepositoriesHandler_CreateApp(t *testing.T) {
 	request.Header.Add(fiber.HeaderContentType, fiber.MIMEApplicationJSON)
 
 	response, err := app.Test(request)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotNil(t, response)
 	assert.Equal(t, http.StatusCreated, response.StatusCode)
 
 	body, err := io.ReadAll(response.Body)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotNil(t, body)
 
 	assert.Equal(t, "{\"id\":1}", string(body))
@@ -214,12 +211,12 @@ func TestRepositoriesHandler_CreateApp_Err(t *testing.T) {
 	request.Header.Add(fiber.HeaderContentType, fiber.MIMEApplicationJSON)
 
 	response, err := app.Test(request)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotNil(t, response)
 	assert.Equal(t, http.StatusInternalServerError, response.StatusCode)
 
 	body, err := io.ReadAll(response.Body)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotNil(t, body)
 
 	assert.Equal(t, "{\"status_code\":500,\"message\":\"src server error\"}", string(body))
@@ -241,12 +238,12 @@ func TestRepositoriesHandler_CreateApp_BadRequest_Err(t *testing.T) {
 			bytes.NewBufferString("{\"invalid_field\":\"my repo\",\"group_id\":1}"))
 
 	response, err := app.Test(request)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotNil(t, response)
 	assert.Equal(t, http.StatusBadRequest, response.StatusCode)
 
 	body, err := io.ReadAll(response.Body)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotNil(t, body)
 
 	assert.Equal(t, "{\"status_code\":400,\"message\":\"bad request error\"}", string(body))
@@ -262,12 +259,12 @@ func TestAppHandler_GetAppTypes(t *testing.T) {
 
 	request := httptest.NewRequest(http.MethodGet, "/apps/types", nil)
 	response, err := app.Test(request)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotNil(t, response)
 	assert.Equal(t, http.StatusOK, response.StatusCode)
 
 	body, err := io.ReadAll(response.Body)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotNil(t, body)
 
 	assert.Equal(t, "[{\"id\":1,\"name\":\"backend\"},{\"id\":2,\"name\":\"frontend\"}]", string(body))
@@ -283,12 +280,12 @@ func TestAppHandler_GetAppTypes_Err(t *testing.T) {
 
 	request := httptest.NewRequest(http.MethodGet, "/apps/types", nil)
 	response, err := app.Test(request)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotNil(t, response)
 	assert.Equal(t, http.StatusInternalServerError, response.StatusCode)
 
 	body, err := io.ReadAll(response.Body)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotNil(t, body)
 
 	assert.Equal(t, "{\"status_code\":500,\"message\":\"src server error\"}", string(body))

@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"math"
 
+	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
@@ -85,7 +86,7 @@ func (atq *AppTypeQuery) QueryApps() *AppQuery {
 // First returns the first AppType entity from the query.
 // Returns a *NotFoundError when no AppType was found.
 func (atq *AppTypeQuery) First(ctx context.Context) (*AppType, error) {
-	nodes, err := atq.Limit(1).All(setContextOp(ctx, atq.ctx, "First"))
+	nodes, err := atq.Limit(1).All(setContextOp(ctx, atq.ctx, ent.OpQueryFirst))
 	if err != nil {
 		return nil, err
 	}
@@ -108,7 +109,7 @@ func (atq *AppTypeQuery) FirstX(ctx context.Context) *AppType {
 // Returns a *NotFoundError when no AppType ID was found.
 func (atq *AppTypeQuery) FirstID(ctx context.Context) (id int, err error) {
 	var ids []int
-	if ids, err = atq.Limit(1).IDs(setContextOp(ctx, atq.ctx, "FirstID")); err != nil {
+	if ids, err = atq.Limit(1).IDs(setContextOp(ctx, atq.ctx, ent.OpQueryFirstID)); err != nil {
 		return
 	}
 	if len(ids) == 0 {
@@ -131,7 +132,7 @@ func (atq *AppTypeQuery) FirstIDX(ctx context.Context) int {
 // Returns a *NotSingularError when more than one AppType entity is found.
 // Returns a *NotFoundError when no AppType entities are found.
 func (atq *AppTypeQuery) Only(ctx context.Context) (*AppType, error) {
-	nodes, err := atq.Limit(2).All(setContextOp(ctx, atq.ctx, "Only"))
+	nodes, err := atq.Limit(2).All(setContextOp(ctx, atq.ctx, ent.OpQueryOnly))
 	if err != nil {
 		return nil, err
 	}
@@ -159,7 +160,7 @@ func (atq *AppTypeQuery) OnlyX(ctx context.Context) *AppType {
 // Returns a *NotFoundError when no entities are found.
 func (atq *AppTypeQuery) OnlyID(ctx context.Context) (id int, err error) {
 	var ids []int
-	if ids, err = atq.Limit(2).IDs(setContextOp(ctx, atq.ctx, "OnlyID")); err != nil {
+	if ids, err = atq.Limit(2).IDs(setContextOp(ctx, atq.ctx, ent.OpQueryOnlyID)); err != nil {
 		return
 	}
 	switch len(ids) {
@@ -184,7 +185,7 @@ func (atq *AppTypeQuery) OnlyIDX(ctx context.Context) int {
 
 // All executes the query and returns a list of AppTypes.
 func (atq *AppTypeQuery) All(ctx context.Context) ([]*AppType, error) {
-	ctx = setContextOp(ctx, atq.ctx, "All")
+	ctx = setContextOp(ctx, atq.ctx, ent.OpQueryAll)
 	if err := atq.prepareQuery(ctx); err != nil {
 		return nil, err
 	}
@@ -206,7 +207,7 @@ func (atq *AppTypeQuery) IDs(ctx context.Context) (ids []int, err error) {
 	if atq.ctx.Unique == nil && atq.path != nil {
 		atq.Unique(true)
 	}
-	ctx = setContextOp(ctx, atq.ctx, "IDs")
+	ctx = setContextOp(ctx, atq.ctx, ent.OpQueryIDs)
 	if err = atq.Select(apptype.FieldID).Scan(ctx, &ids); err != nil {
 		return nil, err
 	}
@@ -224,7 +225,7 @@ func (atq *AppTypeQuery) IDsX(ctx context.Context) []int {
 
 // Count returns the count of the given query.
 func (atq *AppTypeQuery) Count(ctx context.Context) (int, error) {
-	ctx = setContextOp(ctx, atq.ctx, "Count")
+	ctx = setContextOp(ctx, atq.ctx, ent.OpQueryCount)
 	if err := atq.prepareQuery(ctx); err != nil {
 		return 0, err
 	}
@@ -242,7 +243,7 @@ func (atq *AppTypeQuery) CountX(ctx context.Context) int {
 
 // Exist returns true if the query has elements in the graph.
 func (atq *AppTypeQuery) Exist(ctx context.Context) (bool, error) {
-	ctx = setContextOp(ctx, atq.ctx, "Exist")
+	ctx = setContextOp(ctx, atq.ctx, ent.OpQueryExist)
 	switch _, err := atq.FirstID(ctx); {
 	case IsNotFound(err):
 		return false, nil
@@ -528,7 +529,7 @@ func (atgb *AppTypeGroupBy) Aggregate(fns ...AggregateFunc) *AppTypeGroupBy {
 
 // Scan applies the selector query and scans the result into the given value.
 func (atgb *AppTypeGroupBy) Scan(ctx context.Context, v any) error {
-	ctx = setContextOp(ctx, atgb.build.ctx, "GroupBy")
+	ctx = setContextOp(ctx, atgb.build.ctx, ent.OpQueryGroupBy)
 	if err := atgb.build.prepareQuery(ctx); err != nil {
 		return err
 	}
@@ -576,7 +577,7 @@ func (ats *AppTypeSelect) Aggregate(fns ...AggregateFunc) *AppTypeSelect {
 
 // Scan applies the selector query and scans the result into the given value.
 func (ats *AppTypeSelect) Scan(ctx context.Context, v any) error {
-	ctx = setContextOp(ctx, ats.ctx, "Select")
+	ctx = setContextOp(ctx, ats.ctx, ent.OpQuerySelect)
 	if err := ats.prepareQuery(ctx); err != nil {
 		return err
 	}

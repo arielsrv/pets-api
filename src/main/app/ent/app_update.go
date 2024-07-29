@@ -142,7 +142,7 @@ func (au *AppUpdate) ExecX(ctx context.Context) {
 
 // check runs all checks and user-defined validators on the builder.
 func (au *AppUpdate) check() error {
-	if _, ok := au.mutation.AppsTypesID(); au.mutation.AppsTypesCleared() && !ok {
+	if au.mutation.AppsTypesCleared() && len(au.mutation.AppsTypesIDs()) > 0 {
 		return errors.New(`ent: clearing a required unique edge "App.apps_types"`)
 	}
 	return nil
@@ -348,7 +348,7 @@ func (auo *AppUpdateOne) ExecX(ctx context.Context) {
 
 // check runs all checks and user-defined validators on the builder.
 func (auo *AppUpdateOne) check() error {
-	if _, ok := auo.mutation.AppsTypesID(); auo.mutation.AppsTypesCleared() && !ok {
+	if auo.mutation.AppsTypesCleared() && len(auo.mutation.AppsTypesIDs()) > 0 {
 		return errors.New(`ent: clearing a required unique edge "App.apps_types"`)
 	}
 	return nil

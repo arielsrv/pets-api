@@ -2,16 +2,16 @@ module github.com/arielsrv/pets-api
 
 go 1.22
 
-toolchain go1.22.2
+toolchain go1.22.5
 
 require (
-	entgo.io/ent v0.13.1
+	entgo.io/ent v0.14.0
 	github.com/arielsrv/ikp_go-restclient v0.0.5
 	github.com/go-chassis/go-archaius v1.5.6
 	github.com/go-sql-driver/mysql v1.8.1
-	github.com/gofiber/fiber/v2 v2.52.4
-	github.com/gofiber/swagger v1.0.0
-	github.com/gofiber/template/html/v2 v2.1.1
+	github.com/gofiber/fiber/v2 v2.52.5
+	github.com/gofiber/swagger v1.1.0
+	github.com/gofiber/template/html/v2 v2.1.2
 	github.com/mattn/go-sqlite3 v1.14.22
 	github.com/stretchr/testify v1.9.0
 	github.com/swaggo/swag v1.16.3

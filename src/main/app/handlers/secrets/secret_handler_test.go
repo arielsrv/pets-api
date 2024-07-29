@@ -7,15 +7,13 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/gofiber/fiber/v2"
-
 	"github.com/arielsrv/pets-api/src/main/app/handlers/secrets"
-
 	"github.com/arielsrv/pets-api/src/main/app/model"
 	"github.com/arielsrv/pets-api/src/main/app/server"
-
+	"github.com/gofiber/fiber/v2"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
+	"github.com/stretchr/testify/require"
 )
 
 type MockSecretService struct {
@@ -77,12 +75,12 @@ func TestSecretHandler_CreateSecret(t *testing.T) {
 	request.Header.Add(fiber.HeaderContentType, fiber.MIMEApplicationJSON)
 
 	response, err := app.Test(request)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotNil(t, response)
 	assert.Equal(t, http.StatusCreated, response.StatusCode)
 
 	body, err := io.ReadAll(response.Body)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotNil(t, body)
 
 	assert.Equal(t, "{\"key\":\"my_secret_key\",\"snippet_url\":\"/relative_url\"}", string(body))

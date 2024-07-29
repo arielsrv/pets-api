@@ -118,7 +118,7 @@ func (sc *SecretCreate) check() error {
 	if _, ok := sc.mutation.Active(); !ok {
 		return &ValidationError{Name: "active", err: errors.New(`ent: missing required field "Secret.active"`)}
 	}
-	if _, ok := sc.mutation.AppID(); !ok {
+	if len(sc.mutation.AppIDs()) == 0 {
 		return &ValidationError{Name: "app", err: errors.New(`ent: missing required edge "Secret.app"`)}
 	}
 	return nil

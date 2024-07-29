@@ -2,18 +2,15 @@ package server
 
 import (
 	"net/http"
-
-	"github.com/gofiber/template/html/v2"
-
-	"github.com/arielsrv/pets-api/src/main/app/config"
-
 	"reflect"
 
+	"github.com/arielsrv/pets-api/src/main/app/config"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/gofiber/fiber/v2/middleware/requestid"
 	"github.com/gofiber/swagger"
+	"github.com/gofiber/template/html/v2"
 )
 
 type App struct {

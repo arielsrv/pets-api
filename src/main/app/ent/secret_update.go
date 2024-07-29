@@ -129,7 +129,7 @@ func (su *SecretUpdate) ExecX(ctx context.Context) {
 
 // check runs all checks and user-defined validators on the builder.
 func (su *SecretUpdate) check() error {
-	if _, ok := su.mutation.AppID(); su.mutation.AppCleared() && !ok {
+	if su.mutation.AppCleared() && len(su.mutation.AppIDs()) > 0 {
 		return errors.New(`ent: clearing a required unique edge "Secret.app"`)
 	}
 	return nil
@@ -319,7 +319,7 @@ func (suo *SecretUpdateOne) ExecX(ctx context.Context) {
 
 // check runs all checks and user-defined validators on the builder.
 func (suo *SecretUpdateOne) check() error {
-	if _, ok := suo.mutation.AppID(); suo.mutation.AppCleared() && !ok {
+	if suo.mutation.AppCleared() && len(suo.mutation.AppIDs()) > 0 {
 		return errors.New(`ent: clearing a required unique edge "Secret.app"`)
 	}
 	return nil
